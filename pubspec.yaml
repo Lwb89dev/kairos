@@ -1,0 +1,100 @@
+name: kairos
+description: "Kairos - an offline-first, privacy-first task manager with optional encrypted Nostr synchronization."
+publish_to: 'none'
+
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management: Riverpod — same choice as Echoes and Astraea, so the
+  # provider layout (auth/entry/services/state) is a direct reuse of the
+  # patterns those apps already established.
+  flutter_riverpod: ^3.3.2
+
+  # Nostr protocol: key generation (new keypair), nsec/hex import, event
+  # signing, and REQ subscriptions over websockets. Same SDK as Echoes and
+  # Astraea.
+  dart_nostr: ^10.0.1
+
+  # Local persistence for tasks. Stored as Map<String, dynamic> via manual
+  # toJson/fromJson (no hive_generator/build_runner — it conflicts with the
+  # analyzer versions dart_nostr/riverpod pull in, same constraint as
+  # Echoes/Astraea).
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Non-sensitive settings: relay list, pubkey, login method, entered flag.
+  shared_preferences: ^2.5.5
+
+  # Encrypted storage dedicated to the account private key (nsec). The
+  # private key must never end up in plaintext SharedPreferences: native
+  # keystore/keychain instead.
+  flutter_secure_storage: ^10.3.1
+
+  # Stable per-task ids (also used as the Kind-30789 `d` tag suffix).
+  uuid: ^4.5.3
+
+  # Login via Amber (NIP-55 external signer, Android only): the app never
+  # sees the private key. On Android this is the true "authenticate once for
+  # the whole Echoes ecosystem" path — apps can delegate to the same Amber identity.
+  amberflutter: ^0.0.9
+
+  # Low-level crypto primitives backing our own NIP-44 implementation — see
+  # lib/utils/nip44.dart, shared with Echoes/Astraea. dart_nostr
+  # doesn't implement NIP-44, and every published Dart package that does
+  # conflicts with dart_nostr's transitive pointycastle ^3.x.
+  pointycastle: ^3.9.1
+
+  # `@visibleForTesting` on the NIP-44 internals (spec-vector tests).
+  meta: ^1.16.0
+
+  # Localized date formatting for due dates in the task list/editor.
+  intl: ^0.20.2
+
+  # Fetching the logged-in account's public kind-0 profile (name/avatar) and
+  # downloading the avatar image.
+  http: ^1.6.0
+
+  # SHA-256 cache keys for the downloaded avatar.
+  crypto: ^3.0.7
+
+  # App-private cache directory for the avatar image — never external/shared
+  # storage.
+  path_provider: ^2.1.0
+
+  # Localization: ARB-based strings, same pipeline as Echoes/Roadstr
+  # (l10n.yaml + `generate: true` below).
+  flutter_localizations:
+    sdk: flutter
+
+  # "Support Kairos" tile in Settings: opens the developer's Lightning
+  # address via a lightning: URI, with a clipboard-copy fallback.
+  url_launcher: ^6.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+  # Generates the platform launcher icons (Android adaptive) from
+  # assets/icon/. Regenerate after changing the source PNGs with:
+  #   dart run flutter_launcher_icons
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  image_path: "assets/icon/icon.png"
+  adaptive_icon_background: "#16092F"
+  adaptive_icon_foreground: "assets/icon/icon.png"
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  assets:
+    - assets/icon/

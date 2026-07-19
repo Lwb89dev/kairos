@@ -1,0 +1,165 @@
+{
+  "@@locale": "en",
+
+  "settingsTitle": "Settings",
+  "sectionAccount": "Account",
+  "addAccountTitle": "Add a Nostr account",
+  "addAccountSubtitle": "Currently offline, local-only.",
+  "backupKeyTitle": "Back up private key",
+  "backupKeySubtitle": "Required to recover this Nostr account.",
+  "logOut": "Log out",
+  "sectionSync": "Sync",
+  "syncInfoTitle": "Optional encrypted sync",
+  "syncInfoBody": "Tasks sync only when a Nostr account and at least one relay are configured. Task content is NIP-44 encrypted before it leaves this device.",
+  "sectionRelays": "Relays",
+  "sectionAppearance": "Appearance",
+  "themeLabel": "Theme",
+  "sectionLanguage": "Language",
+  "langSystem": "System",
+  "sectionSupport": "Support",
+  "supportKairosTitle": "Support Kairos",
+  "lightningAddressCopied": "No Lightning wallet found — address copied: {address}",
+  "@lightningAddressCopied": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "logoutConfirmTitle": "Log out?",
+  "logoutConfirmBody": "Your tasks stay on this device. Without the key, they can no longer sync — make sure you have a backup of your nsec before logging out.",
+  "cancelButton": "Cancel",
+  "nsecDialogTitle": "Your private key (nsec)",
+  "nsecDialogWarning": "Anyone with this key controls your account. Store it in a password manager and never share it.",
+  "copyButton": "Copy",
+  "doneButton": "Done",
+  "signedInWithAmber": "Signed in with Amber",
+  "signedInWithKey": "Signed in · {npub}",
+  "@signedInWithKey": {
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
+  },
+
+  "relayInvalidUrlWss": "Enter a valid encrypted wss:// relay URL.",
+  "relayUrlHint": "wss://your-relay…",
+  "addRelayTooltip": "Add relay",
+  "noRelaysConfigured": "No relays configured.",
+  "removeRelayTooltip": "Remove relay",
+  "homeRelayTitle": "Personal home relay",
+  "homeRelayConfiguredSubtitle": "Extra backup target for your encrypted tasks",
+  "homeRelaySubtitle": "Optional: add your own relay as an extra backup target. Unlike other relays, this one may also use an unencrypted ws:// address if it's on your local network.",
+  "removeHomeRelayTooltip": "Remove home relay",
+  "homeRelayUrlHint": "wss://your-home-relay, or ws:// on your LAN",
+  "homeRelayInvalidUrl": "Enter a valid wss:// relay URL (ws:// is only allowed for a home relay on your own network).",
+  "saveButton": "Save",
+
+  "onboardingSaveError": "Could not save setup on this device.",
+  "backButton": "Back",
+  "getStartedButton": "Get started",
+  "useOfflineButton": "Use offline",
+  "nextButton": "Next",
+  "welcomeTitle": "Welcome to {appName}",
+  "@welcomeTitle": {
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
+  },
+  "welcomeSubtitle": "A private, focused task manager in the Echoes ecosystem.",
+  "featureLocalTitle": "Yours, on your device",
+  "featureLocalBody": "Tasks are stored locally first in an encrypted database. The app works fully offline — no account required.",
+  "featureSyncTitle": "Sync through Nostr",
+  "featureSyncBody": "Sign in with a Nostr key and your tasks sync across devices through relays you choose — no company server in the middle.",
+  "featureEncryptedTitle": "End-to-end encrypted",
+  "featureEncryptedBody": "Every task is encrypted (NIP-44) before it leaves the device. Relays only ever see ciphertext.",
+  "featureAmberTitle": "Amber support",
+  "featureAmberBody": "On Android you can keep your key in Amber: one sign-in for the whole suite, and no app ever touches the key itself.",
+  "loginPageTitle": "Sign in to sync your encrypted tasks",
+  "loginPageBody": "Use a Nostr identity for optional multi-device sync, or continue without an account and keep everything local.",
+  "relaySetupTitle": "Choose your relays",
+  "relaySetupBody": "Relays store encrypted tasks for synchronization with Kairos on your other devices. Add one or more, or leave this empty and configure sync later.",
+  "relaySettingsLoadError": "Could not load relay settings.",
+
+  "taskGoneMessage": "This task no longer exists.",
+  "taskDetailsTitle": "Task",
+  "editTooltip": "Edit",
+  "deleteTooltip": "Delete",
+  "dueDateLabel": "Due date",
+  "noneLabel": "None",
+  "tagsLabel": "Tags",
+  "priorityLabel": "Priority",
+  "priorityValue": "{priority} / 5",
+  "@priorityValue": {
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
+  },
+  "colorLabel": "Color",
+  "syncStatusLabel": "Sync",
+  "syncedStatus": "Published to relays",
+  "notSyncedStatus": "Local only (pending sync)",
+  "linkedEventLabel": "Linked calendar event",
+  "createdUpdatedInfo": "Created {created}\nUpdated {updated}",
+  "@createdUpdatedInfo": {
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteTaskConfirmTitle": "Delete this task?",
+  "deleteTaskConfirmBody": "The task is removed locally and a deletion request is sent to your relays.",
+  "deleteButton": "Delete",
+  "deleteTaskError": "Could not delete the task locally.",
+
+  "saveTaskError": "Could not save the task locally.",
+  "editTaskTitle": "Edit task",
+  "newTaskTitle": "New task",
+  "titleFieldLabel": "Title",
+  "titleRequiredError": "A title is required.",
+  "titleTooLongError": "The title is too long.",
+  "descriptionFieldLabel": "Description (optional)",
+  "noDueDateLabel": "No due date",
+  "optionalDeadlineHint": "Optional deadline.",
+  "clearDueDateTooltip": "Clear due date",
+  "tagsFieldLabel": "Tags (comma-separated, optional)",
+  "tagsFieldHint": "work, personal",
+  "tooManyTagsError": "Use at most 32 tags.",
+  "tagTooLongError": "Each tag must be at most 64 characters.",
+  "priorityScaleHint": "1 = low, 5 = high",
+
+  "syncNowTooltip": "Sync now",
+  "settingsTooltip": "Settings",
+  "newTaskTooltip": "New task",
+  "loadTasksError": "Could not load local tasks.",
+  "emptyTasksTitle": "No tasks yet",
+  "emptyTasksBody": "Tap + to add your first task.",
+  "completedCount": "Completed ({count})",
+  "@completedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "invalidKeyError": "That private key is not valid. Check it and try again.",
+  "signInError": "Could not sign in. Please try again.",
+  "signInAmberButton": "Sign in with Amber",
+  "createAccountButton": "Create a new account",
+  "generatedAccountHint": "A generated account can only be recovered with its private key. Back it up from Settings after setup.",
+  "importKeyButton": "Import an existing key",
+  "importKeyFieldLabel": "nsec or hex private key",
+  "importButton": "Import",
+
+  "storageFailureMessage": "Kairos could not open its encrypted local database. Restart the app. Do not clear app data; if the problem persists, report it privately."
+}

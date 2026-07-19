@@ -1,0 +1,5 @@
+# Copy to key.properties (ignored by Git) and keep the keystore outside the repository.
+storeFile=/absolute/path/to/kairos-release.jks
+storePassword=CHANGE_ME
+keyAlias=kairos
+keyPassword=CHANGE_ME
