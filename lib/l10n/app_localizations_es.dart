@@ -282,6 +282,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get newTaskTitle => 'Nueva tarea';
 
   @override
+  String get syncToNostrTitle => 'Sincronizar con Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Publica esta tarea, cifrada, en tus relés. Si está desactivado, se queda solo en este dispositivo.';
+
+  @override
+  String get syncTaskButton => 'Sincronizar tarea';
+
+  @override
+  String get localOnlyStatus => 'Solo local (sin sincronización)';
+
+  @override
   String get titleFieldLabel => 'Título';
 
   @override

@@ -281,6 +281,19 @@ class AppLocalizationsCs extends AppLocalizations {
   String get newTaskTitle => 'Nový úkol';
 
   @override
+  String get syncToNostrTitle => 'Synchronizovat s Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Publikuje úkol zašifrovaně na vaše relaye. Pokud je vypnuto, zůstane jen v tomto zařízení.';
+
+  @override
+  String get syncTaskButton => 'Synchronizovat úkol';
+
+  @override
+  String get localOnlyStatus => 'Pouze místně (synchronizace vypnuta)';
+
+  @override
   String get titleFieldLabel => 'Název';
 
   @override

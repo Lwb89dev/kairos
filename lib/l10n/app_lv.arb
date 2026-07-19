@@ -19,7 +19,11 @@
   "supportKairosTitle": "Atbalsti Kairos",
   "lightningAddressCopied": "Lightning maks netika atrasts — adrese nokopēta: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Izrakstīties?",
   "logoutConfirmBody": "Jūsu uzdevumi paliks šajā ierīcē. Bez atslēgas tos vairs nevarēs sinhronizēt — pirms izrakstīšanās pārliecinieties, ka jums ir sava nsec rezerves kopija.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Pierakstījies ar Amber",
   "signedInWithKey": "Pierakstījies · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Ievadiet derīgu šifrētu wss:// releja servera adresi.",
   "relayUrlHint": "wss://jūsu-releja-serveris…",
@@ -52,7 +60,11 @@
   "nextButton": "Tālāk",
   "welcomeTitle": "Laipni lūdzam {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Privāts, fokusēts uzdevumu pārvaldnieks Echoes ekosistēmā.",
   "featureLocalTitle": "Jūsu, jūsu ierīcē",
@@ -78,7 +90,11 @@
   "priorityLabel": "Prioritāte",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Krāsa",
   "syncStatusLabel": "Sinhronizācija",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Saistītais kalendāra notikums",
   "createdUpdatedInfo": "Izveidots {created}\nAtjaunināts {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Dzēst šo uzdevumu?",
   "deleteTaskConfirmBody": "Uzdevums tiek noņemts lokāli, un dzēšanas pieprasījums tiek nosūtīts jūsu releja serveriem.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Neizdevās lokāli saglabāt uzdevumu.",
   "editTaskTitle": "Rediģēt uzdevumu",
   "newTaskTitle": "Jauns uzdevums",
+  "syncToNostrTitle": "Sinhronizēt ar Nostr",
+  "syncToNostrSubtitle": "Publicē uzdevumu šifrētā veidā jūsu relejos. Ja izslēgts, tas paliek tikai šajā ierīcē.",
+  "syncTaskButton": "Sinhronizēt uzdevumu",
+  "localOnlyStatus": "Tikai lokāli (sinhronizācija izslēgta)",
   "titleFieldLabel": "Nosaukums",
   "titleRequiredError": "Nosaukums ir obligāts.",
   "titleTooLongError": "Nosaukums ir pārāk garš.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Pieskarieties +, lai pievienotu savu pirmo uzdevumu.",
   "completedCount": "Pabeigts ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Šī privātā atslēga nav derīga. Pārbaudiet to un mēģiniet vēlreiz.",
   "signInError": "Neizdevās pierakstīties. Lūdzu, mēģiniet vēlreiz.",

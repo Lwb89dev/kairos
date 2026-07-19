@@ -19,7 +19,11 @@
   "supportKairosTitle": "Υποστηρίξτε το Kairos",
   "lightningAddressCopied": "Δεν βρέθηκε πορτοφόλι Lightning — η διεύθυνση αντιγράφηκε: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Αποσύνδεση;",
   "logoutConfirmBody": "Οι εργασίες σας παραμένουν σε αυτή τη συσκευή. Χωρίς το κλειδί, δεν μπορούν πλέον να συγχρονιστούν — βεβαιωθείτε ότι έχετε αντίγραφο ασφαλείας του nsec σας πριν αποσυνδεθείτε.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Συνδεθήκατε με Amber",
   "signedInWithKey": "Συνδεδεμένος/η · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Εισαγάγετε μια έγκυρη κρυπτογραφημένη διεύθυνση relay wss://.",
   "relayUrlHint": "wss://το-relay-σας…",
@@ -52,7 +60,11 @@
   "nextButton": "Επόμενο",
   "welcomeTitle": "Καλώς ήρθατε στο {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Ένας ιδιωτικός, εστιασμένος διαχειριστής εργασιών στο οικοσύστημα Echoes.",
   "featureLocalTitle": "Δικό σας, στη συσκευή σας",
@@ -78,7 +90,11 @@
   "priorityLabel": "Προτεραιότητα",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Χρώμα",
   "syncStatusLabel": "Συγχρονισμός",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Συνδεδεμένο συμβάν ημερολογίου",
   "createdUpdatedInfo": "Δημιουργήθηκε {created}\nΕνημερώθηκε {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Διαγραφή αυτής της εργασίας;",
   "deleteTaskConfirmBody": "Η εργασία αφαιρείται τοπικά και ένα αίτημα διαγραφής αποστέλλεται στα relays σας.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Δεν ήταν δυνατή η τοπική αποθήκευση της εργασίας.",
   "editTaskTitle": "Επεξεργασία εργασίας",
   "newTaskTitle": "Νέα εργασία",
+  "syncToNostrTitle": "Συγχρονισμός στο Nostr",
+  "syncToNostrSubtitle": "Δημοσιεύει την εργασία, κρυπτογραφημένη, στους αναμεταδότες σας. Αν είναι ανενεργό, μένει μόνο σε αυτήν τη συσκευή.",
+  "syncTaskButton": "Συγχρονισμός εργασίας",
+  "localOnlyStatus": "Μόνο τοπικά (συγχρονισμός ανενεργός)",
   "titleFieldLabel": "Τίτλος",
   "titleRequiredError": "Απαιτείται τίτλος.",
   "titleTooLongError": "Ο τίτλος είναι πολύ μεγάλος.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Πατήστε + για να προσθέσετε την πρώτη σας εργασία.",
   "completedCount": "Ολοκληρωμένες ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Αυτό το ιδιωτικό κλειδί δεν είναι έγκυρο. Ελέγξτε το και δοκιμάστε ξανά.",
   "signInError": "Δεν ήταν δυνατή η σύνδεση. Δοκιμάστε ξανά.",

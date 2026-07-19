@@ -19,7 +19,11 @@
   "supportKairosTitle": "Stöd Kairos",
   "lightningAddressCopied": "Ingen Lightning-plånbok hittades — adressen kopierades: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Logga ut?",
   "logoutConfirmBody": "Dina uppgifter finns kvar på den här enheten. Utan nyckeln kan de inte längre synkroniseras — se till att du har en säkerhetskopia av din nsec innan du loggar ut.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Inloggad med Amber",
   "signedInWithKey": "Inloggad · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Ange en giltig krypterad wss://-relä-URL.",
   "relayUrlHint": "wss://din-relä…",
@@ -52,7 +60,11 @@
   "nextButton": "Nästa",
   "welcomeTitle": "Välkommen till {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "En privat, fokuserad uppgiftshanterare i Echoes-ekosystemet.",
   "featureLocalTitle": "Din, på din enhet",
@@ -78,7 +90,11 @@
   "priorityLabel": "Prioritet",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Färg",
   "syncStatusLabel": "Synkronisering",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Länkad kalenderhändelse",
   "createdUpdatedInfo": "Skapad {created}\nUppdaterad {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Ta bort den här uppgiften?",
   "deleteTaskConfirmBody": "Uppgiften tas bort lokalt och en borttagningsförfrågan skickas till dina reläer.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Kunde inte spara uppgiften lokalt.",
   "editTaskTitle": "Redigera uppgift",
   "newTaskTitle": "Ny uppgift",
+  "syncToNostrTitle": "Synka till Nostr",
+  "syncToNostrSubtitle": "Publicerar uppgiften krypterad till dina reläer. Om av stannar den bara på den här enheten.",
+  "syncTaskButton": "Synka uppgift",
+  "localOnlyStatus": "Endast lokalt (synk av)",
   "titleFieldLabel": "Titel",
   "titleRequiredError": "En titel krävs.",
   "titleTooLongError": "Titeln är för lång.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Tryck på + för att lägga till din första uppgift.",
   "completedCount": "Slutförda ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Den privata nyckeln är ogiltig. Kontrollera den och försök igen.",
   "signInError": "Det gick inte att logga in. Försök igen.",

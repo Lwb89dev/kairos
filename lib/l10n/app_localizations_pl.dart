@@ -281,6 +281,19 @@ class AppLocalizationsPl extends AppLocalizations {
   String get newTaskTitle => 'Nowe zadanie';
 
   @override
+  String get syncToNostrTitle => 'Synchronizuj z Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Publikuje zadanie w postaci zaszyfrowanej na twoich przekaźnikach. Gdy wyłączone, zostaje tylko na tym urządzeniu.';
+
+  @override
+  String get syncTaskButton => 'Synchronizuj zadanie';
+
+  @override
+  String get localOnlyStatus => 'Tylko lokalnie (synchronizacja wyłączona)';
+
+  @override
   String get titleFieldLabel => 'Tytuł';
 
   @override

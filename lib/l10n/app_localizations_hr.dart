@@ -281,6 +281,19 @@ class AppLocalizationsHr extends AppLocalizations {
   String get newTaskTitle => 'Novi zadatak';
 
   @override
+  String get syncToNostrTitle => 'Sinkroniziraj na Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Objavljuje zadatak šifriran na tvoje releje. Ako je isključeno, ostaje samo na ovom uređaju.';
+
+  @override
+  String get syncTaskButton => 'Sinkroniziraj zadatak';
+
+  @override
+  String get localOnlyStatus => 'Samo lokalno (sinkronizacija isključena)';
+
+  @override
   String get titleFieldLabel => 'Naslov';
 
   @override

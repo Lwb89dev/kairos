@@ -19,7 +19,11 @@
   "supportKairosTitle": "Støt Kairos",
   "lightningAddressCopied": "Ingen Lightning-wallet fundet — adresse kopieret: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Log ud?",
   "logoutConfirmBody": "Dine opgaver forbliver på denne enhed. Uden nøglen kan de ikke længere synkroniseres — sørg for, at du har en sikkerhedskopi af din nsec, før du logger ud.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Logget ind med Amber",
   "signedInWithKey": "Logget ind · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Indtast en gyldig krypteret wss://-relæ-URL.",
   "relayUrlHint": "wss://dit-relæ…",
@@ -52,7 +60,11 @@
   "nextButton": "Næste",
   "welcomeTitle": "Velkommen til {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "En privat, fokuseret opgavehåndtering i Echoes-økosystemet.",
   "featureLocalTitle": "Din, på din enhed",
@@ -78,7 +90,11 @@
   "priorityLabel": "Prioritet",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Farve",
   "syncStatusLabel": "Synkronisering",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Tilknyttet kalenderbegivenhed",
   "createdUpdatedInfo": "Oprettet {created}\nOpdateret {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Slet denne opgave?",
   "deleteTaskConfirmBody": "Opgaven fjernes lokalt, og en sletteanmodning sendes til dine relæer.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Opgaven kunne ikke gemmes lokalt.",
   "editTaskTitle": "Rediger opgave",
   "newTaskTitle": "Ny opgave",
+  "syncToNostrTitle": "Synkroniser til Nostr",
+  "syncToNostrSubtitle": "Udgiver opgaven krypteret til dine relæer. Hvis fra, bliver den kun på denne enhed.",
+  "syncTaskButton": "Synkroniser opgave",
+  "localOnlyStatus": "Kun lokalt (synk fra)",
   "titleFieldLabel": "Titel",
   "titleRequiredError": "En titel er påkrævet.",
   "titleTooLongError": "Titlen er for lang.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Tryk på + for at tilføje din første opgave.",
   "completedCount": "Fuldført ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Den private nøgle er ikke gyldig. Tjek den, og prøv igen.",
   "signInError": "Kunne ikke logge ind. Prøv igen.",

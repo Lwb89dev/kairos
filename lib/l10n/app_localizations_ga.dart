@@ -282,6 +282,19 @@ class AppLocalizationsGa extends AppLocalizations {
   String get newTaskTitle => 'Tasc nua';
 
   @override
+  String get syncToNostrTitle => 'Sioncronaigh le Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Foilsíonn sé an tasc, criptithe, chuig do sheachadáin. Nuair atá sé múchta, fanann sé ar an ngléas seo amháin.';
+
+  @override
+  String get syncTaskButton => 'Sioncronaigh an tasc';
+
+  @override
+  String get localOnlyStatus => 'Áitiúil amháin (sioncronú múchta)';
+
+  @override
   String get titleFieldLabel => 'Teideal';
 
   @override

@@ -19,7 +19,11 @@
   "supportKairosTitle": "Steun Kairos",
   "lightningAddressCopied": "Geen Lightning-wallet gevonden — adres gekopieerd: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Uitloggen?",
   "logoutConfirmBody": "Je taken blijven op dit apparaat. Zonder de sleutel kunnen ze niet meer worden gesynchroniseerd — zorg dat je een back-up van je nsec hebt voordat je uitlogt.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Ingelogd met Amber",
   "signedInWithKey": "Ingelogd · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Voer een geldige versleutelde wss://-relay-URL in.",
   "relayUrlHint": "wss://jouw-relay…",
@@ -52,7 +60,11 @@
   "nextButton": "Volgende",
   "welcomeTitle": "Welkom bij {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Een privé, gefocuste taakbeheerder in het Echoes-ecosysteem.",
   "featureLocalTitle": "Van jou, op jouw apparaat",
@@ -78,7 +90,11 @@
   "priorityLabel": "Prioriteit",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Kleur",
   "syncStatusLabel": "Synchronisatie",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Gekoppelde agenda-afspraak",
   "createdUpdatedInfo": "Aangemaakt {created}\nBijgewerkt {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Deze taak verwijderen?",
   "deleteTaskConfirmBody": "De taak wordt lokaal verwijderd en er wordt een verwijderverzoek naar je relays gestuurd.",
@@ -96,6 +119,10 @@
   "saveTaskError": "De taak kon lokaal niet worden opgeslagen.",
   "editTaskTitle": "Taak bewerken",
   "newTaskTitle": "Nieuwe taak",
+  "syncToNostrTitle": "Synchroniseren met Nostr",
+  "syncToNostrSubtitle": "Publiceert deze taak versleuteld naar je relays. Indien uit, blijft hij alleen op dit apparaat.",
+  "syncTaskButton": "Taak synchroniseren",
+  "localOnlyStatus": "Alleen lokaal (sync uit)",
   "titleFieldLabel": "Titel",
   "titleRequiredError": "Een titel is verplicht.",
   "titleTooLongError": "De titel is te lang.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Tik op + om je eerste taak toe te voegen.",
   "completedCount": "Voltooid ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Die privésleutel is ongeldig. Controleer hem en probeer het opnieuw.",
   "signInError": "Inloggen mislukt. Probeer het opnieuw.",

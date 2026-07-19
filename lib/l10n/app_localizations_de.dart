@@ -284,6 +284,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get newTaskTitle => 'Neue Aufgabe';
 
   @override
+  String get syncToNostrTitle => 'Mit Nostr synchronisieren';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Veröffentlicht diese Aufgabe verschlüsselt auf deinen Relays. Wenn aus, bleibt sie nur auf diesem Gerät.';
+
+  @override
+  String get syncTaskButton => 'Aufgabe synchronisieren';
+
+  @override
+  String get localOnlyStatus => 'Nur lokal (Sync aus)';
+
+  @override
   String get titleFieldLabel => 'Titel';
 
   @override

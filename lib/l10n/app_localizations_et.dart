@@ -280,6 +280,19 @@ class AppLocalizationsEt extends AppLocalizations {
   String get newTaskTitle => 'Uus ülesanne';
 
   @override
+  String get syncToNostrTitle => 'Sünkrooni Nostriga';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Avaldab ülesande krüpteeritult sinu releedes. Kui väljas, jääb see ainult sellesse seadmesse.';
+
+  @override
+  String get syncTaskButton => 'Sünkrooni ülesanne';
+
+  @override
+  String get localOnlyStatus => 'Ainult kohalik (sünkroonimine väljas)';
+
+  @override
   String get titleFieldLabel => 'Pealkiri';
 
   @override

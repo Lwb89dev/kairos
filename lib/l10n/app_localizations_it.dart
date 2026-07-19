@@ -282,6 +282,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get newTaskTitle => 'Nuova attività';
 
   @override
+  String get syncToNostrTitle => 'Sincronizza su Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Pubblica questo task, crittografato, sui tuoi relay. Se disattivato, resta solo su questo dispositivo.';
+
+  @override
+  String get syncTaskButton => 'Sincronizza task';
+
+  @override
+  String get localOnlyStatus => 'Solo locale (sync disattivata)';
+
+  @override
   String get titleFieldLabel => 'Titolo';
 
   @override

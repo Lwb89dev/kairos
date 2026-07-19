@@ -19,7 +19,11 @@
   "supportKairosTitle": "Wesprzyj Kairos",
   "lightningAddressCopied": "Nie znaleziono portfela Lightning — adres skopiowany: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Wylogować się?",
   "logoutConfirmBody": "Twoje zadania pozostaną na tym urządzeniu. Bez klucza nie będą się już synchronizować — upewnij się, że masz kopię zapasową swojego nsec przed wylogowaniem.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Zalogowano przez Amber",
   "signedInWithKey": "Zalogowano · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Podaj prawidłowy, szyfrowany adres przekaźnika wss://.",
   "relayUrlHint": "wss://twój-przekaźnik…",
@@ -52,7 +60,11 @@
   "nextButton": "Dalej",
   "welcomeTitle": "Witamy w {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Prywatny, skoncentrowany menedżer zadań w ekosystemie Echoes.",
   "featureLocalTitle": "Twoje, na Twoim urządzeniu",
@@ -78,7 +90,11 @@
   "priorityLabel": "Priorytet",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Kolor",
   "syncStatusLabel": "Synchronizacja",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Powiązane wydarzenie w kalendarzu",
   "createdUpdatedInfo": "Utworzono {created}\nZaktualizowano {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Usunąć to zadanie?",
   "deleteTaskConfirmBody": "Zadanie zostaje usunięte lokalnie, a żądanie usunięcia jest wysyłane do Twoich przekaźników.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Nie udało się zapisać zadania lokalnie.",
   "editTaskTitle": "Edytuj zadanie",
   "newTaskTitle": "Nowe zadanie",
+  "syncToNostrTitle": "Synchronizuj z Nostr",
+  "syncToNostrSubtitle": "Publikuje zadanie w postaci zaszyfrowanej na twoich przekaźnikach. Gdy wyłączone, zostaje tylko na tym urządzeniu.",
+  "syncTaskButton": "Synchronizuj zadanie",
+  "localOnlyStatus": "Tylko lokalnie (synchronizacja wyłączona)",
   "titleFieldLabel": "Tytuł",
   "titleRequiredError": "Tytuł jest wymagany.",
   "titleTooLongError": "Tytuł jest zbyt długi.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Dotknij +, aby dodać pierwsze zadanie.",
   "completedCount": "Ukończone ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Ten klucz prywatny jest nieprawidłowy. Sprawdź go i spróbuj ponownie.",
   "signInError": "Nie udało się zalogować. Spróbuj ponownie.",

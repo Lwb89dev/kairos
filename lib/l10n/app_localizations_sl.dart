@@ -281,6 +281,19 @@ class AppLocalizationsSl extends AppLocalizations {
   String get newTaskTitle => 'Novo opravilo';
 
   @override
+  String get syncToNostrTitle => 'Sinhroniziraj v Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Objavi opravilo, šifrirano, na tvoje releje. Če je izklopljeno, ostane samo v tej napravi.';
+
+  @override
+  String get syncTaskButton => 'Sinhroniziraj opravilo';
+
+  @override
+  String get localOnlyStatus => 'Samo lokalno (sinhronizacija izklopljena)';
+
+  @override
   String get titleFieldLabel => 'Naslov';
 
   @override

@@ -291,6 +291,11 @@ class NostrService {
   }) async {
     debugLog('NostrService.publishTask called', name: 'NostrService');
     if (relayUrls.isEmpty) throw StateError('No relay configured.');
+    // Last barrier before the network: a task the user pinned to the device
+    // must never be encrypted-and-published, whatever the caller got wrong.
+    if (task.localOnly) {
+      throw StateError('A local-only task must never be published.');
+    }
     await connectToRelays(relayUrls, homeRelayUrl: homeRelayUrl);
 
     final content = await _encrypt(author, jsonEncode(task.toSyncJson()));
@@ -595,17 +600,34 @@ class NostrService {
 
   /// Requires an acknowledgement from every configured target before a task
   /// is marked synchronized. Partial success is retried idempotently later.
+  ///
+  /// Each per-relay send carries its own outer [Future.timeout] on top of the
+  /// timeout passed to `dart_nostr`: when a relay in [relayUrls] never got
+  /// registered (its websocket connection failed — e.g. an unreachable
+  /// personal home relay), `sendEventToRelaysAsync` builds an empty completer
+  /// list and its `Future.any([])` NEVER completes, ignoring its own timeout
+  /// parameter entirely. Without this outer bound one dead relay would hang
+  /// the publish forever, permanently wedging the app's single-flight sync.
   Future<void> _sendToEveryRelay(
     NostrEvent event,
     List<String> relayUrls,
   ) async {
+    final outerTimeout =
+        AppConstants.syncEoseTimeout + const Duration(seconds: 2);
     final acknowledgements = await Future.wait([
       for (final relayUrl in relayUrls.toSet())
-        _nostr.services.relays.sendEventToRelaysAsync(
-          event,
-          timeout: AppConstants.syncEoseTimeout,
-          relays: [relayUrl],
-        ),
+        _nostr.services.relays
+            .sendEventToRelaysAsync(
+              event,
+              timeout: AppConstants.syncEoseTimeout,
+              relays: [relayUrl],
+            )
+            .timeout(
+              outerTimeout,
+              onTimeout: () => throw StateError(
+                'A configured relay did not respond to the publish.',
+              ),
+            ),
     ]);
     final rejected = acknowledgements.where((ok) => ok.isEventAccepted != true);
     if (rejected.isNotEmpty) {

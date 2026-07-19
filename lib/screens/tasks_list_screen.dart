@@ -243,15 +243,18 @@ class _TaskTile extends ConsumerWidget {
                 size: 18,
                 color: theme.colorScheme.error,
               ),
-            Icon(
-              task.synced
-                  ? Icons.cloud_done_outlined
-                  : Icons.cloud_off_outlined,
-              size: 18,
-              color: task.synced
-                  ? (onBackground ?? theme.colorScheme.primary)
-                  : muted,
-            ),
+            // A deliberately local-only task is not "pending sync", so it
+            // gets no cloud badge at all instead of a misleading cloud-off.
+            if (!task.localOnly)
+              Icon(
+                task.synced
+                    ? Icons.cloud_done_outlined
+                    : Icons.cloud_off_outlined,
+                size: 18,
+                color: task.synced
+                    ? (onBackground ?? theme.colorScheme.primary)
+                    : muted,
+              ),
           ],
         ),
         onTap: () => Navigator.of(context).push(

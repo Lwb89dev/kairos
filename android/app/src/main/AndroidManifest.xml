@@ -2,13 +2,20 @@
     <!-- Optional encrypted relay sync and public profile/avatar retrieval. -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- usesCleartextTraffic: cleartext must stay permitted at the OS level
+         or the user's optional ws:// personal home relay (a LAN relay
+         without TLS) can never connect on Android. The app's own transport
+         policy (wss:// only, except the single explicit home-relay slot) is
+         enforced in Dart at three layers — relay_url.dart, the settings
+         provider and NostrService — and every Nostr payload is NIP-44
+         encrypted regardless of transport. -->
     <application
         android:label="Kairos"
         android:name="${applicationName}"
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
-        android:usesCleartextTraffic="false"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

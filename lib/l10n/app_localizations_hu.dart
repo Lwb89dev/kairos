@@ -282,6 +282,19 @@ class AppLocalizationsHu extends AppLocalizations {
   String get newTaskTitle => 'Új feladat';
 
   @override
+  String get syncToNostrTitle => 'Szinkronizálás a Nostrra';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Titkosítva közzéteszi a feladatot a relékre. Ha ki van kapcsolva, csak ezen az eszközön marad.';
+
+  @override
+  String get syncTaskButton => 'Feladat szinkronizálása';
+
+  @override
+  String get localOnlyStatus => 'Csak helyi (szinkronizálás kikapcsolva)';
+
+  @override
   String get titleFieldLabel => 'Cím';
 
   @override

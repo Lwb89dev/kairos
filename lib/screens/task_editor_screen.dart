@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/task_model.dart';
+import '../providers/auth_provider.dart';
+import '../providers/sync_mode_provider.dart';
 import '../providers/tasks_provider.dart';
 import '../utils/task_colors.dart';
 
@@ -11,6 +13,11 @@ import '../utils/task_colors.dart';
 /// priority. Pass [task] to edit; otherwise a new task is created on save.
 /// Saving is offline-first — the screen never blocks on the network; sync
 /// publication happens best-effort after the local write.
+///
+/// When sync is available (account + at least one relay), a new task gets a
+/// "Sync to Nostr" toggle — off pins it to this device ([Task.localOnly]) —
+/// and an existing local-only task gets a "Sync task" button that saves the
+/// current edits and lifts the pin, publishing it a posteriori.
 class TaskEditorScreen extends ConsumerStatefulWidget {
   const TaskEditorScreen({super.key, this.task});
 
@@ -30,6 +37,10 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
   int? _priority;
   TaskColor? _color;
   bool _saving = false;
+
+  /// New tasks: driven by the "Sync to Nostr" toggle (defaults to on).
+  /// Existing local-only tasks: flipped to true by the "Sync task" button.
+  bool _syncOnSave = true;
 
   bool get _isEditing => widget.task != null;
 
@@ -94,7 +105,7 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
         .toList(growable: false);
   }
 
-  Future<void> _save() async {
+  Future<void> _save({bool enableSync = false}) async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     setState(() => _saving = true);
 
@@ -119,6 +130,7 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
             color: _color,
             clearColor: _color == null,
           ),
+          enableSync: enableSync,
         );
       } else {
         await notifier.createTask(
@@ -128,6 +140,7 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
           tags: tags,
           priority: _priority,
           color: _color,
+          localOnly: !_syncOnSave,
         );
       }
       if (mounted) Navigator.of(context).pop();
@@ -145,6 +158,10 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l = AppLocalizations.of(context);
+    final syncAvailable =
+        ref.watch(authProvider).value != null &&
+        (ref.watch(syncConfigProvider).value?.allSyncRelays.isNotEmpty ??
+            false);
 
     return Scaffold(
       appBar: AppBar(
@@ -294,6 +311,40 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
                   ),
               ],
             ),
+
+            // Sync controls, only when sync can actually happen (account +
+            // at least one relay). New task: opt-out toggle. Existing task
+            // pinned local-only: opt-in "Sync task" button that saves the
+            // current edits and publishes a posteriori.
+            if (syncAvailable && !_isEditing) ...[
+              const SizedBox(height: 24),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                secondary: const Icon(Icons.cloud_upload_outlined),
+                title: Text(l.syncToNostrTitle),
+                subtitle: Text(l.syncToNostrSubtitle),
+                value: _syncOnSave,
+                onChanged: _saving
+                    ? null
+                    : (value) => setState(() => _syncOnSave = value),
+              ),
+            ] else if (syncAvailable &&
+                _isEditing &&
+                widget.task!.localOnly) ...[
+              const SizedBox(height: 24),
+              FilledButton.tonalIcon(
+                onPressed: _saving ? null : () => _save(enableSync: true),
+                icon: const Icon(Icons.cloud_upload_outlined),
+                label: Text(l.syncTaskButton),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                l.syncToNostrSubtitle,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
           ],
         ),
       ),

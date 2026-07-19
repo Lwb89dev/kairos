@@ -282,6 +282,19 @@ class AppLocalizationsLt extends AppLocalizations {
   String get newTaskTitle => 'Nauja užduotis';
 
   @override
+  String get syncToNostrTitle => 'Sinchronizuoti su Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Paskelbia užduotį užšifruotą jūsų relėse. Jei išjungta, ji lieka tik šiame įrenginyje.';
+
+  @override
+  String get syncTaskButton => 'Sinchronizuoti užduotį';
+
+  @override
+  String get localOnlyStatus => 'Tik vietinė (sinchronizavimas išjungtas)';
+
+  @override
   String get titleFieldLabel => 'Pavadinimas';
 
   @override

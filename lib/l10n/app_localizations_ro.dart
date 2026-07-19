@@ -282,6 +282,19 @@ class AppLocalizationsRo extends AppLocalizations {
   String get newTaskTitle => 'Sarcină nouă';
 
   @override
+  String get syncToNostrTitle => 'Sincronizează pe Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Publică sarcina, criptată, pe releele tale. Dacă e dezactivat, rămâne doar pe acest dispozitiv.';
+
+  @override
+  String get syncTaskButton => 'Sincronizează sarcina';
+
+  @override
+  String get localOnlyStatus => 'Doar local (sincronizare oprită)';
+
+  @override
   String get titleFieldLabel => 'Titlu';
 
   @override

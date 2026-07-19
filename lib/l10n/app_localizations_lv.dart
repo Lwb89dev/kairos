@@ -281,6 +281,19 @@ class AppLocalizationsLv extends AppLocalizations {
   String get newTaskTitle => 'Jauns uzdevums';
 
   @override
+  String get syncToNostrTitle => 'Sinhronizēt ar Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Publicē uzdevumu šifrētā veidā jūsu relejos. Ja izslēgts, tas paliek tikai šajā ierīcē.';
+
+  @override
+  String get syncTaskButton => 'Sinhronizēt uzdevumu';
+
+  @override
+  String get localOnlyStatus => 'Tikai lokāli (sinhronizācija izslēgta)';
+
+  @override
   String get titleFieldLabel => 'Nosaukums';
 
   @override

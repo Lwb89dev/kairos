@@ -19,7 +19,11 @@
   "supportKairosTitle": "Подкрепете Kairos",
   "lightningAddressCopied": "Не е намерен Lightning портфейл — адресът е копиран: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Изход от акаунта?",
   "logoutConfirmBody": "Задачите ви остават на това устройство. Без ключа те вече не могат да се синхронизират — уверете се, че имате резервно копие на вашия nsec, преди да излезете.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Вписан с Amber",
   "signedInWithKey": "Вписан · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Въведете валиден криптиран wss:// адрес на релей.",
   "relayUrlHint": "wss://вашият-релей…",
@@ -52,7 +60,11 @@
   "nextButton": "Напред",
   "welcomeTitle": "Добре дошли в {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Личен, фокусиран мениджър на задачи в екосистемата Echoes.",
   "featureLocalTitle": "Ваши, на вашето устройство",
@@ -78,7 +90,11 @@
   "priorityLabel": "Приоритет",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Цвят",
   "syncStatusLabel": "Синхронизация",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Свързано събитие в календара",
   "createdUpdatedInfo": "Създадено {created}\nОбновено {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Изтриване на тази задача?",
   "deleteTaskConfirmBody": "Задачата се премахва локално и заявка за изтриване се изпраща до вашите релеи.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Задачата не можа да бъде запазена локално.",
   "editTaskTitle": "Редактиране на задача",
   "newTaskTitle": "Нова задача",
+  "syncToNostrTitle": "Синхронизиране с Nostr",
+  "syncToNostrSubtitle": "Публикува задачата шифрована на вашите релета. Ако е изключено, тя остава само на това устройство.",
+  "syncTaskButton": "Синхронизирай задачата",
+  "localOnlyStatus": "Само локално (синхронизацията е изключена)",
   "titleFieldLabel": "Заглавие",
   "titleRequiredError": "Заглавието е задължително.",
   "titleTooLongError": "Заглавието е твърде дълго.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Докоснете +, за да добавите първата си задача.",
   "completedCount": "Завършени ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Този личен ключ не е валиден. Проверете го и опитайте отново.",
   "signInError": "Неуспешно вписване. Моля, опитайте отново.",

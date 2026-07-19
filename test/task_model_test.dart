@@ -53,12 +53,25 @@ void main() {
         nostrEventId: 'event-id',
         syncOwnerPubkey: List.filled(64, 'a').join(),
         deletionRequestPending: true,
+        localOnly: true,
       );
       final wire = task.toSyncJson();
       expect(wire, isNot(contains('synced')));
       expect(wire, isNot(contains('nostrEventId')));
       expect(wire, isNot(contains('syncOwnerPubkey')));
       expect(wire, isNot(contains('deletionRequestPending')));
+      expect(wire, isNot(contains('localOnly')));
+    });
+
+    test('localOnly survives the local JSON round trip and copyWith', () {
+      final pinned = buildTask().copyWith(localOnly: true);
+      expect(Task.fromJson(pinned.toJson()).localOnly, isTrue);
+      // A plain copyWith must not clear the pin; an explicit false does.
+      expect(pinned.copyWith(title: 'x').localOnly, isTrue);
+      expect(pinned.copyWith(localOnly: false).localOnly, isFalse);
+      // Tasks restored from a relay payload always come back unpinned.
+      final fromWire = Task.fromJson(pinned.toSyncJson());
+      expect(fromWire.localOnly, isFalse);
     });
 
     test('d tag is checkmarks-prefixed and stable', () {

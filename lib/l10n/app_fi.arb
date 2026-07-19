@@ -19,7 +19,11 @@
   "supportKairosTitle": "Tue Kairosta",
   "lightningAddressCopied": "Lightning-lompakkoa ei löytynyt — osoite kopioitu: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Kirjaudutaanko ulos?",
   "logoutConfirmBody": "Tehtäväsi pysyvät tällä laitteella. Ilman avainta niitä ei voi enää synkronoida — varmista, että sinulla on varmuuskopio nsec-avaimestasi ennen uloskirjautumista.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Kirjauduttu sisään Amberilla",
   "signedInWithKey": "Kirjautunut sisään · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Anna kelvollinen salattu wss://-relay-osoite.",
   "relayUrlHint": "wss://oma-relay…",
@@ -52,7 +60,11 @@
   "nextButton": "Seuraava",
   "welcomeTitle": "Tervetuloa, {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Yksityinen, keskittynyt tehtävienhallinta Echoes-ekosysteemissä.",
   "featureLocalTitle": "Sinun, omalla laitteellasi",
@@ -78,7 +90,11 @@
   "priorityLabel": "Prioriteetti",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Väri",
   "syncStatusLabel": "Synkronointi",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Linkitetty kalenteritapahtuma",
   "createdUpdatedInfo": "Luotu {created}\nPäivitetty {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Poistetaanko tämä tehtävä?",
   "deleteTaskConfirmBody": "Tehtävä poistetaan paikallisesti, ja poistopyyntö lähetetään relayeillesi.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Tehtävää ei voitu tallentaa paikallisesti.",
   "editTaskTitle": "Muokkaa tehtävää",
   "newTaskTitle": "Uusi tehtävä",
+  "syncToNostrTitle": "Synkronoi Nostriin",
+  "syncToNostrSubtitle": "Julkaisee tehtävän salattuna releillesi. Pois päältä: tehtävä pysyy vain tällä laitteella.",
+  "syncTaskButton": "Synkronoi tehtävä",
+  "localOnlyStatus": "Vain paikallinen (synkronointi pois)",
   "titleFieldLabel": "Otsikko",
   "titleRequiredError": "Otsikko vaaditaan.",
   "titleTooLongError": "Otsikko on liian pitkä.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Napauta +-painiketta lisätäksesi ensimmäisen tehtäväsi.",
   "completedCount": "Valmiit ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Tämä yksityinen avain ei ole kelvollinen. Tarkista se ja yritä uudelleen.",
   "signInError": "Sisäänkirjautuminen epäonnistui. Yritä uudelleen.",

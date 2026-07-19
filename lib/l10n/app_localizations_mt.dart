@@ -281,6 +281,19 @@ class AppLocalizationsMt extends AppLocalizations {
   String get newTaskTitle => 'Kompitu ġdid';
 
   @override
+  String get syncToNostrTitle => 'Issinkronizza ma\' Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Jippubblika dan ix-xogħol, kriptat, fuq ir-relays tiegħek. Jekk mitfi, jibqa\' biss fuq dan l-apparat.';
+
+  @override
+  String get syncTaskButton => 'Issinkronizza x-xogħol';
+
+  @override
+  String get localOnlyStatus => 'Lokali biss (sinkronizzazzjoni mitfija)';
+
+  @override
   String get titleFieldLabel => 'Titlu';
 
   @override

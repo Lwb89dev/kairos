@@ -19,7 +19,11 @@
   "supportKairosTitle": "Поддержать Kairos",
   "lightningAddressCopied": "Кошелёк Lightning не найден — адрес скопирован: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Выйти из аккаунта?",
   "logoutConfirmBody": "Ваши задачи останутся на этом устройстве. Без ключа их больше нельзя будет синхронизировать — убедитесь, что у вас есть резервная копия nsec, прежде чем выходить.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Вход выполнен через Amber",
   "signedInWithKey": "Вход выполнен · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Введите корректный зашифрованный адрес реле wss://.",
   "relayUrlHint": "wss://ваш-реле…",
@@ -52,7 +60,11 @@
   "nextButton": "Далее",
   "welcomeTitle": "Добро пожаловать в {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Приватный, сфокусированный менеджер задач в экосистеме Echoes.",
   "featureLocalTitle": "Ваше, на вашем устройстве",
@@ -78,7 +90,11 @@
   "priorityLabel": "Приоритет",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Цвет",
   "syncStatusLabel": "Синхронизация",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Связанное событие календаря",
   "createdUpdatedInfo": "Создано {created}\nОбновлено {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Удалить эту задачу?",
   "deleteTaskConfirmBody": "Задача удаляется локально, а запрос на удаление отправляется на ваши реле.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Не удалось сохранить задачу локально.",
   "editTaskTitle": "Редактировать задачу",
   "newTaskTitle": "Новая задача",
+  "syncToNostrTitle": "Синхронизировать с Nostr",
+  "syncToNostrSubtitle": "Публикует задачу в зашифрованном виде на ваши релеи. Если выключено, она остаётся только на этом устройстве.",
+  "syncTaskButton": "Синхронизировать задачу",
+  "localOnlyStatus": "Только локально (синхронизация выключена)",
   "titleFieldLabel": "Название",
   "titleRequiredError": "Необходимо указать название.",
   "titleTooLongError": "Название слишком длинное.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Нажмите +, чтобы добавить первую задачу.",
   "completedCount": "Выполнено ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Этот приватный ключ недействителен. Проверьте его и попробуйте снова.",
   "signInError": "Не удалось войти. Попробуйте ещё раз.",

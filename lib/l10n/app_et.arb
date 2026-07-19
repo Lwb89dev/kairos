@@ -19,7 +19,11 @@
   "supportKairosTitle": "Toeta Kairost",
   "lightningAddressCopied": "Lightning rahakotti ei leitud — aadress kopeeriti: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Kas logida välja?",
   "logoutConfirmBody": "Teie ülesanded jäävad sellesse seadmesse. Ilma võtmeta ei saa neid enam sünkroonida — veenduge enne väljalogimist, et teil on oma nsec varukoopia.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Sisse logitud Amberiga",
   "signedInWithKey": "Sisse logitud · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Sisestage kehtiv krüpteeritud wss:// relee aadress.",
   "relayUrlHint": "wss://teie-relee…",
@@ -52,7 +60,11 @@
   "nextButton": "Edasi",
   "welcomeTitle": "Tere tulemast, {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Privaatne, fokusseeritud ülesannete haldur Echoes ökosüsteemis.",
   "featureLocalTitle": "Teie oma, teie seadmes",
@@ -78,7 +90,11 @@
   "priorityLabel": "Prioriteet",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Värv",
   "syncStatusLabel": "Sünkroonimine",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Seotud kalendrisündmus",
   "createdUpdatedInfo": "Loodud {created}\nUuendatud {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Kas kustutada see ülesanne?",
   "deleteTaskConfirmBody": "Ülesanne eemaldatakse kohapeal ja kustutamistaotlus saadetakse teie releedele.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Ülesannet ei õnnestunud kohapeal salvestada.",
   "editTaskTitle": "Muuda ülesannet",
   "newTaskTitle": "Uus ülesanne",
+  "syncToNostrTitle": "Sünkrooni Nostriga",
+  "syncToNostrSubtitle": "Avaldab ülesande krüpteeritult sinu releedes. Kui väljas, jääb see ainult sellesse seadmesse.",
+  "syncTaskButton": "Sünkrooni ülesanne",
+  "localOnlyStatus": "Ainult kohalik (sünkroonimine väljas)",
   "titleFieldLabel": "Pealkiri",
   "titleRequiredError": "Pealkiri on kohustuslik.",
   "titleTooLongError": "Pealkiri on liiga pikk.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Puudutage +, et lisada oma esimene ülesanne.",
   "completedCount": "Lõpetatud ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "See privaatvõti ei ole kehtiv. Kontrollige seda ja proovige uuesti.",
   "signInError": "Sisselogimine ebaõnnestus. Palun proovige uuesti.",

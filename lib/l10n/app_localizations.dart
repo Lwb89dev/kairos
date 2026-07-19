@@ -634,6 +634,30 @@ abstract class AppLocalizations {
   /// **'New task'**
   String get newTaskTitle;
 
+  /// No description provided for @syncToNostrTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync to Nostr'**
+  String get syncToNostrTitle;
+
+  /// No description provided for @syncToNostrSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish this task, encrypted, to your relays. When off, it stays only on this device.'**
+  String get syncToNostrSubtitle;
+
+  /// No description provided for @syncTaskButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync task'**
+  String get syncTaskButton;
+
+  /// No description provided for @localOnlyStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Local only (sync off)'**
+  String get localOnlyStatus;
+
   /// No description provided for @titleFieldLabel.
   ///
   /// In en, this message translates to:

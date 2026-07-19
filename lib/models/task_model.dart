@@ -71,6 +71,13 @@ class Task {
   /// relay can be re-published to a newly added relay without deleting itself.
   final bool deletionRequestPending;
 
+  /// User's explicit choice to keep this task off the relays: the sync layer
+  /// must never publish it (not even its deletion tombstone). Cleared by the
+  /// editor's "Sync task" action. Device-local bookkeeping — excluded from
+  /// [toSyncJson], so it can never leak to a relay, and tasks pulled from
+  /// relays always come back with `false`.
+  final bool localOnly;
+
   const Task({
     required this.id,
     required this.title,
@@ -88,6 +95,7 @@ class Task {
     this.syncOwnerPubkey,
     this.deleted = false,
     this.deletionRequestPending = false,
+    this.localOnly = false,
   });
 
   /// The Kind-30789 `d` tag: `checkmarks:<uuid>`. Immutable for the lifetime
@@ -118,6 +126,7 @@ class Task {
     bool? deleted,
     bool? deletionRequestPending,
     bool clearDeletionRequestPending = false,
+    bool? localOnly,
   }) {
     return Task(
       id: id,
@@ -140,6 +149,7 @@ class Task {
       deletionRequestPending: clearDeletionRequestPending
           ? false
           : (deletionRequestPending ?? this.deletionRequestPending),
+      localOnly: localOnly ?? this.localOnly,
     );
   }
 
@@ -161,6 +171,7 @@ class Task {
       'syncOwnerPubkey': syncOwnerPubkey,
       'deleted': deleted,
       'deletionRequestPending': deletionRequestPending,
+      'localOnly': localOnly,
     };
   }
 
@@ -245,6 +256,7 @@ class Task {
       deleted: deleted,
       deletionRequestPending:
           json['deletionRequestPending'] as bool? ?? (deleted && !synced),
+      localOnly: json['localOnly'] as bool? ?? false,
     );
   }
 }

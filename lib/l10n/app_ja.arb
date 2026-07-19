@@ -19,7 +19,11 @@
   "supportKairosTitle": "Kairosを応援する",
   "lightningAddressCopied": "Lightningウォレットが見つかりません — アドレスをコピーしました: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "ログアウトしますか？",
   "logoutConfirmBody": "タスクはこのデバイスに残ります。鍵がないと同期できなくなります — ログアウトする前にnsecのバックアップを必ず取ってください。",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Amberでサインイン済み",
   "signedInWithKey": "サインイン済み · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "有効な暗号化されたwss://リレーURLを入力してください。",
   "relayUrlHint": "wss://あなたのリレー…",
@@ -52,7 +60,11 @@
   "nextButton": "次へ",
   "welcomeTitle": "{appName}へようこそ",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Echoesエコシステムのプライベートで集中できるタスク管理アプリ。",
   "featureLocalTitle": "あなたのもの、あなたの端末に",
@@ -78,7 +90,11 @@
   "priorityLabel": "優先度",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "色",
   "syncStatusLabel": "同期",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "リンクされたカレンダーイベント",
   "createdUpdatedInfo": "作成日 {created}\n更新日 {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "このタスクを削除しますか？",
   "deleteTaskConfirmBody": "タスクはローカルから削除され、削除リクエストがリレーに送信されます。",
@@ -96,6 +119,10 @@
   "saveTaskError": "タスクをローカルに保存できませんでした。",
   "editTaskTitle": "タスクを編集",
   "newTaskTitle": "新規タスク",
+  "syncToNostrTitle": "Nostr に同期",
+  "syncToNostrSubtitle": "このタスクを暗号化してリレーに公開します。オフの場合、この端末にのみ保存されます。",
+  "syncTaskButton": "タスクを同期",
+  "localOnlyStatus": "ローカルのみ（同期オフ）",
   "titleFieldLabel": "タイトル",
   "titleRequiredError": "タイトルを入力してください。",
   "titleTooLongError": "タイトルが長すぎます。",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "＋をタップして最初のタスクを追加しましょう。",
   "completedCount": "完了済み（{count}）",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "その秘密鍵は無効です。確認してもう一度お試しください。",
   "signInError": "サインインできませんでした。もう一度お試しください。",

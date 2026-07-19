@@ -280,6 +280,19 @@ class AppLocalizationsNl extends AppLocalizations {
   String get newTaskTitle => 'Nieuwe taak';
 
   @override
+  String get syncToNostrTitle => 'Synchroniseren met Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Publiceert deze taak versleuteld naar je relays. Indien uit, blijft hij alleen op dit apparaat.';
+
+  @override
+  String get syncTaskButton => 'Taak synchroniseren';
+
+  @override
+  String get localOnlyStatus => 'Alleen lokaal (sync uit)';
+
+  @override
   String get titleFieldLabel => 'Titel';
 
   @override

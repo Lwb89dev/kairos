@@ -285,6 +285,19 @@ class AppLocalizationsEl extends AppLocalizations {
   String get newTaskTitle => 'Νέα εργασία';
 
   @override
+  String get syncToNostrTitle => 'Συγχρονισμός στο Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Δημοσιεύει την εργασία, κρυπτογραφημένη, στους αναμεταδότες σας. Αν είναι ανενεργό, μένει μόνο σε αυτήν τη συσκευή.';
+
+  @override
+  String get syncTaskButton => 'Συγχρονισμός εργασίας';
+
+  @override
+  String get localOnlyStatus => 'Μόνο τοπικά (συγχρονισμός ανενεργός)';
+
+  @override
   String get titleFieldLabel => 'Τίτλος';
 
   @override

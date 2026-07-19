@@ -281,6 +281,19 @@ class AppLocalizationsSk extends AppLocalizations {
   String get newTaskTitle => 'Nová úloha';
 
   @override
+  String get syncToNostrTitle => 'Synchronizovať s Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Publikuje úlohu zašifrovanú na vaše relaye. Ak je vypnuté, zostane len v tomto zariadení.';
+
+  @override
+  String get syncTaskButton => 'Synchronizovať úlohu';
+
+  @override
+  String get localOnlyStatus => 'Iba lokálne (synchronizácia vypnutá)';
+
+  @override
   String get titleFieldLabel => 'Názov';
 
   @override

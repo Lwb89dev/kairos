@@ -19,7 +19,11 @@
   "supportKairosTitle": "Susține Kairos",
   "lightningAddressCopied": "Nu s-a găsit niciun portofel Lightning — adresă copiată: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Te deconectezi?",
   "logoutConfirmBody": "Sarcinile tale rămân pe acest dispozitiv. Fără cheie, nu se mai pot sincroniza — asigură-te că ai o copie de rezervă a nsec-ului înainte de a te deconecta.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Conectat cu Amber",
   "signedInWithKey": "Conectat · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Introdu o adresă wss:// validă și criptată a releului.",
   "relayUrlHint": "wss://releul-tău…",
@@ -52,7 +60,11 @@
   "nextButton": "Următorul",
   "welcomeTitle": "Bine ai venit în {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Un manager de sarcini privat și concentrat, în ecosistemul Echoes.",
   "featureLocalTitle": "Al tău, pe dispozitivul tău",
@@ -78,7 +90,11 @@
   "priorityLabel": "Prioritate",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Culoare",
   "syncStatusLabel": "Sincronizare",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Eveniment de calendar asociat",
   "createdUpdatedInfo": "Creat {created}\nActualizat {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Ștergi această sarcină?",
   "deleteTaskConfirmBody": "Sarcina este eliminată local, iar o cerere de ștergere este trimisă către releele tale.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Sarcina nu a putut fi salvată local.",
   "editTaskTitle": "Editează sarcina",
   "newTaskTitle": "Sarcină nouă",
+  "syncToNostrTitle": "Sincronizează pe Nostr",
+  "syncToNostrSubtitle": "Publică sarcina, criptată, pe releele tale. Dacă e dezactivat, rămâne doar pe acest dispozitiv.",
+  "syncTaskButton": "Sincronizează sarcina",
+  "localOnlyStatus": "Doar local (sincronizare oprită)",
   "titleFieldLabel": "Titlu",
   "titleRequiredError": "Titlul este obligatoriu.",
   "titleTooLongError": "Titlul este prea lung.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Atinge + pentru a adăuga prima ta sarcină.",
   "completedCount": "Finalizate ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Această cheie privată nu este validă. Verific-o și încearcă din nou.",
   "signInError": "Conectarea a eșuat. Te rugăm să încerci din nou.",

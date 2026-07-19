@@ -281,6 +281,19 @@ class AppLocalizationsPt extends AppLocalizations {
   String get newTaskTitle => 'Nova tarefa';
 
   @override
+  String get syncToNostrTitle => 'Sincronizar com o Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Publica esta tarefa, encriptada, nos teus relays. Se desligado, fica apenas neste dispositivo.';
+
+  @override
+  String get syncTaskButton => 'Sincronizar tarefa';
+
+  @override
+  String get localOnlyStatus => 'Apenas local (sync desligada)';
+
+  @override
   String get titleFieldLabel => 'Título';
 
   @override

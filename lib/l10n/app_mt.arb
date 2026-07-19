@@ -19,7 +19,11 @@
   "supportKairosTitle": "Appoġġja lil Kairos",
   "lightningAddressCopied": "Ma nstab l-ebda kartafoll Lightning — l-indirizz ġie kkupjat: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Toħroġ?",
   "logoutConfirmBody": "Il-kompiti tiegħek jibqgħu fuq dan l-apparat. Mingħajr iċ-ċavetta, ma jistgħux jibqgħu jissinkronizzaw — kun żgur li għandek kopja tal-appoġġ tan-nsec tiegħek qabel toħroġ.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Idħalt bl-Amber",
   "signedInWithKey": "Idħalt · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Daħħal URL validu ta' relay kriptat wss://.",
   "relayUrlHint": "wss://ir-relay-tiegħek…",
@@ -52,7 +60,11 @@
   "nextButton": "Li Jmiss",
   "welcomeTitle": "Merħba għal {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Maniġer ta' kompiti privat u ffokat fl-ekosistema ta' Echoes.",
   "featureLocalTitle": "Tiegħek, fuq l-apparat tiegħek",
@@ -78,7 +90,11 @@
   "priorityLabel": "Prijorità",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Kulur",
   "syncStatusLabel": "Sinkronizzazzjoni",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Avveniment tal-kalendarju marbut",
   "createdUpdatedInfo": "Maħluq {created}\nAġġornat {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Tħassar dan il-kompitu?",
   "deleteTaskConfirmBody": "Il-kompitu jitneħħa lokalment u talba għat-tħassir tintbagħat lir-relays tiegħek.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Ma setax jiġi ssejvjat il-kompitu lokalment.",
   "editTaskTitle": "Editja l-kompitu",
   "newTaskTitle": "Kompitu ġdid",
+  "syncToNostrTitle": "Issinkronizza ma' Nostr",
+  "syncToNostrSubtitle": "Jippubblika dan ix-xogħol, kriptat, fuq ir-relays tiegħek. Jekk mitfi, jibqa' biss fuq dan l-apparat.",
+  "syncTaskButton": "Issinkronizza x-xogħol",
+  "localOnlyStatus": "Lokali biss (sinkronizzazzjoni mitfija)",
   "titleFieldLabel": "Titlu",
   "titleRequiredError": "Titlu huwa meħtieġ.",
   "titleTooLongError": "It-titlu huwa twil wisq.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Agħfas + biex iżżid l-ewwel kompitu tiegħek.",
   "completedCount": "Lest ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Dik iċ-ċavetta privata mhix valida. Iċċekkjaha u erġa' pprova.",
   "signInError": "Ma setax isir id-dħul. Jekk jogħġbok erġa' pprova.",

@@ -42,7 +42,9 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
     return tasks.where((t) => !t.deleted).toList();
   }
 
-  /// Creates a new task from the editor form and syncs it out.
+  /// Creates a new task from the editor form and syncs it out — unless
+  /// [localOnly] is set, in which case the task is pinned to this device and
+  /// the sync layer never touches it (see [Task.localOnly]).
   Future<Task> createTask({
     required String title,
     String? description,
@@ -51,6 +53,7 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
     int? priority,
     TaskColor? color,
     String? linkedEventId,
+    bool localOnly = false,
   }) async {
     final normalizedTitle = title.trim();
     if (normalizedTitle.isEmpty || normalizedTitle.length > 512) {
@@ -83,6 +86,7 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
       linkedEventId: linkedEventId,
       createdAt: now,
       updatedAt: now,
+      localOnly: localOnly,
     );
     debugLog('TasksNotifier.createTask called', name: 'TasksNotifier');
     await ref.read(taskLocalStorageServiceProvider).saveTask(task);
@@ -114,7 +118,11 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
   /// can happen concurrently elsewhere (checkbox state, sync ownership and
   /// deletion). In particular, a stale open editor must never resurrect a
   /// task that another device deleted.
-  Future<void> updateFromEditor(Task edited) async {
+  ///
+  /// [enableSync] is the editor's "Sync task" action for a task that was
+  /// created local-only: it clears [Task.localOnly] so this save (and every
+  /// future revision) publishes to the configured relays.
+  Future<void> updateFromEditor(Task edited, {bool enableSync = false}) async {
     final current = ref
         .read(taskLocalStorageServiceProvider)
         .getTask(edited.id);
@@ -130,6 +138,7 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
         nostrEventId: current.nostrEventId,
         deleted: current.deleted,
         deletionRequestPending: current.deletionRequestPending,
+        localOnly: enableSync ? false : current.localOnly,
       ),
     );
   }
@@ -163,7 +172,11 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
     final auth = ref.read(authProvider).value;
     final config = ref.read(syncConfigProvider).value;
     final owner = tombstone.syncOwnerPubkey;
-    if (config != null &&
+    // A local-only task never reached the relays, so there is nothing to
+    // retract there — publishing its tombstone would leak the task's
+    // existence to relays the user explicitly kept it away from.
+    if (!tombstone.localOnly &&
+        config != null &&
         config.allSyncRelays.isNotEmpty &&
         auth != null &&
         (owner == null || owner == auth.publicKeyHex)) {
@@ -219,6 +232,7 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
   }
 
   Future<void> _publishAndRefresh(Task task) async {
+    if (task.localOnly) return;
     final config = ref.read(syncConfigProvider).value;
     final auth = ref.read(authProvider).value;
     if (config == null || auth == null || config.allSyncRelays.isEmpty) return;

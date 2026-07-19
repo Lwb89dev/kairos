@@ -38,6 +38,9 @@ class NostrTaskSyncService {
     required SyncConfig config,
     required User author,
   }) async {
+    if (task.localOnly) {
+      throw StateError('A local-only task must never be published.');
+    }
     SyncLog.nostr('publishTask ${task.id} (kind 30789, d=${task.dTag})');
     final owned = await _claimForAuthor(task, author);
     final eventId = await _nostr.publishTask(
@@ -131,6 +134,9 @@ class NostrTaskSyncService {
     var pushFailures = 0;
     for (final local in existingById.values) {
       if (local.synced) continue;
+      // Explicitly pinned to this device: neither the task nor its
+      // tombstone ever goes out.
+      if (local.localOnly) continue;
       final owner = local.syncOwnerPubkey;
       if (owner != null && owner != author.publicKeyHex) {
         SyncLog.warn(

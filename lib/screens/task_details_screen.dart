@@ -139,11 +139,17 @@ class TaskDetailsScreen extends ConsumerWidget {
               ),
             ),
           _DetailRow(
-            icon: task.synced
+            icon: task.localOnly
+                ? Icons.smartphone
+                : task.synced
                 ? Icons.cloud_done_outlined
                 : Icons.cloud_off_outlined,
             label: l.syncStatusLabel,
-            value: task.synced ? l.syncedStatus : l.notSyncedStatus,
+            value: task.localOnly
+                ? l.localOnlyStatus
+                : task.synced
+                ? l.syncedStatus
+                : l.notSyncedStatus,
           ),
           if (task.linkedEventId != null)
             _DetailRow(

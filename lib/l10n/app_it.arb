@@ -19,7 +19,11 @@
   "supportKairosTitle": "Sostieni Kairos",
   "lightningAddressCopied": "Nessun wallet Lightning trovato — indirizzo copiato: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Uscire?",
   "logoutConfirmBody": "Le tue attività restano su questo dispositivo. Senza la chiave non potranno più sincronizzarsi: assicurati di avere un backup del tuo nsec prima di uscire.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Accesso con Amber",
   "signedInWithKey": "Accesso eseguito · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Inserisci un URL relay wss:// crittografato valido.",
   "relayUrlHint": "wss://il-tuo-relay…",
@@ -52,7 +60,11 @@
   "nextButton": "Avanti",
   "welcomeTitle": "Benvenuto in {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Un task manager privato e concentrato, nell'ecosistema Echoes.",
   "featureLocalTitle": "Tuo, sul tuo dispositivo",
@@ -78,7 +90,11 @@
   "priorityLabel": "Priorità",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Colore",
   "syncStatusLabel": "Sincronizzazione",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Evento di calendario collegato",
   "createdUpdatedInfo": "Creata il {created}\nAggiornata il {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Eliminare questa attività?",
   "deleteTaskConfirmBody": "L'attività viene rimossa localmente e una richiesta di eliminazione viene inviata ai tuoi relay.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Impossibile salvare l'attività localmente.",
   "editTaskTitle": "Modifica attività",
   "newTaskTitle": "Nuova attività",
+  "syncToNostrTitle": "Sincronizza su Nostr",
+  "syncToNostrSubtitle": "Pubblica questo task, crittografato, sui tuoi relay. Se disattivato, resta solo su questo dispositivo.",
+  "syncTaskButton": "Sincronizza task",
+  "localOnlyStatus": "Solo locale (sync disattivata)",
   "titleFieldLabel": "Titolo",
   "titleRequiredError": "Il titolo è obbligatorio.",
   "titleTooLongError": "Il titolo è troppo lungo.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Tocca + per aggiungere la tua prima attività.",
   "completedCount": "Completate ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Quella chiave privata non è valida. Controllala e riprova.",
   "signInError": "Impossibile accedere. Riprova.",

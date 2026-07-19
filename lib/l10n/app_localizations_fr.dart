@@ -281,6 +281,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get newTaskTitle => 'Nouvelle tâche';
 
   @override
+  String get syncToNostrTitle => 'Synchroniser sur Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Publie cette tâche, chiffrée, sur vos relais. Si désactivé, elle reste uniquement sur cet appareil.';
+
+  @override
+  String get syncTaskButton => 'Synchroniser la tâche';
+
+  @override
+  String get localOnlyStatus => 'Local uniquement (sync désactivée)';
+
+  @override
   String get titleFieldLabel => 'Titre';
 
   @override

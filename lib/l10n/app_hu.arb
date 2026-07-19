@@ -19,7 +19,11 @@
   "supportKairosTitle": "Kairos támogatása",
   "lightningAddressCopied": "Nem található Lightning tárca — cím másolva: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Kijelentkezel?",
   "logoutConfirmBody": "A feladataid ezen az eszközön maradnak. A kulcs nélkül többé nem szinkronizálhatók — a kijelentkezés előtt győződj meg róla, hogy van biztonsági mentésed az nsec kulcsodról.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Bejelentkezve Amberrel",
   "signedInWithKey": "Bejelentkezve · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Adj meg egy érvényes, titkosított wss:// relécímet.",
   "relayUrlHint": "wss://saját-reléd…",
@@ -52,7 +60,11 @@
   "nextButton": "Tovább",
   "welcomeTitle": "Üdvözlünk a(z) {appName} alkalmazásban",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Privát, összpontosított feladatkezelő az Echoes ökoszisztémában.",
   "featureLocalTitle": "A tiéd, a saját eszközödön",
@@ -78,7 +90,11 @@
   "priorityLabel": "Prioritás",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Szín",
   "syncStatusLabel": "Szinkronizálás",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Kapcsolt naptáresemény",
   "createdUpdatedInfo": "Létrehozva: {created}\nFrissítve: {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Törlöd ezt a feladatot?",
   "deleteTaskConfirmBody": "A feladat helyben törlődik, és törlési kérelem kerül elküldésre a réléidnek.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Nem sikerült helyben elmenteni a feladatot.",
   "editTaskTitle": "Feladat szerkesztése",
   "newTaskTitle": "Új feladat",
+  "syncToNostrTitle": "Szinkronizálás a Nostrra",
+  "syncToNostrSubtitle": "Titkosítva közzéteszi a feladatot a relékre. Ha ki van kapcsolva, csak ezen az eszközön marad.",
+  "syncTaskButton": "Feladat szinkronizálása",
+  "localOnlyStatus": "Csak helyi (szinkronizálás kikapcsolva)",
   "titleFieldLabel": "Cím",
   "titleRequiredError": "A cím megadása kötelező.",
   "titleTooLongError": "A cím túl hosszú.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Koppints a + gombra az első feladat hozzáadásához.",
   "completedCount": "Befejezve ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Ez a privát kulcs érvénytelen. Ellenőrizd, és próbáld újra.",
   "signInError": "Nem sikerült bejelentkezni. Kérjük, próbáld újra.",

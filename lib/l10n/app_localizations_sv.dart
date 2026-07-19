@@ -279,6 +279,19 @@ class AppLocalizationsSv extends AppLocalizations {
   String get newTaskTitle => 'Ny uppgift';
 
   @override
+  String get syncToNostrTitle => 'Synka till Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Publicerar uppgiften krypterad till dina reläer. Om av stannar den bara på den här enheten.';
+
+  @override
+  String get syncTaskButton => 'Synka uppgift';
+
+  @override
+  String get localOnlyStatus => 'Endast lokalt (synk av)';
+
+  @override
   String get titleFieldLabel => 'Titel';
 
   @override

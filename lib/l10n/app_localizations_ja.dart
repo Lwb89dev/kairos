@@ -273,6 +273,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get newTaskTitle => '新規タスク';
 
   @override
+  String get syncToNostrTitle => 'Nostr に同期';
+
+  @override
+  String get syncToNostrSubtitle => 'このタスクを暗号化してリレーに公開します。オフの場合、この端末にのみ保存されます。';
+
+  @override
+  String get syncTaskButton => 'タスクを同期';
+
+  @override
+  String get localOnlyStatus => 'ローカルのみ（同期オフ）';
+
+  @override
   String get titleFieldLabel => 'タイトル';
 
   @override

@@ -280,6 +280,19 @@ class AppLocalizationsFi extends AppLocalizations {
   String get newTaskTitle => 'Uusi tehtävä';
 
   @override
+  String get syncToNostrTitle => 'Synkronoi Nostriin';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Julkaisee tehtävän salattuna releillesi. Pois päältä: tehtävä pysyy vain tällä laitteella.';
+
+  @override
+  String get syncTaskButton => 'Synkronoi tehtävä';
+
+  @override
+  String get localOnlyStatus => 'Vain paikallinen (synkronointi pois)';
+
+  @override
   String get titleFieldLabel => 'Otsikko';
 
   @override

@@ -269,6 +269,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get newTaskTitle => '新建任务';
 
   @override
+  String get syncToNostrTitle => '同步到 Nostr';
+
+  @override
+  String get syncToNostrSubtitle => '将此任务加密后发布到你的中继。关闭时，任务仅保留在本设备上。';
+
+  @override
+  String get syncTaskButton => '同步任务';
+
+  @override
+  String get localOnlyStatus => '仅本地（同步已关闭）';
+
+  @override
   String get titleFieldLabel => '标题';
 
   @override

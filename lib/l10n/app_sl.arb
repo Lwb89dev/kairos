@@ -19,7 +19,11 @@
   "supportKairosTitle": "Podpri Kairos",
   "lightningAddressCopied": "Denarnica Lightning ni bila najdena — naslov je kopiran: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Se želite odjaviti?",
   "logoutConfirmBody": "Vaša opravila ostanejo na tej napravi. Brez ključa jih ni več mogoče sinhronizirati — pred odjavo se prepričajte, da imate varnostno kopijo svojega nseca.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Prijavljeni z Amber",
   "signedInWithKey": "Prijavljeni · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Vnesite veljaven šifriran naslov releja wss://.",
   "relayUrlHint": "wss://vaš-rele…",
@@ -52,7 +60,11 @@
   "nextButton": "Naprej",
   "welcomeTitle": "Dobrodošli v {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Zaseben, osredotočen upravitelj opravil v ekosistemu Echoes.",
   "featureLocalTitle": "Vaše, na vaši napravi",
@@ -78,7 +90,11 @@
   "priorityLabel": "Prioriteta",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Barva",
   "syncStatusLabel": "Sinhronizacija",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Povezan dogodek v koledarju",
   "createdUpdatedInfo": "Ustvarjeno {created}\nPosodobljeno {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Želite izbrisati to opravilo?",
   "deleteTaskConfirmBody": "Opravilo se odstrani lokalno, zahteva za izbris pa se pošlje vašim relejem.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Opravila ni bilo mogoče lokalno shraniti.",
   "editTaskTitle": "Uredi opravilo",
   "newTaskTitle": "Novo opravilo",
+  "syncToNostrTitle": "Sinhroniziraj v Nostr",
+  "syncToNostrSubtitle": "Objavi opravilo, šifrirano, na tvoje releje. Če je izklopljeno, ostane samo v tej napravi.",
+  "syncTaskButton": "Sinhroniziraj opravilo",
+  "localOnlyStatus": "Samo lokalno (sinhronizacija izklopljena)",
   "titleFieldLabel": "Naslov",
   "titleRequiredError": "Naslov je obvezen.",
   "titleTooLongError": "Naslov je predolg.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Tapnite +, da dodate svoje prvo opravilo.",
   "completedCount": "Dokončano ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Ta zasebni ključ ni veljaven. Preverite ga in poskusite znova.",
   "signInError": "Prijava ni uspela. Poskusite znova.",

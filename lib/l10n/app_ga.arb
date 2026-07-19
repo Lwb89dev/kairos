@@ -19,7 +19,11 @@
   "supportKairosTitle": "Tacaigh le Kairos",
   "lightningAddressCopied": "Níor aimsíodh sparán Lightning — cóipeáladh an seoladh: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Logáil amach?",
   "logoutConfirmBody": "Fanfaidh do chuid tascanna ar an ngléas seo. Gan an eochair, ní féidir leo sioncrónú a dhéanamh a thuilleadh — bí cinnte go bhfuil cúltaca de do nsec agat sula logálann tú amach.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Sínithe isteach le Amber",
   "signedInWithKey": "Sínithe isteach · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Cuir isteach URL bailí criptithe relay wss://.",
   "relayUrlHint": "wss://do-relay…",
@@ -52,7 +60,11 @@
   "nextButton": "Ar Aghaidh",
   "welcomeTitle": "Fáilte go {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Bainisteoir tascanna príobháideach, dírithe, i gcóras Echoes.",
   "featureLocalTitle": "Is leatsa é, ar do ghléas",
@@ -78,7 +90,11 @@
   "priorityLabel": "Tosaíocht",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Dath",
   "syncStatusLabel": "Sioncrónú",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Imeacht féilire nasctha",
   "createdUpdatedInfo": "Cruthaithe {created}\nNuashonraithe {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "An tasc seo a scriosadh?",
   "deleteTaskConfirmBody": "Baintear an tasc go háitiúil agus seoltar iarratas scriosta chuig do chuid relays.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Níorbh fhéidir an tasc a shábháil go háitiúil.",
   "editTaskTitle": "Cuir tasc in eagar",
   "newTaskTitle": "Tasc nua",
+  "syncToNostrTitle": "Sioncronaigh le Nostr",
+  "syncToNostrSubtitle": "Foilsíonn sé an tasc, criptithe, chuig do sheachadáin. Nuair atá sé múchta, fanann sé ar an ngléas seo amháin.",
+  "syncTaskButton": "Sioncronaigh an tasc",
+  "localOnlyStatus": "Áitiúil amháin (sioncronú múchta)",
   "titleFieldLabel": "Teideal",
   "titleRequiredError": "Tá teideal ag teastáil.",
   "titleTooLongError": "Tá an teideal rófhada.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Tapáil + chun do chéad tasc a chur leis.",
   "completedCount": "Críochnaithe ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Níl an eochair phríobháideach sin bailí. Seiceáil í agus bain triail eile as.",
   "signInError": "Níorbh fhéidir síniú isteach. Bain triail eile as le do thoil.",

@@ -19,7 +19,11 @@
   "supportKairosTitle": "Podporiť Kairos",
   "lightningAddressCopied": "Nenašla sa žiadna Lightning peňaženka — adresa skopírovaná: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Odhlásiť sa?",
   "logoutConfirmBody": "Vaše úlohy zostanú na tomto zariadení. Bez kľúča ich už nebude možné synchronizovať — pred odhlásením sa uistite, že máte zálohu svojho nsec.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Prihlásené cez Amber",
   "signedInWithKey": "Prihlásené · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Zadajte platnú šifrovanú adresu prenosového uzla wss://.",
   "relayUrlHint": "wss://váš-uzol…",
@@ -52,7 +60,11 @@
   "nextButton": "Ďalej",
   "welcomeTitle": "Vitajte v {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Súkromný, na úlohy zameraný správca úloh v ekosystéme Echoes.",
   "featureLocalTitle": "Vaše, na vašom zariadení",
@@ -78,7 +90,11 @@
   "priorityLabel": "Priorita",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Farba",
   "syncStatusLabel": "Synchronizácia",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Prepojená udalosť kalendára",
   "createdUpdatedInfo": "Vytvorené {created}\nAktualizované {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Odstrániť túto úlohu?",
   "deleteTaskConfirmBody": "Úloha sa odstráni lokálne a na vaše prenosové uzly sa odošle žiadosť o odstránenie.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Úlohu sa nepodarilo lokálne uložiť.",
   "editTaskTitle": "Upraviť úlohu",
   "newTaskTitle": "Nová úloha",
+  "syncToNostrTitle": "Synchronizovať s Nostr",
+  "syncToNostrSubtitle": "Publikuje úlohu zašifrovanú na vaše relaye. Ak je vypnuté, zostane len v tomto zariadení.",
+  "syncTaskButton": "Synchronizovať úlohu",
+  "localOnlyStatus": "Iba lokálne (synchronizácia vypnutá)",
   "titleFieldLabel": "Názov",
   "titleRequiredError": "Názov je povinný.",
   "titleTooLongError": "Názov je príliš dlhý.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Klepnutím na + pridáte svoju prvú úlohu.",
   "completedCount": "Dokončené ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Tento súkromný kľúč nie je platný. Skontrolujte ho a skúste to znova.",
   "signInError": "Prihlásenie sa nepodarilo. Skúste to prosím znova.",

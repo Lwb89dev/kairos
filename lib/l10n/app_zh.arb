@@ -19,7 +19,11 @@
   "supportKairosTitle": "支持 Kairos",
   "lightningAddressCopied": "未找到闪电钱包 — 地址已复制：{address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "要退出登录吗？",
   "logoutConfirmBody": "您的任务会保留在此设备上。没有密钥，它们将无法再同步——退出登录前请确保已备份您的 nsec。",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "已使用 Amber 登录",
   "signedInWithKey": "已登录 · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "请输入有效的加密 wss:// 中继地址。",
   "relayUrlHint": "wss://你的中继服务器…",
@@ -52,7 +60,11 @@
   "nextButton": "下一步",
   "welcomeTitle": "欢迎使用 {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Echoes 生态系统中一款私密、专注的任务管理应用。",
   "featureLocalTitle": "属于你，就在你的设备上",
@@ -78,7 +90,11 @@
   "priorityLabel": "优先级",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "颜色",
   "syncStatusLabel": "同步",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "已关联的日历事件",
   "createdUpdatedInfo": "创建于 {created}\n更新于 {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "要删除此任务吗？",
   "deleteTaskConfirmBody": "任务将从本地移除，并向您的中继服务器发送删除请求。",
@@ -96,6 +119,10 @@
   "saveTaskError": "无法在本地保存该任务。",
   "editTaskTitle": "编辑任务",
   "newTaskTitle": "新建任务",
+  "syncToNostrTitle": "同步到 Nostr",
+  "syncToNostrSubtitle": "将此任务加密后发布到你的中继。关闭时，任务仅保留在本设备上。",
+  "syncTaskButton": "同步任务",
+  "localOnlyStatus": "仅本地（同步已关闭）",
   "titleFieldLabel": "标题",
   "titleRequiredError": "标题为必填项。",
   "titleTooLongError": "标题过长。",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "点击 + 添加您的第一个任务。",
   "completedCount": "已完成（{count}）",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "该私钥无效。请检查后重试。",
   "signInError": "无法登录，请重试。",

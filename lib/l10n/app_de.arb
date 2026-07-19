@@ -19,7 +19,11 @@
   "supportKairosTitle": "Kairos unterstützen",
   "lightningAddressCopied": "Kein Lightning-Wallet gefunden — Adresse kopiert: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Abmelden?",
   "logoutConfirmBody": "Deine Aufgaben bleiben auf diesem Gerät. Ohne den Schlüssel können sie nicht mehr synchronisiert werden — stelle sicher, dass du eine Sicherung deines nsec hast, bevor du dich abmeldest.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Mit Amber angemeldet",
   "signedInWithKey": "Angemeldet · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Gib eine gültige verschlüsselte wss://-Relay-URL ein.",
   "relayUrlHint": "wss://dein-relay…",
@@ -52,7 +60,11 @@
   "nextButton": "Weiter",
   "welcomeTitle": "Willkommen bei {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Ein privater, fokussierter Aufgabenmanager im Echoes-Ökosystem.",
   "featureLocalTitle": "Deins, auf deinem Gerät",
@@ -78,7 +90,11 @@
   "priorityLabel": "Priorität",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Farbe",
   "syncStatusLabel": "Synchronisierung",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Verknüpftes Kalenderereignis",
   "createdUpdatedInfo": "Erstellt {created}\nAktualisiert {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Diese Aufgabe löschen?",
   "deleteTaskConfirmBody": "Die Aufgabe wird lokal entfernt und eine Löschanfrage wird an deine Relays gesendet.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Die Aufgabe konnte lokal nicht gespeichert werden.",
   "editTaskTitle": "Aufgabe bearbeiten",
   "newTaskTitle": "Neue Aufgabe",
+  "syncToNostrTitle": "Mit Nostr synchronisieren",
+  "syncToNostrSubtitle": "Veröffentlicht diese Aufgabe verschlüsselt auf deinen Relays. Wenn aus, bleibt sie nur auf diesem Gerät.",
+  "syncTaskButton": "Aufgabe synchronisieren",
+  "localOnlyStatus": "Nur lokal (Sync aus)",
   "titleFieldLabel": "Titel",
   "titleRequiredError": "Ein Titel ist erforderlich.",
   "titleTooLongError": "Der Titel ist zu lang.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Tippe auf +, um deine erste Aufgabe hinzuzufügen.",
   "completedCount": "Abgeschlossen ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Dieser private Schlüssel ist ungültig. Überprüfe ihn und versuche es erneut.",
   "signInError": "Anmeldung fehlgeschlagen. Bitte versuche es erneut.",

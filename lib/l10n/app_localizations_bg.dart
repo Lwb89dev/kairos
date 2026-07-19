@@ -282,6 +282,19 @@ class AppLocalizationsBg extends AppLocalizations {
   String get newTaskTitle => 'Нова задача';
 
   @override
+  String get syncToNostrTitle => 'Синхронизиране с Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Публикува задачата шифрована на вашите релета. Ако е изключено, тя остава само на това устройство.';
+
+  @override
+  String get syncTaskButton => 'Синхронизирай задачата';
+
+  @override
+  String get localOnlyStatus => 'Само локално (синхронизацията е изключена)';
+
+  @override
   String get titleFieldLabel => 'Заглавие';
 
   @override

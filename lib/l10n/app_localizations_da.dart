@@ -280,6 +280,19 @@ class AppLocalizationsDa extends AppLocalizations {
   String get newTaskTitle => 'Ny opgave';
 
   @override
+  String get syncToNostrTitle => 'Synkroniser til Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Udgiver opgaven krypteret til dine relæer. Hvis fra, bliver den kun på denne enhed.';
+
+  @override
+  String get syncTaskButton => 'Synkroniser opgave';
+
+  @override
+  String get localOnlyStatus => 'Kun lokalt (synk fra)';
+
+  @override
   String get titleFieldLabel => 'Titel';
 
   @override

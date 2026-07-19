@@ -19,7 +19,11 @@
   "supportKairosTitle": "Paremti Kairos",
   "lightningAddressCopied": "Lightning piniginė nerasta — adresas nukopijuotas: {address}",
   "@lightningAddressCopied": {
-    "placeholders": { "address": { "type": "String" } }
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
   },
   "logoutConfirmTitle": "Atsijungti?",
   "logoutConfirmBody": "Jūsų užduotys liks šiame įrenginyje. Be rakto jos nebegalės sinchronizuotis — prieš atsijungdami įsitikinkite, kad turite savo nsec atsarginę kopiją.",
@@ -31,7 +35,11 @@
   "signedInWithAmber": "Prisijungta su Amber",
   "signedInWithKey": "Prisijungta · {npub}",
   "@signedInWithKey": {
-    "placeholders": { "npub": { "type": "String" } }
+    "placeholders": {
+      "npub": {
+        "type": "String"
+      }
+    }
   },
   "relayInvalidUrlWss": "Įveskite galiojantį šifruotą wss:// relės adresą.",
   "relayUrlHint": "wss://jūsų-relė…",
@@ -52,7 +60,11 @@
   "nextButton": "Toliau",
   "welcomeTitle": "Sveiki atvykę į {appName}",
   "@welcomeTitle": {
-    "placeholders": { "appName": { "type": "String" } }
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
   },
   "welcomeSubtitle": "Privati, sutelkta užduočių tvarkyklė Echoes ekosistemoje.",
   "featureLocalTitle": "Jūsų, jūsų įrenginyje",
@@ -78,7 +90,11 @@
   "priorityLabel": "Prioritetas",
   "priorityValue": "{priority} / 5",
   "@priorityValue": {
-    "placeholders": { "priority": { "type": "int" } }
+    "placeholders": {
+      "priority": {
+        "type": "int"
+      }
+    }
   },
   "colorLabel": "Spalva",
   "syncStatusLabel": "Sinchronizavimas",
@@ -87,7 +103,14 @@
   "linkedEventLabel": "Susietas kalendoriaus įvykis",
   "createdUpdatedInfo": "Sukurta {created}\nAtnaujinta {updated}",
   "@createdUpdatedInfo": {
-    "placeholders": { "created": { "type": "String" }, "updated": { "type": "String" } }
+    "placeholders": {
+      "created": {
+        "type": "String"
+      },
+      "updated": {
+        "type": "String"
+      }
+    }
   },
   "deleteTaskConfirmTitle": "Ištrinti šią užduotį?",
   "deleteTaskConfirmBody": "Užduotis pašalinama vietoje, o ištrynimo užklausa siunčiama jūsų relėms.",
@@ -96,6 +119,10 @@
   "saveTaskError": "Nepavyko išsaugoti užduoties vietoje.",
   "editTaskTitle": "Redaguoti užduotį",
   "newTaskTitle": "Nauja užduotis",
+  "syncToNostrTitle": "Sinchronizuoti su Nostr",
+  "syncToNostrSubtitle": "Paskelbia užduotį užšifruotą jūsų relėse. Jei išjungta, ji lieka tik šiame įrenginyje.",
+  "syncTaskButton": "Sinchronizuoti užduotį",
+  "localOnlyStatus": "Tik vietinė (sinchronizavimas išjungtas)",
   "titleFieldLabel": "Pavadinimas",
   "titleRequiredError": "Pavadinimas yra privalomas.",
   "titleTooLongError": "Pavadinimas per ilgas.",
@@ -116,7 +143,11 @@
   "emptyTasksBody": "Palieskite +, kad pridėtumėte pirmą užduotį.",
   "completedCount": "Atlikta ({count})",
   "@completedCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "invalidKeyError": "Šis privatus raktas negalioja. Patikrinkite jį ir bandykite dar kartą.",
   "signInError": "Nepavyko prisijungti. Bandykite dar kartą.",

@@ -281,6 +281,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get newTaskTitle => 'Новая задача';
 
   @override
+  String get syncToNostrTitle => 'Синхронизировать с Nostr';
+
+  @override
+  String get syncToNostrSubtitle =>
+      'Публикует задачу в зашифрованном виде на ваши релеи. Если выключено, она остаётся только на этом устройстве.';
+
+  @override
+  String get syncTaskButton => 'Синхронизировать задачу';
+
+  @override
+  String get localOnlyStatus => 'Только локально (синхронизация выключена)';
+
+  @override
   String get titleFieldLabel => 'Название';
 
   @override
