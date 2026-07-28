@@ -28,7 +28,7 @@ widget — see [Ecosystem](#ecosystem).
 - **Encrypted in transit**: NIP-44 encrypted kind `30789` parameterized-replaceable events. No cleartext titles, dates, statuses or tags ever reach a relay.
 - **Your identity, your relays**: Nostr identity via imported/generated key or [Amber](https://github.com/greenart7c3/Amber) (NIP-55) on Android. Fresh installs contact no relay by default.
 - **Reminders**: a task with a due date can carry several notifications, from "at the due time" up to a day ahead. They are scheduled with the operating system when the task is saved — nothing polls, nothing runs in the background — and they travel with the task to the account's other devices.
-- **Astraea calendar**: a dated task can be published as an event in [Astraea](https://github.com/Lwb89dev/astraea), the sibling calendar app, so it shows up there in the calendar and the home-screen widget. Opt-in per task. The integration happens entirely over the relays using the account's own key: nothing is shared between the two apps locally and Astraea needs no changes.
+- **Astraea calendar**: a dated task can be published as an event in [Astraea](https://github.com/Lwb89dev/astraea), the sibling calendar app, so it shows up there in the calendar and the home-screen widget. Opt-in per task. Kairos also sends an explicit same-device instruction on Android/Linux; Nostr remains the durable cross-device path.
 - **Self-hosted relays**: relays on your own network can be added to the ordinary relay list as well as to the dedicated home-relay slot. Plaintext `ws://` is accepted only towards a private, loopback or `.local` address — where the traffic never leaves your network — and always refused towards a public host.
 - **27 languages**: full localization (all EU official languages plus Japanese, Russian and Chinese), switchable at runtime from Settings.
 - **Hardened transport**: authenticated relay input (NIP-01 event ID and Schnorr signature verified before decryption), bounded fetches, capped relay fan-out (12 endpoints), no automatic reconnect loops.
@@ -93,12 +93,16 @@ A task with a due date can be published as an Astraea calendar event, so a
 deadline you set in Kairos also appears in Astraea's calendar and its
 home-screen widget on the day it falls. Enable it per task from the editor.
 
-There is nothing to install or configure between the two apps, and Astraea
-needs no changes to support it. **The relays are the only integration point**:
+When both apps are installed on Android, Kairos also sends Astraea a local,
+versioned upsert instruction immediately, including an explicit notification
+request. **The relays remain the durable integration point**:
 Kairos writes an event in exactly the shape Astraea already reads
 (kind `30078`, `d` tag `epochs:<task-id>`, NIP-44 encrypted with the account
 key it also holds), and Astraea's next sync picks it up like any other event.
 Its widgets are drawn from its own local store, so they update on their own.
+The local receiver contract is documented in
+[`docs/ASTRAEA_LOCAL_PROTOCOL.md`](docs/ASTRAEA_LOCAL_PROTOCOL.md); if Astraea
+is unavailable, the task and its Nostr mirror are unaffected.
 
 The mirror is deliberately one-way and opt-in per task:
 

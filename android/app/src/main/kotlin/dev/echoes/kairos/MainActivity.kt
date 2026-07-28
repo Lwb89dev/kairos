@@ -3,6 +3,7 @@ package dev.echoes.kairos
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -16,6 +17,17 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity : FlutterActivity() {
     companion object {
         private const val PRIVACY_CHANNEL = "dev.echoes.kairos/privacy"
+        private const val ASTRAEA_CHANNEL = "dev.echoes.kairos/astraea"
+        private const val ASTRAEA_ACTION = "dev.echoes.astraea.action.LOCAL_SYNC"
+        private const val ASTRAEA_PAYLOAD = "dev.echoes.astraea.extra.PAYLOAD"
+        // Astraea kept its pre-rename application id on some installs. Try it
+        // after the current id so an upgrade does not lose local delivery.
+        private val ASTRAEA_PACKAGES = arrayOf(
+            "dev.echoes.astraea",
+            "dev.echoes.epochs",
+            // Current Astraea development application id.
+            "com.example.epochs",
+        )
         private const val SENSITIVE_CLIPBOARD_FLAG = "android.content.extra.IS_SENSITIVE"
     }
 
@@ -52,6 +64,25 @@ class MainActivity : FlutterActivity() {
                     else -> result.notImplemented()
                 }
             }
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ASTRAEA_CHANNEL)
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "sendToAstraea" -> {
+                        val payload = call.arguments as? String
+                        if (payload == null || payload.isBlank()) {
+                            result.error("invalid_argument", "Expected a JSON payload", null)
+                        } else {
+                            try {
+                                sendToAstraea(payload)
+                                result.success(null)
+                            } catch (error: Exception) {
+                                result.error("astraea_unavailable", error.message, null)
+                            }
+                        }
+                    }
+                    else -> result.notImplemented()
+                }
+            }
     }
 
     private fun copySensitive(value: String) {
@@ -74,5 +105,31 @@ class MainActivity : FlutterActivity() {
                 else clipboard.setPrimaryClip(ClipData.newPlainText("", ""))
             }
         }, 60_000L)
+    }
+
+    /**
+     * Sends a versioned, explicit app-to-app command. Keeping the package
+     * explicit prevents another installed app from receiving task contents;
+     * Astraea registers [ASTRAEA_ACTION] in its own exported entry activity.
+     */
+    private fun sendToAstraea(payload: String) {
+        var lastError: Exception? = null
+        for (packageName in ASTRAEA_PACKAGES) {
+            val intent = Intent(ASTRAEA_ACTION).apply {
+                setPackage(packageName)
+                type = "application/json"
+                putExtra(ASTRAEA_PAYLOAD, payload)
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            }
+            try {
+                startActivity(intent)
+                return
+            } catch (error: android.content.ActivityNotFoundException) {
+                lastError = error
+            }
+        }
+        throw lastError ?: android.content.ActivityNotFoundException(
+            "Astraea is not installed"
+        )
     }
 }

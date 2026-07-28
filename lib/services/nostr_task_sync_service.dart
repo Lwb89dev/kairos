@@ -97,6 +97,11 @@ class NostrTaskSyncService {
     }
 
     try {
+      // Keep a foreground Astraea installation in step immediately as well as
+      // publishing the durable relay representation. This also handles tasks
+      // pulled from another device: the local app gets the same explicit
+      // notification instruction as a task created on this device.
+      await _calendar.syncLocal(current);
       if (wanted) {
         final eventId = await _calendar.publish(
           task: current,

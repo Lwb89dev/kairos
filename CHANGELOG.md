@@ -4,7 +4,7 @@ All notable changes to Kairos are documented in this file. The format is based
 on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.1] - 2026-07-28
 
 ### Added
 
@@ -17,9 +17,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   off and back on without losing the per-task choices.
 - Astraea calendar integration. A dated task can be published as an Astraea
   calendar event, so it appears in that app's calendar and home-screen widget
-  on the day it is due. Opt-in per task, from the editor. The two apps meet on
-  the relays using the account's own key — nothing is installed, shared or
-  configured between them, and Astraea needs no changes.
+  on the day it is due. Opt-in per task, from the editor. When both apps are
+  installed, Kairos also sends Astraea a local instruction with an explicit
+  notification request, independently of Nostr.
+- Local Kairos ↔ Astraea interoperability. Android uses an explicit,
+  package-bound intent; Linux uses a per-user Unix-domain socket. Upserts,
+  edits, unchecks and deletions are delivered through a versioned JSON
+  protocol, with notification deduplication instructions for Astraea.
+- The Astraea calendar option is now available for dated tasks even without a
+  Nostr account or selected relay; the local bridge works offline and Nostr
+  remains the durable cross-device channel when configured.
 - Four more suggested relays (`relay.primal.net`, `relay.nostr.band`,
   `nostr.mom`, `relay.snort.social`) alongside the existing two, for
   redundancy when one is slow or unreachable. As before, none is selected
@@ -101,5 +108,6 @@ First public release.
 - See [docs/SECURITY_AUDIT.md](docs/SECURITY_AUDIT.md) for the full audit
   record of this release.
 
-[Unreleased]: https://github.com/OWNER/REPO/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/OWNER/REPO/releases/tag/v0.1.0
+[Unreleased]: https://github.com/Lwb89dev/kairos/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/Lwb89dev/kairos/releases/tag/v0.1.1
+[0.1.0]: https://github.com/Lwb89dev/kairos/releases/tag/v0.1.0

@@ -8,6 +8,7 @@ import '../models/user_model.dart';
 import '../utils/constants.dart';
 import '../utils/logger.dart';
 import '../utils/task_colors.dart';
+import 'astraea_local_bridge.dart';
 import 'nostr_service.dart';
 
 /// Publishes a dated task as an Astraea calendar event, so a task the user
@@ -16,9 +17,10 @@ import 'nostr_service.dart';
 ///
 /// ## How this reaches Astraea
 ///
-/// Nothing is shared between the two apps at runtime — no IPC, no shared
-/// database, no changes on Astraea's side. The relays are the integration
-/// point. Astraea stores its calendar as kind-30078 (NIP-78 application data)
+/// A task is sent to Astraea through two independent paths. The local Android
+/// bridge gives a running/on-device Astraea an immediate upsert plus an
+/// explicit notification instruction. The relays remain the durable path:
+/// Astraea stores its calendar as kind-30078 (NIP-78 application data)
 /// parameterized-replaceable events under the `d` tag `epochs:<uuid>`, NIP-44
 /// self-encrypted with the account's own key. Kairos holds that same key, so
 /// it can write an event in exactly that shape; Astraea's next sync pulls it
@@ -43,10 +45,14 @@ import 'nostr_service.dart';
 /// inside Astraea is overwritten the next time the task changes in Kairos —
 /// the task is the source of truth for its own mirror.
 class AstraeaCalendarMirror {
-  AstraeaCalendarMirror({required NostrService nostrService})
-    : _nostr = nostrService;
+  AstraeaCalendarMirror({
+    required NostrService nostrService,
+    AstraeaLocalBridge? localBridge,
+  }) : _nostr = nostrService,
+       _local = localBridge ?? AstraeaLocalBridge();
 
   final NostrService _nostr;
+  final AstraeaLocalBridge _local;
 
   /// The `d` tag of the calendar event mirroring [taskId].
   static String calendarDTagFor(String taskId) =>
@@ -64,6 +70,22 @@ class AstraeaCalendarMirror {
         task.dueDateUtc != null;
   }
 
+  /// Sends the same calendar event to Astraea over the local app-to-app
+  /// channel. Unlike the relay mirror this path does not require an account or
+  /// a configured relay, but it is still excluded for local-only tasks.
+  ///
+  /// The local receiver owns persistence and notification scheduling. Kairos
+  /// only gives it an explicit upsert/delete instruction and never writes into
+  /// Astraea's database directly.
+  Future<void> syncLocal(Task task) async {
+    if (task.localOnly) return;
+    if (shouldMirror(task)) {
+      await _local.upsert(task: task, event: eventJsonFor(task));
+    } else {
+      await _local.delete(task: task, event: eventJsonFor(task, deleted: true));
+    }
+  }
+
   /// Publishes (or replaces) the calendar event for [task] and returns the
   /// relay-confirmed event id.
   Future<String> publish({
@@ -79,7 +101,7 @@ class AstraeaCalendarMirror {
       author: author,
       kind: AppConstants.astraeaCalendarEventKind,
       dTag: calendarDTagFor(task.id),
-      plaintextContent: jsonEncode(_toAstraeaEventJson(task)),
+      plaintextContent: jsonEncode(eventJsonFor(task)),
       createdAt: task.updatedAt,
       relayUrls: config.allSyncRelays,
     );
@@ -103,7 +125,7 @@ class AstraeaCalendarMirror {
       author: author,
       kind: AppConstants.astraeaCalendarEventKind,
       dTag: calendarDTagFor(task.id),
-      plaintextContent: jsonEncode(_toAstraeaEventJson(task, deleted: true)),
+      plaintextContent: jsonEncode(eventJsonFor(task, deleted: true)),
       createdAt: task.updatedAt,
       relayUrls: config.allSyncRelays,
     );
@@ -131,7 +153,7 @@ class AstraeaCalendarMirror {
   ///  - `synced` is false and the sync-ownership fields are absent: those
   ///    describe Astraea's own publishing history, and it is not Kairos'
   ///    place to assert anything about it.
-  Map<String, dynamic> _toAstraeaEventJson(Task task, {bool deleted = false}) {
+  Map<String, dynamic> eventJsonFor(Task task, {bool deleted = false}) {
     final dueDate = task.dueDateUtc ?? task.updatedAt;
     return {
       'id': task.id,

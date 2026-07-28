@@ -6,6 +6,7 @@ import 'package:kairos/models/sync_config_model.dart';
 import 'package:kairos/models/task_model.dart';
 import 'package:kairos/models/user_model.dart';
 import 'package:kairos/services/astraea_calendar_mirror.dart';
+import 'package:kairos/services/astraea_local_bridge.dart';
 import 'package:kairos/services/nostr_service.dart';
 import 'package:kairos/utils/constants.dart';
 import 'package:kairos/utils/task_colors.dart';
@@ -44,6 +45,7 @@ class _RecordingNostrService implements NostrService {
 void main() {
   late _RecordingNostrService nostr;
   late AstraeaCalendarMirror mirror;
+  late List<String> localPayloads;
 
   // Not const: string repetition is not a constant expression in Dart.
   final author = User(
@@ -83,7 +85,13 @@ void main() {
 
   setUp(() {
     nostr = _RecordingNostrService();
-    mirror = AstraeaCalendarMirror(nostrService: nostr);
+    localPayloads = [];
+    mirror = AstraeaCalendarMirror(
+      nostrService: nostr,
+      localBridge: AstraeaLocalBridge(
+        send: (payload) async => localPayloads.add(payload),
+      ),
+    );
   });
 
   group('what gets mirrored', () {
@@ -271,5 +279,30 @@ void main() {
       isNot(subject.dTag),
     );
     expect(subject.dTag, startsWith(AppConstants.dTagPrefix));
+  });
+
+  test('local delivery instructs Astraea to display and notify', () async {
+    await mirror.syncLocal(task());
+
+    final message = jsonDecode(localPayloads.single) as Map<String, dynamic>;
+    expect(message['protocol'], AstraeaLocalBridge.protocol);
+    expect(message['version'], AstraeaLocalBridge.version);
+    expect(message['operation'], 'upsert');
+    expect(message['taskId'], 'task-uuid');
+    expect((message['event'] as Map)['id'], 'task-uuid');
+    expect((message['notification'] as Map)['show'], isTrue);
+    expect(
+      (message['notification'] as Map)['dedupeKey'],
+      contains('task-uuid'),
+    );
+  });
+
+  test('local delivery retracts when the calendar choice is removed', () async {
+    await mirror.syncLocal(task(mirrorToCalendar: false));
+
+    final message = jsonDecode(localPayloads.single) as Map<String, dynamic>;
+    expect(message['operation'], 'delete');
+    expect((message['event'] as Map)['deleted'], isTrue);
+    expect((message['notification'] as Map)['show'], isFalse);
   });
 }

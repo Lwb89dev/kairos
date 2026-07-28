@@ -14,7 +14,10 @@ unit/widget tests and a debug Android build are the required release gate.
 ### High impact
 
 - Replaced plaintext task persistence with AES-256 encrypted Hive storage and a verified legacy migration.
-- Removed obsolete plaintext Unix-socket IPC that had no Astraea consumer and unnecessarily expanded the attack surface.
+- Added a scoped Astraea local bridge: Android uses an explicit package-bound
+  intent, while Linux uses the per-user `XDG_RUNTIME_DIR` Unix socket. Both
+  carry a versioned envelope and remain best-effort; no public TCP listener or
+  shared task database is exposed.
 - Replaced blanket `ws://` support with normalized, boundary-validated `wss://` only, keeping a single deliberate exception: the personal home-relay slot, which may use `ws://` and a private/loopback address for a LAN relay without TLS.
 - Confined REQ streams to selected relays, waited for all EOSE responses, imposed timeout/event/byte limits and always closed listeners.
 - Required NIP-01 ID and Schnorr-signature validation before accepting profile or task events.

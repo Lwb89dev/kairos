@@ -455,20 +455,12 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
     );
   }
 
-  /// The Astraea calendar option: publishes the task as a calendar event so a
-  /// dated task also shows up in that app's calendar and home-screen widget.
-  ///
-  /// Needs everything task sync needs (an account and a relay — the two apps
-  /// meet on the relays, nowhere else) plus a due date to place the event on.
-  /// Shown disabled rather than hidden when those are missing, so the option
-  /// is discoverable and its precondition is stated.
-  Widget _buildCalendarMirrorTile(
-    ThemeData theme,
-    AppLocalizations l, {
-    required bool syncAvailable,
-  }) {
+  /// The Astraea calendar option: a dated task can reach Astraea immediately
+  /// through the local bridge, and also gets the Nostr mirror when relays are
+  /// available. A local-only task remains excluded from both paths.
+  Widget _buildCalendarMirrorTile(ThemeData theme, AppLocalizations l) {
     final keptOffRelays = _isEditing ? widget.task!.localOnly : !_syncOnSave;
-    final available = syncAvailable && _dueDateLocal != null && !keptOffRelays;
+    final available = _dueDateLocal != null && !keptOffRelays;
     return SwitchListTile(
       contentPadding: EdgeInsets.zero,
       secondary: const Icon(Icons.event_available_outlined),
@@ -492,8 +484,11 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
     AppLocalizations l, {
     required bool syncAvailable,
   }) {
-    if (!syncAvailable) return const [];
     if (!_isEditing) {
+      final calendarTile = _buildCalendarMirrorTile(theme, l);
+      if (!syncAvailable) {
+        return [const SizedBox(height: 24), calendarTile];
+      }
       return [
         const SizedBox(height: 24),
         SwitchListTile(
@@ -511,15 +506,16 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
                   if (!value) _mirrorToCalendar = false;
                 }),
         ),
-        _buildCalendarMirrorTile(theme, l, syncAvailable: syncAvailable),
+        calendarTile,
       ];
     }
     if (!widget.task!.localOnly) {
       return [
         const SizedBox(height: 24),
-        _buildCalendarMirrorTile(theme, l, syncAvailable: syncAvailable),
+        _buildCalendarMirrorTile(theme, l),
       ];
     }
+    if (!syncAvailable) return const [];
     return [
       const SizedBox(height: 24),
       FilledButton.tonalIcon(

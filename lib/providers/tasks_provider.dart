@@ -10,6 +10,7 @@ import '../models/user_model.dart';
 import '../utils/nostr_timestamp.dart';
 import '../utils/task_colors.dart';
 import '../utils/logger.dart';
+import '../services/astraea_calendar_mirror.dart';
 import 'auth_provider.dart';
 import 'service_providers.dart';
 import 'sync_mode_provider.dart';
@@ -132,7 +133,12 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
     // whatever this task had before, so a stale alarm can never survive.
     await ref.read(notificationServiceProvider).scheduleForTask(stamped);
     await _refresh();
-    unawaited(_publishAndRefresh(stamped));
+    unawaited(
+      _publishAndRefresh(
+        stamped,
+        wasMirrored: current?.mirrorToCalendar == true,
+      ),
+    );
   }
 
   /// Applies fields controlled by the editor while preserving changes that
@@ -197,6 +203,12 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
     // deletion ever reaches a relay.
     await ref.read(notificationServiceProvider).cancelForTask(tombstone.id);
     await _refresh();
+
+    // Retract immediately from a running Astraea installation. The relay
+    // tombstone below remains the durable cross-device cleanup path.
+    unawaited(
+      _syncLocalMirror(tombstone, wasMirrored: current.mirrorToCalendar),
+    );
 
     final auth = ref.read(authProvider).value;
     final config = ref.read(syncConfigProvider).value;
@@ -263,7 +275,8 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
     await rescheduleReminders();
   }
 
-  Future<void> _publishAndRefresh(Task task) async {
+  Future<void> _publishAndRefresh(Task task, {bool wasMirrored = false}) async {
+    await _syncLocalMirror(task, wasMirrored: wasMirrored);
     if (task.localOnly) return;
     final config = ref.read(syncConfigProvider).value;
     final auth = ref.read(authProvider).value;
@@ -277,6 +290,19 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
       await _refresh();
     } catch (_) {
       debugLog('Task publish failed', name: 'TasksNotifier');
+    }
+  }
+
+  /// Local Astraea delivery is independent of Nostr availability. A failed
+  /// delivery is intentionally non-fatal: the task is already committed in
+  /// Kairos and the relay mirror, when configured, can still converge later.
+  Future<void> _syncLocalMirror(Task task, {bool wasMirrored = false}) async {
+    if (task.localOnly) return;
+    if (!AstraeaCalendarMirror.shouldMirror(task) && !wasMirrored) return;
+    try {
+      await ref.read(astraeaCalendarMirrorProvider).syncLocal(task);
+    } catch (_) {
+      debugLog('Local Astraea update failed', name: 'TasksNotifier');
     }
   }
 

@@ -68,8 +68,13 @@ A task with a due date can also appear in the calendar — and the home-screen
 widget — of Astraea, the sibling calendar app, without the two apps sharing
 anything locally.
 
-The relays are the only integration point. Astraea stores its calendar as
-kind-30078 (NIP-78 application data) parameterized-replaceable events under the
+Kairos sends the event locally on Android as well as publishing it to Nostr.
+The local message is an explicit, versioned JSON instruction containing the
+event and a notification command; Astraea writes it through its normal local
+store and must deduplicate the notification. See
+`docs/ASTRAEA_LOCAL_PROTOCOL.md` for the receiver contract. The relays remain
+the durable cross-device path. Astraea stores its calendar as kind-30078
+(NIP-78 application data) parameterized-replaceable events under the
 `d` tag `epochs:<uuid>`, NIP-44 self-encrypted with the account's key. Kairos
 holds that same key, so `AstraeaCalendarMirror` can write an event in exactly
 that shape. Astraea's next sync pulls it like any other event, saves it, and
