@@ -157,5 +157,20 @@
   "importKeyButton": "Импортиране на съществуващ ключ",
   "importKeyFieldLabel": "nsec или hex личен ключ",
   "importButton": "Импортиране",
-  "storageFailureMessage": "Kairos не можа да отвори криптираната си локална база данни. Рестартирайте приложението. Не изтривайте данните на приложението; ако проблемът продължава, докладвайте го поверително."
+  "storageFailureMessage": "Kairos не можа да отвори криптираната си локална база данни. Рестартирайте приложението. Не изтривайте данните на приложението; ако проблемът продължава, докладвайте го поверително.",
+  "remindersLabel": "Напомняния",
+  "addReminderButton": "Добавяне на напомняне",
+  "remindersNeedDueDate": "Задай краен срок, за да добавиш напомняния",
+  "removeReminderTooltip": "Премахване на напомнянето",
+  "reminderAtDueTime": "В момента на срока",
+  "reminderMinutesBefore": "{count, plural, =1{1 минута по-рано} other{{count} минути по-рано}}",
+  "reminderHoursBefore": "{count, plural, =1{1 час по-рано} other{{count} часа по-рано}}",
+  "reminderDaysBefore": "{count, plural, =1{1 ден по-рано} other{{count} дни по-рано}}",
+  "maxRemindersReached": "Една задача може да има най-много {count} напомняния",
+  "notificationsTitle": "Напомняния за задачи",
+  "notificationsSubtitle": "Уведомявай ме преди крайния срок на задача",
+  "sectionReminders": "Напомняния",
+  "addToCalendarTitle": "Добавяне в календара на Astraea",
+  "addToCalendarSubtitle": "Тази задача се показва и в календара и приспособлението на Astraea, в деня на срока.",
+  "addToCalendarNeedsSync": "Изисква акаунт, реле и краен срок"
 }

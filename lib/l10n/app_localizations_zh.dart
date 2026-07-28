@@ -366,4 +366,72 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos 无法打开其本地加密数据库。请重启应用。请勿清除应用数据；如果问题持续存在，请私下反馈。';
+
+  @override
+  String get remindersLabel => '提醒';
+
+  @override
+  String get addReminderButton => '添加提醒';
+
+  @override
+  String get remindersNeedDueDate => '设置截止日期后才能添加提醒';
+
+  @override
+  String get removeReminderTooltip => '移除提醒';
+
+  @override
+  String get reminderAtDueTime => '截止时刻';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '提前 $count 分钟',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '提前 $count 小时',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '提前 $count 天',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return '一个任务最多可设置 $count 个提醒';
+  }
+
+  @override
+  String get notificationsTitle => '任务提醒';
+
+  @override
+  String get notificationsSubtitle => '在任务截止前通知我';
+
+  @override
+  String get sectionReminders => '提醒';
+
+  @override
+  String get addToCalendarTitle => '添加到 Astraea 日历';
+
+  @override
+  String get addToCalendarSubtitle => '该任务也会在截止当天显示在 Astraea 的日历和小组件中。';
+
+  @override
+  String get addToCalendarNeedsSync => '需要账户、中继和截止日期';
 }

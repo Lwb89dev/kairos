@@ -157,5 +157,20 @@
   "importKeyButton": "Uvezi postojeći ključ",
   "importKeyFieldLabel": "nsec ili hex privatni ključ",
   "importButton": "Uvezi",
-  "storageFailureMessage": "Kairos nije mogao otvoriti svoju šifriranu lokalnu bazu podataka. Ponovno pokrenite aplikaciju. Ne brišite podatke aplikacije; ako se problem nastavi, prijavite ga privatno."
+  "storageFailureMessage": "Kairos nije mogao otvoriti svoju šifriranu lokalnu bazu podataka. Ponovno pokrenite aplikaciju. Ne brišite podatke aplikacije; ako se problem nastavi, prijavite ga privatno.",
+  "remindersLabel": "Podsjetnici",
+  "addReminderButton": "Dodaj podsjetnik",
+  "remindersNeedDueDate": "Postavi rok da bi mogao dodati podsjetnike",
+  "removeReminderTooltip": "Ukloni podsjetnik",
+  "reminderAtDueTime": "U trenutku roka",
+  "reminderMinutesBefore": "{count, plural, =1{1 minutu prije} few{{count} minute prije} other{{count} minuta prije}}",
+  "reminderHoursBefore": "{count, plural, =1{1 sat prije} few{{count} sata prije} other{{count} sati prije}}",
+  "reminderDaysBefore": "{count, plural, =1{1 dan prije} few{{count} dana prije} other{{count} dana prije}}",
+  "maxRemindersReached": "Zadatak može imati najviše {count} podsjetnika",
+  "notificationsTitle": "Podsjetnici na zadatke",
+  "notificationsSubtitle": "Obavijesti me prije roka zadatka",
+  "sectionReminders": "Podsjetnici",
+  "addToCalendarTitle": "Dodaj u Astraea kalendar",
+  "addToCalendarSubtitle": "Ovaj se zadatak na dan roka pojavljuje i u Astraeinu kalendaru i widgetu.",
+  "addToCalendarNeedsSync": "Potreban je račun, relej i rok"
 }

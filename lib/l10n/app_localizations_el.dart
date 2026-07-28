@@ -388,4 +388,79 @@ class AppLocalizationsEl extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Το Kairos δεν μπόρεσε να ανοίξει την κρυπτογραφημένη τοπική βάση δεδομένων του. Επανεκκινήστε την εφαρμογή. Μην διαγράψετε τα δεδομένα της εφαρμογής· αν το πρόβλημα παραμένει, αναφέρετέ το ιδιωτικά.';
+
+  @override
+  String get remindersLabel => 'Υπενθυμίσεις';
+
+  @override
+  String get addReminderButton => 'Προσθήκη υπενθύμισης';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Όρισε προθεσμία για να προσθέσεις υπενθυμίσεις';
+
+  @override
+  String get removeReminderTooltip => 'Αφαίρεση υπενθύμισης';
+
+  @override
+  String get reminderAtDueTime => 'Την ώρα της προθεσμίας';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count λεπτά πριν',
+      one: '1 λεπτό πριν',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ώρες πριν',
+      one: '1 ώρα πριν',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ημέρες πριν',
+      one: '1 ημέρα πριν',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Μια εργασία μπορεί να έχει το πολύ $count υπενθυμίσεις';
+  }
+
+  @override
+  String get notificationsTitle => 'Υπενθυμίσεις εργασιών';
+
+  @override
+  String get notificationsSubtitle =>
+      'Ειδοποίησέ με πριν από την προθεσμία μιας εργασίας';
+
+  @override
+  String get sectionReminders => 'Υπενθυμίσεις';
+
+  @override
+  String get addToCalendarTitle => 'Προσθήκη στο ημερολόγιο Astraea';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Αυτή η εργασία εμφανίζεται και στο ημερολόγιο και το widget του Astraea, την ημέρα της προθεσμίας.';
+
+  @override
+  String get addToCalendarNeedsSync =>
+      'Απαιτεί λογαριασμό, relay και προθεσμία';
 }

@@ -157,5 +157,20 @@
   "importKeyButton": "Zaimportuj istniejący klucz",
   "importKeyFieldLabel": "nsec lub klucz prywatny w formacie hex",
   "importButton": "Importuj",
-  "storageFailureMessage": "Kairos nie mógł otworzyć zaszyfrowanej lokalnej bazy danych. Uruchom aplikację ponownie. Nie czyść danych aplikacji; jeśli problem będzie się powtarzał, zgłoś go poufnie."
+  "storageFailureMessage": "Kairos nie mógł otworzyć zaszyfrowanej lokalnej bazy danych. Uruchom aplikację ponownie. Nie czyść danych aplikacji; jeśli problem będzie się powtarzał, zgłoś go poufnie.",
+  "remindersLabel": "Przypomnienia",
+  "addReminderButton": "Dodaj przypomnienie",
+  "remindersNeedDueDate": "Ustaw termin, aby dodać przypomnienia",
+  "removeReminderTooltip": "Usuń przypomnienie",
+  "reminderAtDueTime": "O godzinie terminu",
+  "reminderMinutesBefore": "{count, plural, =1{1 minutę wcześniej} few{{count} minuty wcześniej} many{{count} minut wcześniej} other{{count} minuty wcześniej}}",
+  "reminderHoursBefore": "{count, plural, =1{1 godzinę wcześniej} few{{count} godziny wcześniej} many{{count} godzin wcześniej} other{{count} godziny wcześniej}}",
+  "reminderDaysBefore": "{count, plural, =1{1 dzień wcześniej} few{{count} dni wcześniej} many{{count} dni wcześniej} other{{count} dnia wcześniej}}",
+  "maxRemindersReached": "Zadanie może mieć najwyżej {count} przypomnień",
+  "notificationsTitle": "Przypomnienia o zadaniach",
+  "notificationsSubtitle": "Powiadom mnie przed terminem zadania",
+  "sectionReminders": "Przypomnienia",
+  "addToCalendarTitle": "Dodaj do kalendarza Astraea",
+  "addToCalendarSubtitle": "To zadanie pojawi się także w kalendarzu i widżecie Astraea, w dniu terminu.",
+  "addToCalendarNeedsSync": "Wymaga konta, przekaźnika i terminu"
 }

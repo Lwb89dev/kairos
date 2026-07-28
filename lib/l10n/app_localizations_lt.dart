@@ -383,4 +383,83 @@ class AppLocalizationsLt extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos nepavyko atverti šifruotos vietinės duomenų bazės. Paleiskite programą iš naujo. Nevalykite programos duomenų; jei problema kartojasi, praneškite apie ją privačiai.';
+
+  @override
+  String get remindersLabel => 'Priminimai';
+
+  @override
+  String get addReminderButton => 'Pridėti priminimą';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Nustatyk terminą, kad galėtum pridėti priminimų';
+
+  @override
+  String get removeReminderTooltip => 'Pašalinti priminimą';
+
+  @override
+  String get reminderAtDueTime => 'Termino metu';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'prieš $count minučių',
+      many: 'prieš $count minutės',
+      few: 'prieš $count minutes',
+      one: 'prieš $count minutę',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'prieš $count valandų',
+      many: 'prieš $count valandos',
+      few: 'prieš $count valandas',
+      one: 'prieš $count valandą',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'prieš $count dienų',
+      many: 'prieš $count dienos',
+      few: 'prieš $count dienas',
+      one: 'prieš $count dieną',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Užduotis gali turėti daugiausia $count priminimų';
+  }
+
+  @override
+  String get notificationsTitle => 'Užduočių priminimai';
+
+  @override
+  String get notificationsSubtitle => 'Pranešti man prieš užduoties terminą';
+
+  @override
+  String get sectionReminders => 'Priminimai';
+
+  @override
+  String get addToCalendarTitle => 'Pridėti į Astraea kalendorių';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Ši užduotis termino dieną taip pat matoma Astraea kalendoriuje ir valdiklyje.';
+
+  @override
+  String get addToCalendarNeedsSync => 'Reikia paskyros, relės ir termino';
 }

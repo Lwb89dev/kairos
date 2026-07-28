@@ -381,4 +381,83 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Aplikaci Kairos se nepodařilo otevřít šifrovanou lokální databázi. Restartujte aplikaci. Nemažte data aplikace; pokud problém přetrvává, nahlaste ho soukromě.';
+
+  @override
+  String get remindersLabel => 'Připomenutí';
+
+  @override
+  String get addReminderButton => 'Přidat připomenutí';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Nastav termín, abys mohl přidat připomenutí';
+
+  @override
+  String get removeReminderTooltip => 'Odebrat připomenutí';
+
+  @override
+  String get reminderAtDueTime => 'V čase termínu';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minut předem',
+      many: '$count minuty předem',
+      few: '$count minuty předem',
+      one: '1 minutu předem',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hodin předem',
+      many: '$count hodiny předem',
+      few: '$count hodiny předem',
+      one: '1 hodinu předem',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dní předem',
+      many: '$count dne předem',
+      few: '$count dny předem',
+      one: '1 den předem',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Úkol může mít nejvýše $count připomenutí';
+  }
+
+  @override
+  String get notificationsTitle => 'Připomenutí úkolů';
+
+  @override
+  String get notificationsSubtitle => 'Upozornit mě před termínem úkolu';
+
+  @override
+  String get sectionReminders => 'Připomenutí';
+
+  @override
+  String get addToCalendarTitle => 'Přidat do kalendáře Astraea';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Tento úkol se v den termínu objeví také v kalendáři a widgetu Astraea.';
+
+  @override
+  String get addToCalendarNeedsSync => 'Vyžaduje účet, relay a termín';
 }

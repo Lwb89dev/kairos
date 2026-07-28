@@ -157,5 +157,20 @@
   "importKeyButton": "Importera en befintlig nyckel",
   "importKeyFieldLabel": "nsec eller hexadecimal privat nyckel",
   "importButton": "Importera",
-  "storageFailureMessage": "Kairos kunde inte öppna sin krypterade lokala databas. Starta om appen. Rensa inte appdata; om problemet kvarstår, rapportera det privat."
+  "storageFailureMessage": "Kairos kunde inte öppna sin krypterade lokala databas. Starta om appen. Rensa inte appdata; om problemet kvarstår, rapportera det privat.",
+  "remindersLabel": "Påminnelser",
+  "addReminderButton": "Lägg till påminnelse",
+  "remindersNeedDueDate": "Ange ett förfallodatum för att lägga till påminnelser",
+  "removeReminderTooltip": "Ta bort påminnelse",
+  "reminderAtDueTime": "Vid förfallotidpunkten",
+  "reminderMinutesBefore": "{count, plural, =1{1 minut innan} other{{count} minuter innan}}",
+  "reminderHoursBefore": "{count, plural, =1{1 timme innan} other{{count} timmar innan}}",
+  "reminderDaysBefore": "{count, plural, =1{1 dag innan} other{{count} dagar innan}}",
+  "maxRemindersReached": "En uppgift kan ha högst {count} påminnelser",
+  "notificationsTitle": "Uppgiftspåminnelser",
+  "notificationsSubtitle": "Meddela mig innan en uppgift förfaller",
+  "sectionReminders": "Påminnelser",
+  "addToCalendarTitle": "Lägg till i Astraea-kalendern",
+  "addToCalendarSubtitle": "Uppgiften visas även i Astraeas kalender och widget på förfallodagen.",
+  "addToCalendarNeedsSync": "Kräver ett konto, ett relä och ett förfallodatum"
 }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../l10n/app_localizations.dart';
+import '../models/reminder_model.dart';
 import '../models/task_model.dart';
 import '../providers/auth_provider.dart';
 import '../providers/sync_mode_provider.dart';
@@ -37,6 +38,8 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
   int? _priority;
   TaskColor? _color;
   bool _saving = false;
+  List<Reminder> _reminders = const [];
+  bool _mirrorToCalendar = false;
 
   /// New tasks: driven by the "Sync to Nostr" toggle (defaults to on).
   /// Existing local-only tasks: flipped to true by the "Sync task" button.
@@ -56,6 +59,8 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
     _dueDateLocal = task?.dueDateUtc?.toLocal();
     _priority = task?.priority;
     _color = task?.color;
+    _reminders = task?.reminders ?? const [];
+    _mirrorToCalendar = task?.mirrorToCalendar ?? false;
   }
 
   @override
@@ -85,6 +90,7 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
       initialTime: TimeOfDay.fromDateTime(initial),
     );
     setState(() {
+      final hadDueDate = _dueDateLocal != null;
       _dueDateLocal = DateTime(
         date.year,
         date.month,
@@ -92,6 +98,50 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
         time?.hour ?? 23,
         time?.minute ?? 59,
       );
+      // Setting a deadline for the first time is what makes a reminder
+      // possible, so it comes with one rather than silently doing nothing.
+      // Only on the first time: re-picking a date must not resurrect a
+      // reminder the user deliberately removed.
+      if (!hadDueDate && _reminders.isEmpty) {
+        _reminders = const [Reminder.defaultReminder];
+      }
+    });
+  }
+
+  void _clearDueDate() {
+    // Reminders count back from the deadline and the calendar entry needs a
+    // day to sit on; neither survives its removal.
+    setState(() {
+      _dueDateLocal = null;
+      _reminders = const [];
+      _mirrorToCalendar = false;
+    });
+  }
+
+  Future<void> _addReminder() async {
+    final l = AppLocalizations.of(context);
+    if (_reminders.length >= Reminder.maxPerTask) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l.maxRemindersReached(Reminder.maxPerTask))),
+      );
+      return;
+    }
+    final chosen = await showModalBottomSheet<int>(
+      context: context,
+      builder: (sheetContext) => _ReminderPicker(
+        alreadyChosen: _reminders.map((r) => r.minutesBefore).toSet(),
+      ),
+    );
+    if (chosen == null || !mounted) return;
+    setState(() {
+      _reminders = [..._reminders, Reminder(minutesBefore: chosen)]
+        ..sort((a, b) => b.minutesBefore.compareTo(a.minutesBefore));
+    });
+  }
+
+  void _removeReminder(Reminder reminder) {
+    setState(() {
+      _reminders = _reminders.where((r) => r != reminder).toList();
     });
   }
 
@@ -100,7 +150,7 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
         .split(',')
         .map((t) => t.trim())
         .where((t) => t.isNotEmpty)
-        .take(32)
+        .take(Task.maxTags)
         .toSet()
         .toList(growable: false);
   }
@@ -129,6 +179,8 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
             clearPriority: _priority == null,
             color: _color,
             clearColor: _color == null,
+            reminders: _reminders,
+            mirrorToCalendar: _mirrorToCalendar,
           ),
           enableSync: enableSync,
         );
@@ -141,6 +193,8 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
           priority: _priority,
           color: _color,
           localOnly: !_syncOnSave,
+          reminders: _reminders,
+          mirrorToCalendar: _mirrorToCalendar,
         );
       }
       if (mounted) Navigator.of(context).pop();
@@ -184,169 +238,357 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            TextFormField(
-              controller: _titleController,
-              autofocus: !_isEditing,
-              maxLength: 512,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                labelText: l.titleFieldLabel,
-                border: const OutlineInputBorder(),
-              ),
-              validator: (value) {
-                final title = value?.trim() ?? '';
-                if (title.isEmpty) return l.titleRequiredError;
-                if (title.length > 512) return l.titleTooLongError;
-                return null;
-              },
-            ),
+            _buildTitleField(l),
             const SizedBox(height: 16),
-            TextFormField(
-              controller: _descriptionController,
-              minLines: 3,
-              maxLines: 6,
-              maxLength: 16384,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                labelText: l.descriptionFieldLabel,
-                border: const OutlineInputBorder(),
-                alignLabelWithHint: true,
-              ),
-            ),
+            _buildDescriptionField(l),
             const SizedBox(height: 16),
+            _buildDueDateTile(theme, l),
+            const SizedBox(height: 16),
+            _buildTagsField(l),
+            const SizedBox(height: 24),
+            _buildPrioritySection(theme, l),
+            const SizedBox(height: 24),
+            _buildColorSection(theme, l),
+            const SizedBox(height: 24),
+            _buildRemindersSection(theme, l),
+            ..._buildSyncControls(theme, l, syncAvailable: syncAvailable),
+          ],
+        ),
+      ),
+    );
+  }
 
-            // Optional deadline stored in UTC and rendered in local time.
+  Widget _buildTitleField(AppLocalizations l) {
+    return TextFormField(
+      controller: _titleController,
+      autofocus: !_isEditing,
+      maxLength: Task.maxTitleLength,
+      textCapitalization: TextCapitalization.sentences,
+      decoration: InputDecoration(
+        labelText: l.titleFieldLabel,
+        border: const OutlineInputBorder(),
+      ),
+      validator: (value) {
+        final title = value?.trim() ?? '';
+        if (title.isEmpty) return l.titleRequiredError;
+        if (title.length > Task.maxTitleLength) return l.titleTooLongError;
+        return null;
+      },
+    );
+  }
+
+  Widget _buildDescriptionField(AppLocalizations l) {
+    return TextFormField(
+      controller: _descriptionController,
+      minLines: 3,
+      maxLines: 6,
+      maxLength: Task.maxDescriptionLength,
+      textCapitalization: TextCapitalization.sentences,
+      decoration: InputDecoration(
+        labelText: l.descriptionFieldLabel,
+        border: const OutlineInputBorder(),
+        alignLabelWithHint: true,
+      ),
+    );
+  }
+
+  /// Optional deadline stored in UTC and rendered in local time.
+  Widget _buildDueDateTile(ThemeData theme, AppLocalizations l) {
+    final due = _dueDateLocal;
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: const Icon(Icons.event_outlined),
+      title: Text(
+        due == null
+            ? l.noDueDateLabel
+            : DateFormat.yMMMd().add_Hm().format(due),
+      ),
+      subtitle: due == null
+          ? Text(l.optionalDeadlineHint, style: theme.textTheme.bodySmall)
+          : null,
+      trailing: due == null
+          ? null
+          : IconButton(
+              tooltip: l.clearDueDateTooltip,
+              icon: const Icon(Icons.close),
+              onPressed: _clearDueDate,
+            ),
+      onTap: _pickDueDate,
+    );
+  }
+
+  Widget _buildTagsField(AppLocalizations l) {
+    return TextFormField(
+      controller: _tagsController,
+      maxLength: Task.maxTagsInputLength,
+      decoration: InputDecoration(
+        labelText: l.tagsFieldLabel,
+        hintText: l.tagsFieldHint,
+        border: const OutlineInputBorder(),
+      ),
+      validator: (value) {
+        final tags = (value ?? '')
+            .split(',')
+            .map((tag) => tag.trim())
+            .where((tag) => tag.isNotEmpty)
+            .toList();
+        if (tags.length > Task.maxTags) return l.tooManyTagsError;
+        if (tags.any((tag) => tag.length > Task.maxTagLength)) {
+          return l.tagTooLongError;
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildPrioritySection(ThemeData theme, AppLocalizations l) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l.priorityLabel, style: theme.textTheme.titleSmall),
+        const SizedBox(height: 8),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: SegmentedButton<int?>(
+            segments: [
+              ButtonSegment(value: null, label: Text(l.noneLabel)),
+              const ButtonSegment(value: 1, label: Text('1')),
+              const ButtonSegment(value: 2, label: Text('2')),
+              const ButtonSegment(value: 3, label: Text('3')),
+              const ButtonSegment(value: 4, label: Text('4')),
+              const ButtonSegment(value: 5, label: Text('5')),
+            ],
+            selected: {_priority},
+            onSelectionChanged: (selection) =>
+                setState(() => _priority = selection.first),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          l.priorityScaleHint,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Echoes-style color coding: a row of pastel swatches; the first slot is
+  /// "no color" (theme surface).
+  Widget _buildColorSection(ThemeData theme, AppLocalizations l) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l.colorLabel, style: theme.textTheme.titleSmall),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: [
+            _ColorSwatchOption(
+              color: null,
+              selected: _color == null,
+              onTap: () => setState(() => _color = null),
+            ),
+            for (final color in TaskColor.values)
+              _ColorSwatchOption(
+                color: color,
+                selected: _color == color,
+                onTap: () => setState(() => _color = color),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// The task's reminders, as offsets before the due date.
+  ///
+  /// Without a due date there is nothing to count back from, so the section
+  /// says so rather than offering a control that cannot work.
+  Widget _buildRemindersSection(ThemeData theme, AppLocalizations l) {
+    final hasDueDate = _dueDateLocal != null;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l.remindersLabel, style: theme.textTheme.titleSmall),
+        const SizedBox(height: 8),
+        if (!hasDueDate)
+          Text(
+            l.remindersNeedDueDate,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          )
+        else ...[
+          for (final reminder in _reminders)
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.event_outlined),
-              title: Text(
-                _dueDateLocal == null
-                    ? l.noDueDateLabel
-                    : DateFormat.yMMMd().add_Hm().format(_dueDateLocal!),
-              ),
-              subtitle: _dueDateLocal == null
-                  ? Text(
-                      l.optionalDeadlineHint,
-                      style: theme.textTheme.bodySmall,
-                    )
-                  : null,
-              trailing: _dueDateLocal == null
-                  ? null
-                  : IconButton(
-                      tooltip: l.clearDueDateTooltip,
-                      icon: const Icon(Icons.close),
-                      onPressed: () => setState(() => _dueDateLocal = null),
-                    ),
-              onTap: _pickDueDate,
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _tagsController,
-              maxLength: 2079,
-              decoration: InputDecoration(
-                labelText: l.tagsFieldLabel,
-                hintText: l.tagsFieldHint,
-                border: const OutlineInputBorder(),
-              ),
-              validator: (value) {
-                final tags = (value ?? '')
-                    .split(',')
-                    .map((tag) => tag.trim())
-                    .where((tag) => tag.isNotEmpty)
-                    .toList();
-                if (tags.length > 32) return l.tooManyTagsError;
-                if (tags.any((tag) => tag.length > 64)) {
-                  return l.tagTooLongError;
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 24),
-
-            Text(l.priorityLabel, style: theme.textTheme.titleSmall),
-            const SizedBox(height: 8),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: SegmentedButton<int?>(
-                segments: [
-                  ButtonSegment(value: null, label: Text(l.noneLabel)),
-                  const ButtonSegment(value: 1, label: Text('1')),
-                  const ButtonSegment(value: 2, label: Text('2')),
-                  const ButtonSegment(value: 3, label: Text('3')),
-                  const ButtonSegment(value: 4, label: Text('4')),
-                  const ButtonSegment(value: 5, label: Text('5')),
-                ],
-                selected: {_priority},
-                onSelectionChanged: (selection) =>
-                    setState(() => _priority = selection.first),
+              dense: true,
+              leading: const Icon(Icons.notifications_active_outlined),
+              title: Text(formatReminderOffset(l, reminder.minutesBefore)),
+              trailing: IconButton(
+                tooltip: l.removeReminderTooltip,
+                icon: const Icon(Icons.close),
+                onPressed: _saving ? null : () => _removeReminder(reminder),
               ),
             ),
-            const SizedBox(height: 8),
+          if (_reminders.isEmpty)
             Text(
-              l.priorityScaleHint,
+              l.noneLabel,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
-            const SizedBox(height: 24),
-
-            // Echoes-style color coding: a row of pastel swatches; the first
-            // slot is "no color" (theme surface).
-            Text(l.colorLabel, style: theme.textTheme.titleSmall),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: [
-                _ColorSwatchOption(
-                  color: null,
-                  selected: _color == null,
-                  onTap: () => setState(() => _color = null),
-                ),
-                for (final color in TaskColor.values)
-                  _ColorSwatchOption(
-                    color: color,
-                    selected: _color == color,
-                    onTap: () => setState(() => _color = color),
-                  ),
-              ],
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: _saving ? null : _addReminder,
+              icon: const Icon(Icons.add_alert_outlined),
+              label: Text(l.addReminderButton),
             ),
+          ),
+        ],
+      ],
+    );
+  }
 
-            // Sync controls, only when sync can actually happen (account +
-            // at least one relay). New task: opt-out toggle. Existing task
-            // pinned local-only: opt-in "Sync task" button that saves the
-            // current edits and publishes a posteriori.
-            if (syncAvailable && !_isEditing) ...[
-              const SizedBox(height: 24),
-              SwitchListTile(
-                contentPadding: EdgeInsets.zero,
-                secondary: const Icon(Icons.cloud_upload_outlined),
-                title: Text(l.syncToNostrTitle),
-                subtitle: Text(l.syncToNostrSubtitle),
-                value: _syncOnSave,
-                onChanged: _saving
-                    ? null
-                    : (value) => setState(() => _syncOnSave = value),
-              ),
-            ] else if (syncAvailable &&
-                _isEditing &&
-                widget.task!.localOnly) ...[
-              const SizedBox(height: 24),
-              FilledButton.tonalIcon(
-                onPressed: _saving ? null : () => _save(enableSync: true),
-                icon: const Icon(Icons.cloud_upload_outlined),
-                label: Text(l.syncTaskButton),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                l.syncToNostrSubtitle,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ],
+  /// The Astraea calendar option: publishes the task as a calendar event so a
+  /// dated task also shows up in that app's calendar and home-screen widget.
+  ///
+  /// Needs everything task sync needs (an account and a relay — the two apps
+  /// meet on the relays, nowhere else) plus a due date to place the event on.
+  /// Shown disabled rather than hidden when those are missing, so the option
+  /// is discoverable and its precondition is stated.
+  Widget _buildCalendarMirrorTile(
+    ThemeData theme,
+    AppLocalizations l, {
+    required bool syncAvailable,
+  }) {
+    final keptOffRelays = _isEditing ? widget.task!.localOnly : !_syncOnSave;
+    final available = syncAvailable && _dueDateLocal != null && !keptOffRelays;
+    return SwitchListTile(
+      contentPadding: EdgeInsets.zero,
+      secondary: const Icon(Icons.event_available_outlined),
+      title: Text(l.addToCalendarTitle),
+      subtitle: Text(
+        available ? l.addToCalendarSubtitle : l.addToCalendarNeedsSync,
+      ),
+      value: available && _mirrorToCalendar,
+      onChanged: !available || _saving
+          ? null
+          : (value) => setState(() => _mirrorToCalendar = value),
+    );
+  }
+
+  /// Sync controls, only when sync can actually happen (account + at least
+  /// one relay). New task: opt-out toggle. Existing task pinned local-only:
+  /// opt-in "Sync task" button that saves the current edits and publishes a
+  /// posteriori. Anything else contributes nothing.
+  List<Widget> _buildSyncControls(
+    ThemeData theme,
+    AppLocalizations l, {
+    required bool syncAvailable,
+  }) {
+    if (!syncAvailable) return const [];
+    if (!_isEditing) {
+      return [
+        const SizedBox(height: 24),
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          secondary: const Icon(Icons.cloud_upload_outlined),
+          title: Text(l.syncToNostrTitle),
+          subtitle: Text(l.syncToNostrSubtitle),
+          value: _syncOnSave,
+          onChanged: _saving
+              ? null
+              : (value) => setState(() {
+                  _syncOnSave = value;
+                  // A task kept off the relays cannot be mirrored into a
+                  // calendar that lives on them.
+                  if (!value) _mirrorToCalendar = false;
+                }),
         ),
+        _buildCalendarMirrorTile(theme, l, syncAvailable: syncAvailable),
+      ];
+    }
+    if (!widget.task!.localOnly) {
+      return [
+        const SizedBox(height: 24),
+        _buildCalendarMirrorTile(theme, l, syncAvailable: syncAvailable),
+      ];
+    }
+    return [
+      const SizedBox(height: 24),
+      FilledButton.tonalIcon(
+        onPressed: _saving ? null : () => _save(enableSync: true),
+        icon: const Icon(Icons.cloud_upload_outlined),
+        label: Text(l.syncTaskButton),
+      ),
+      const SizedBox(height: 8),
+      Text(
+        l.syncToNostrSubtitle,
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+    ];
+  }
+}
+
+/// Renders a reminder offset the way the user picked it: "at the due time",
+/// or in whole minutes, hours or days — whichever the offset divides into
+/// cleanly, so "1 day before" never shows up as "1440 minutes before".
+///
+/// Shared by the editor and the picker so the same offset is never worded two
+/// different ways in the same screen.
+String formatReminderOffset(AppLocalizations l, int minutesBefore) {
+  if (minutesBefore <= 0) return l.reminderAtDueTime;
+  if (minutesBefore % 1440 == 0) {
+    return l.reminderDaysBefore(minutesBefore ~/ 1440);
+  }
+  if (minutesBefore % 60 == 0) {
+    return l.reminderHoursBefore(minutesBefore ~/ 60);
+  }
+  return l.reminderMinutesBefore(minutesBefore);
+}
+
+/// Bottom sheet offering the preset reminder offsets. Offsets already on the
+/// task are shown ticked and are not selectable again — two identical
+/// reminders would just schedule the same notification twice.
+class _ReminderPicker extends StatelessWidget {
+  const _ReminderPicker({required this.alreadyChosen});
+
+  final Set<int> alreadyChosen;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return SafeArea(
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Text(
+              l.addReminderButton,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ),
+          for (final minutes in Reminder.presetsMinutes)
+            ListTile(
+              enabled: !alreadyChosen.contains(minutes),
+              leading: Icon(
+                alreadyChosen.contains(minutes)
+                    ? Icons.check
+                    : Icons.notifications_outlined,
+              ),
+              title: Text(formatReminderOffset(l, minutes)),
+              onTap: () => Navigator.of(context).pop(minutes),
+            ),
+        ],
       ),
     );
   }

@@ -376,4 +376,77 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos could not open its encrypted local database. Restart the app. Do not clear app data; if the problem persists, report it privately.';
+
+  @override
+  String get remindersLabel => 'Reminders';
+
+  @override
+  String get addReminderButton => 'Add reminder';
+
+  @override
+  String get remindersNeedDueDate => 'Set a due date to add reminders';
+
+  @override
+  String get removeReminderTooltip => 'Remove reminder';
+
+  @override
+  String get reminderAtDueTime => 'At the due time';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutes before',
+      one: '1 minute before',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hours before',
+      one: '1 hour before',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days before',
+      one: '1 day before',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'A task can have at most $count reminders';
+  }
+
+  @override
+  String get notificationsTitle => 'Task reminders';
+
+  @override
+  String get notificationsSubtitle => 'Notify me before a task is due';
+
+  @override
+  String get sectionReminders => 'Reminders';
+
+  @override
+  String get addToCalendarTitle => 'Add to Astraea calendar';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'This task also appears in Astraea\'s calendar and widget, on the day it is due.';
+
+  @override
+  String get addToCalendarNeedsSync =>
+      'Requires an account, a relay and a due date';
 }

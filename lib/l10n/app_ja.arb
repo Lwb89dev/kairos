@@ -157,5 +157,20 @@
   "importKeyButton": "既存の鍵をインポート",
   "importKeyFieldLabel": "nsecまたは16進数の秘密鍵",
   "importButton": "インポート",
-  "storageFailureMessage": "Kairosは暗号化されたローカルデータベースを開けませんでした。アプリを再起動してください。アプリのデータは消去せず、問題が続く場合は非公開で報告してください。"
+  "storageFailureMessage": "Kairosは暗号化されたローカルデータベースを開けませんでした。アプリを再起動してください。アプリのデータは消去せず、問題が続く場合は非公開で報告してください。",
+  "remindersLabel": "リマインダー",
+  "addReminderButton": "リマインダーを追加",
+  "remindersNeedDueDate": "リマインダーを追加するには期限を設定してください",
+  "removeReminderTooltip": "リマインダーを削除",
+  "reminderAtDueTime": "期限の時刻",
+  "reminderMinutesBefore": "{count, plural, other{{count} 分前}}",
+  "reminderHoursBefore": "{count, plural, other{{count} 時間前}}",
+  "reminderDaysBefore": "{count, plural, other{{count} 日前}}",
+  "maxRemindersReached": "タスクに設定できるリマインダーは最大 {count} 件です",
+  "notificationsTitle": "タスクのリマインダー",
+  "notificationsSubtitle": "タスクの期限前に通知する",
+  "sectionReminders": "リマインダー",
+  "addToCalendarTitle": "Astraea のカレンダーに追加",
+  "addToCalendarSubtitle": "このタスクは期限の日に Astraea のカレンダーとウィジェットにも表示されます。",
+  "addToCalendarNeedsSync": "アカウント、リレー、期限が必要です"
 }

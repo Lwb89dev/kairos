@@ -381,4 +381,76 @@ class AppLocalizationsEt extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos ei suutnud avada oma krüpteeritud kohalikku andmebaasi. Käivitage rakendus uuesti. Ärge kustutage rakenduse andmeid; kui probleem püsib, teatage sellest privaatselt.';
+
+  @override
+  String get remindersLabel => 'Meeldetuletused';
+
+  @override
+  String get addReminderButton => 'Lisa meeldetuletus';
+
+  @override
+  String get remindersNeedDueDate => 'Määra tähtaeg, et lisada meeldetuletusi';
+
+  @override
+  String get removeReminderTooltip => 'Eemalda meeldetuletus';
+
+  @override
+  String get reminderAtDueTime => 'Tähtaja hetkel';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutit varem',
+      one: '1 minut varem',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tundi varem',
+      one: '1 tund varem',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count päeva varem',
+      one: '1 päev varem',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Ülesandel võib olla kuni $count meeldetuletust';
+  }
+
+  @override
+  String get notificationsTitle => 'Ülesannete meeldetuletused';
+
+  @override
+  String get notificationsSubtitle => 'Teavita mind enne ülesande tähtaega';
+
+  @override
+  String get sectionReminders => 'Meeldetuletused';
+
+  @override
+  String get addToCalendarTitle => 'Lisa Astraea kalendrisse';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'See ülesanne ilmub tähtajapäeval ka Astraea kalendrisse ja vidinasse.';
+
+  @override
+  String get addToCalendarNeedsSync => 'Nõuab kontot, releed ja tähtaega';
 }

@@ -157,5 +157,20 @@
   "importKeyButton": "Importar uma chave existente",
   "importKeyFieldLabel": "nsec ou chave privada hexadecimal",
   "importButton": "Importar",
-  "storageFailureMessage": "O Kairos não conseguiu abrir seu banco de dados local criptografado. Reinicie o app. Não limpe os dados do app; se o problema persistir, relate-o de forma privada."
+  "storageFailureMessage": "O Kairos não conseguiu abrir seu banco de dados local criptografado. Reinicie o app. Não limpe os dados do app; se o problema persistir, relate-o de forma privada.",
+  "remindersLabel": "Lembretes",
+  "addReminderButton": "Adicionar lembrete",
+  "remindersNeedDueDate": "Define um prazo para adicionar lembretes",
+  "removeReminderTooltip": "Remover lembrete",
+  "reminderAtDueTime": "À hora do prazo",
+  "reminderMinutesBefore": "{count, plural, =1{1 minuto antes} other{{count} minutos antes}}",
+  "reminderHoursBefore": "{count, plural, =1{1 hora antes} other{{count} horas antes}}",
+  "reminderDaysBefore": "{count, plural, =1{1 dia antes} other{{count} dias antes}}",
+  "maxRemindersReached": "Uma tarefa pode ter no máximo {count} lembretes",
+  "notificationsTitle": "Lembretes de tarefas",
+  "notificationsSubtitle": "Avisar-me antes do prazo de uma tarefa",
+  "sectionReminders": "Lembretes",
+  "addToCalendarTitle": "Adicionar ao calendário Astraea",
+  "addToCalendarSubtitle": "Esta tarefa aparece também no calendário e no widget do Astraea, no dia do prazo.",
+  "addToCalendarNeedsSync": "Requer uma conta, um relay e um prazo"
 }

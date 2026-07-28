@@ -381,4 +381,82 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos nie mógł otworzyć zaszyfrowanej lokalnej bazy danych. Uruchom aplikację ponownie. Nie czyść danych aplikacji; jeśli problem będzie się powtarzał, zgłoś go poufnie.';
+
+  @override
+  String get remindersLabel => 'Przypomnienia';
+
+  @override
+  String get addReminderButton => 'Dodaj przypomnienie';
+
+  @override
+  String get remindersNeedDueDate => 'Ustaw termin, aby dodać przypomnienia';
+
+  @override
+  String get removeReminderTooltip => 'Usuń przypomnienie';
+
+  @override
+  String get reminderAtDueTime => 'O godzinie terminu';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minuty wcześniej',
+      many: '$count minut wcześniej',
+      few: '$count minuty wcześniej',
+      one: '1 minutę wcześniej',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count godziny wcześniej',
+      many: '$count godzin wcześniej',
+      few: '$count godziny wcześniej',
+      one: '1 godzinę wcześniej',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dnia wcześniej',
+      many: '$count dni wcześniej',
+      few: '$count dni wcześniej',
+      one: '1 dzień wcześniej',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Zadanie może mieć najwyżej $count przypomnień';
+  }
+
+  @override
+  String get notificationsTitle => 'Przypomnienia o zadaniach';
+
+  @override
+  String get notificationsSubtitle => 'Powiadom mnie przed terminem zadania';
+
+  @override
+  String get sectionReminders => 'Przypomnienia';
+
+  @override
+  String get addToCalendarTitle => 'Dodaj do kalendarza Astraea';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'To zadanie pojawi się także w kalendarzu i widżecie Astraea, w dniu terminu.';
+
+  @override
+  String get addToCalendarNeedsSync => 'Wymaga konta, przekaźnika i terminu';
 }

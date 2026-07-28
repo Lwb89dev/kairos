@@ -381,4 +381,82 @@ class AppLocalizationsSl extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos ni mogel odpreti svoje šifrirane lokalne podatkovne zbirke. Znova zaženite aplikacijo. Ne brišite podatkov aplikacije; če se težava nadaljuje, jo prijavite zasebno.';
+
+  @override
+  String get remindersLabel => 'Opomniki';
+
+  @override
+  String get addReminderButton => 'Dodaj opomnik';
+
+  @override
+  String get remindersNeedDueDate => 'Nastavi rok, da lahko dodaš opomnike';
+
+  @override
+  String get removeReminderTooltip => 'Odstrani opomnik';
+
+  @override
+  String get reminderAtDueTime => 'Ob času roka';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minut prej',
+      few: '$count minute prej',
+      two: '$count minuti prej',
+      one: '1 minuto prej',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ur prej',
+      few: '$count ure prej',
+      two: '$count uri prej',
+      one: '1 uro prej',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dni prej',
+      few: '$count dni prej',
+      two: '$count dneva prej',
+      one: '1 dan prej',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Opravilo ima lahko največ $count opomnikov';
+  }
+
+  @override
+  String get notificationsTitle => 'Opomniki za opravila';
+
+  @override
+  String get notificationsSubtitle => 'Obvesti me pred rokom opravila';
+
+  @override
+  String get sectionReminders => 'Opomniki';
+
+  @override
+  String get addToCalendarTitle => 'Dodaj v koledar Astraea';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'To opravilo se na dan roka prikaže tudi v koledarju in pripomočku Astraea.';
+
+  @override
+  String get addToCalendarNeedsSync => 'Zahteva račun, rele in rok';
 }

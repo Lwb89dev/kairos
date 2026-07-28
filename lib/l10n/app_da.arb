@@ -157,5 +157,20 @@
   "importKeyButton": "Importer en eksisterende nøgle",
   "importKeyFieldLabel": "nsec eller hexadecimal privat nøgle",
   "importButton": "Importer",
-  "storageFailureMessage": "Kairos kunne ikke åbne sin krypterede lokale database. Genstart appen. Ryd ikke appdata; hvis problemet fortsætter, så rapporter det privat."
+  "storageFailureMessage": "Kairos kunne ikke åbne sin krypterede lokale database. Genstart appen. Ryd ikke appdata; hvis problemet fortsætter, så rapporter det privat.",
+  "remindersLabel": "Påmindelser",
+  "addReminderButton": "Tilføj påmindelse",
+  "remindersNeedDueDate": "Angiv en forfaldsdato for at tilføje påmindelser",
+  "removeReminderTooltip": "Fjern påmindelse",
+  "reminderAtDueTime": "På forfaldstidspunktet",
+  "reminderMinutesBefore": "{count, plural, =1{1 minut før} other{{count} minutter før}}",
+  "reminderHoursBefore": "{count, plural, =1{1 time før} other{{count} timer før}}",
+  "reminderDaysBefore": "{count, plural, =1{1 dag før} other{{count} dage før}}",
+  "maxRemindersReached": "En opgave kan højst have {count} påmindelser",
+  "notificationsTitle": "Opgavepåmindelser",
+  "notificationsSubtitle": "Giv mig besked, før en opgave forfalder",
+  "sectionReminders": "Påmindelser",
+  "addToCalendarTitle": "Føj til Astraea-kalender",
+  "addToCalendarSubtitle": "Denne opgave vises også i Astraeas kalender og widget på forfaldsdagen.",
+  "addToCalendarNeedsSync": "Kræver en konto, et relay og en forfaldsdato"
 }

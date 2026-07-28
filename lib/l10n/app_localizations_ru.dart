@@ -382,4 +382,82 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos не удалось открыть зашифрованную локальную базу данных. Перезапустите приложение. Не удаляйте данные приложения; если проблема не исчезнет, сообщите о ней конфиденциально.';
+
+  @override
+  String get remindersLabel => 'Напоминания';
+
+  @override
+  String get addReminderButton => 'Добавить напоминание';
+
+  @override
+  String get remindersNeedDueDate => 'Укажите срок, чтобы добавить напоминания';
+
+  @override
+  String get removeReminderTooltip => 'Удалить напоминание';
+
+  @override
+  String get reminderAtDueTime => 'В момент срока';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'за $count минуты',
+      many: 'за $count минут',
+      few: 'за $count минуты',
+      one: 'за 1 минуту',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'за $count часа',
+      many: 'за $count часов',
+      few: 'за $count часа',
+      one: 'за 1 час',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'за $count дня',
+      many: 'за $count дней',
+      few: 'за $count дня',
+      one: 'за 1 день',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'У задачи может быть не более $count напоминаний';
+  }
+
+  @override
+  String get notificationsTitle => 'Напоминания о задачах';
+
+  @override
+  String get notificationsSubtitle => 'Уведомлять до наступления срока задачи';
+
+  @override
+  String get sectionReminders => 'Напоминания';
+
+  @override
+  String get addToCalendarTitle => 'Добавить в календарь Astraea';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Эта задача появится также в календаре и виджете Astraea в день срока.';
+
+  @override
+  String get addToCalendarNeedsSync => 'Требуются аккаунт, реле и срок';
 }

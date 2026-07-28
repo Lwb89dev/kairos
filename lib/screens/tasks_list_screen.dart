@@ -38,7 +38,13 @@ class _TasksListScreenState extends ConsumerState<TasksListScreen>
     // On-entry sync. Post-frame so the first build (local Hive data) is
     // never blocked by the relay round-trip.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) ref.read(tasksProvider.notifier).syncNow();
+      if (!mounted) return;
+      final notifier = ref.read(tasksProvider.notifier);
+      notifier.syncNow();
+      // Pending alarms are OS state and can vanish without the app being
+      // told (app update, cleared data, a permission granted later, a task
+      // that arrived from another device). Rebuild them on every open.
+      notifier.rescheduleReminders();
     });
   }
 

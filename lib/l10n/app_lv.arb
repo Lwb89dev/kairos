@@ -157,5 +157,20 @@
   "importKeyButton": "Importēt esošu atslēgu",
   "importKeyFieldLabel": "nsec vai heksadecimālā privātā atslēga",
   "importButton": "Importēt",
-  "storageFailureMessage": "Kairos neizdevās atvērt savu šifrēto lokālo datubāzi. Restartējiet lietotni. Nedzēsiet lietotnes datus; ja problēma turpinās, ziņojiet par to privāti."
+  "storageFailureMessage": "Kairos neizdevās atvērt savu šifrēto lokālo datubāzi. Restartējiet lietotni. Nedzēsiet lietotnes datus; ja problēma turpinās, ziņojiet par to privāti.",
+  "remindersLabel": "Atgādinājumi",
+  "addReminderButton": "Pievienot atgādinājumu",
+  "remindersNeedDueDate": "Iestati termiņu, lai pievienotu atgādinājumus",
+  "removeReminderTooltip": "Noņemt atgādinājumu",
+  "reminderAtDueTime": "Termiņa brīdī",
+  "reminderMinutesBefore": "{count, plural, zero{{count} minūšu iepriekš} one{{count} minūti iepriekš} other{{count} minūtes iepriekš}}",
+  "reminderHoursBefore": "{count, plural, zero{{count} stundu iepriekš} one{{count} stundu iepriekš} other{{count} stundas iepriekš}}",
+  "reminderDaysBefore": "{count, plural, zero{{count} dienu iepriekš} one{{count} dienu iepriekš} other{{count} dienas iepriekš}}",
+  "maxRemindersReached": "Uzdevumam var būt ne vairāk kā {count} atgādinājumi",
+  "notificationsTitle": "Uzdevumu atgādinājumi",
+  "notificationsSubtitle": "Paziņot man pirms uzdevuma termiņa",
+  "sectionReminders": "Atgādinājumi",
+  "addToCalendarTitle": "Pievienot Astraea kalendāram",
+  "addToCalendarSubtitle": "Šis uzdevums termiņa dienā parādās arī Astraea kalendārā un logrīkā.",
+  "addToCalendarNeedsSync": "Nepieciešams konts, relejs un termiņš"
 }

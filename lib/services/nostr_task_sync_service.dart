@@ -2,6 +2,7 @@ import '../models/sync_config_model.dart';
 import '../models/task_model.dart';
 import '../models/user_model.dart';
 import '../utils/logger.dart';
+import 'astraea_calendar_mirror.dart';
 import 'nostr_service.dart';
 import 'task_local_storage_service.dart';
 
@@ -26,14 +27,27 @@ class NostrTaskSyncService {
   NostrTaskSyncService({
     required TaskLocalStorageService taskStorage,
     required NostrService nostrService,
+    required AstraeaCalendarMirror calendarMirror,
   }) : _storage = taskStorage,
-       _nostr = nostrService;
+       _nostr = nostrService,
+       _calendar = calendarMirror;
 
   final TaskLocalStorageService _storage;
   final NostrService _nostr;
+  final AstraeaCalendarMirror _calendar;
+  final Map<String, Future<void>> _taskOperations = {};
 
   /// Encrypts and publishes a single task, then persists it as synced.
   Future<void> publishTask(
+    Task task, {
+    required SyncConfig config,
+    required User author,
+  }) => _enqueueTaskOperation(
+    task.id,
+    () => _publishTask(task, config: config, author: author),
+  );
+
+  Future<void> _publishTask(
     Task task, {
     required SyncConfig config,
     required User author,
@@ -47,7 +61,6 @@ class NostrTaskSyncService {
       author: author,
       task: owned,
       relayUrls: config.allSyncRelays,
-      homeRelayUrl: config.homeRelayUrl,
     );
     await _storage.markSyncedIfCurrent(
       owned,
@@ -55,6 +68,57 @@ class NostrTaskSyncService {
       ownerPubkey: author.publicKeyHex,
       clearDeletionRequestPending: true,
     );
+    await _syncCalendarMirror(owned, config: config, author: author);
+  }
+
+  /// Brings the Astraea calendar event for [task] in line with the task's
+  /// current state: published when the user asked for it, retracted when they
+  /// stopped (or the task lost its due date), untouched otherwise.
+  ///
+  /// Never allowed to fail a publish. The task itself is already safely on the
+  /// relays by the time this runs; a calendar entry that could not be written
+  /// is a cosmetic loss in another app, and turning it into a sync error would
+  /// leave the task marked unsynced and endlessly retried.
+  Future<void> _syncCalendarMirror(
+    Task task, {
+    required SyncConfig config,
+    required User author,
+  }) async {
+    final current = _storage.getTask(task.id) ?? task;
+    if (current.localOnly) return;
+    final owner = current.syncOwnerPubkey;
+    if (owner != null && owner != author.publicKeyHex) return;
+    final wanted = AstraeaCalendarMirror.shouldMirror(current);
+    final existingEventId = current.calendarNostrEventId;
+    if (!wanted &&
+        existingEventId == null &&
+        !current.calendarMirrorRetractionPending) {
+      return;
+    }
+
+    try {
+      if (wanted) {
+        final eventId = await _calendar.publish(
+          task: current,
+          config: config,
+          author: author,
+        );
+        await _storage.updateCalendarMirror(
+          task.id,
+          expectedUpdatedAt: current.updatedAt,
+          calendarEventId: eventId,
+        );
+        return;
+      }
+      await _calendar.retract(task: current, config: config, author: author);
+      await _storage.updateCalendarMirror(
+        task.id,
+        expectedUpdatedAt: current.updatedAt,
+        calendarEventId: null,
+      );
+    } catch (_) {
+      SyncLog.warn('NOSTR', 'Calendar mirror could not be updated');
+    }
   }
 
   /// Pulls and decrypts every Kairos task of [author] from the relays.
@@ -65,11 +129,7 @@ class NostrTaskSyncService {
     SyncLog.nostr(
       'fetchTasksFromRelay from ${config.allSyncRelays.length} relay(s)',
     );
-    return _nostr.fetchTasks(
-      author: author,
-      relayUrls: config.allSyncRelays,
-      homeRelayUrl: config.homeRelayUrl,
-    );
+    return _nostr.fetchTasks(author: author, relayUrls: config.allSyncRelays);
   }
 
   /// Propagates a deletion. [task] must already be the local tombstone
@@ -85,6 +145,15 @@ class NostrTaskSyncService {
     Task task, {
     required SyncConfig config,
     required User author,
+  }) => _enqueueTaskOperation(
+    task.id,
+    () => _deleteTask(task, config: config, author: author),
+  );
+
+  Future<void> _deleteTask(
+    Task task, {
+    required SyncConfig config,
+    required User author,
   }) async {
     SyncLog.nostr('deleteTask ${task.id}');
     final relays = config.allSyncRelays;
@@ -94,14 +163,12 @@ class NostrTaskSyncService {
       author: author,
       task: owned,
       relayUrls: relays,
-      homeRelayUrl: config.homeRelayUrl,
     );
     if (previousEventId != null) {
       await _nostr.publishDeletion(
         author: author,
         nostrEventId: previousEventId,
         relayUrls: relays,
-        homeRelayUrl: config.homeRelayUrl,
       );
     }
     await _storage.markSyncedIfCurrent(
@@ -110,6 +177,9 @@ class NostrTaskSyncService {
       ownerPubkey: author.publicKeyHex,
       clearDeletionRequestPending: true,
     );
+    // A deleted task must not leave its calendar entry behind: shouldMirror
+    // is false for a tombstone, so this retracts rather than republishes.
+    await _syncCalendarMirror(owned, config: config, author: author);
   }
 
   /// Full sync cycle: pull + decrypt, merge last-write-wins by `updatedAt`,
@@ -126,17 +196,32 @@ class NostrTaskSyncService {
     var changed = 0;
     for (final task in incoming) {
       if (await mergeIncoming(task, existingById: existingById)) {
-        existingById[task.id] = task;
+        existingById[task.id] = _storage.getTask(task.id) ?? task;
         changed++;
       }
     }
 
     var pushFailures = 0;
     for (final local in existingById.values) {
-      if (local.synced) continue;
-      // Explicitly pinned to this device: neither the task nor its
+      // Explicitly pinned to this device: neither the task nor its calendar
       // tombstone ever goes out.
       if (local.localOnly) continue;
+      if (local.synced) {
+        // A task can be synced even when its optional Astraea publication
+        // failed. Retry only the states that prove a mirror is missing or
+        // stale; a healthy mirror must not be republished on every sync.
+        final mirrorMissing =
+            AstraeaCalendarMirror.shouldMirror(local) &&
+            local.calendarNostrEventId == null;
+        final mirrorMustBeRetracted =
+            !AstraeaCalendarMirror.shouldMirror(local) &&
+            (local.calendarNostrEventId != null ||
+                local.calendarMirrorRetractionPending);
+        if (mirrorMissing || mirrorMustBeRetracted) {
+          await _syncCalendarMirror(local, config: config, author: author);
+        }
+        continue;
+      }
       final owner = local.syncOwnerPubkey;
       if (owner != null && owner != author.publicKeyHex) {
         SyncLog.warn(
@@ -151,7 +236,7 @@ class NostrTaskSyncService {
         } else {
           await publishTask(local, config: config, author: author);
         }
-      } catch (e) {
+      } catch (_) {
         pushFailures++;
         SyncLog.warn('NOSTR', 'Failed to push one task');
         // Leave it unsynced; the next cycle retries it.
@@ -171,7 +256,17 @@ class NostrTaskSyncService {
   }) async {
     final existing = existingById[incoming.id];
     if (existing == null || incoming.updatedAt.isAfter(existing.updatedAt)) {
-      await _storage.saveTask(incoming);
+      // The mirror event id is local bookkeeping. Keep it while accepting
+      // the remote task revision, otherwise a remote "mirror off" edit would
+      // erase the id before Kairos can publish the Astraea tombstone.
+      final merged = incoming.copyWith(
+        calendarNostrEventId: existing?.calendarNostrEventId,
+        calendarMirrorRetractionPending:
+            existing?.calendarMirrorRetractionPending == true ||
+            (existing?.mirrorToCalendar == true && !incoming.mirrorToCalendar),
+      );
+      await _storage.saveTask(merged);
+      existingById[incoming.id] = merged;
       return true;
     }
     return false;
@@ -193,5 +288,34 @@ class NostrTaskSyncService {
     final claimed = current.copyWith(syncOwnerPubkey: author.publicKeyHex);
     await _storage.saveTask(claimed);
     return claimed;
+  }
+
+  Future<void> _enqueueTaskOperation(
+    String taskId,
+    Future<void> Function() operation,
+  ) async {
+    final previous = _taskOperations[taskId];
+    final next = _runAfter(previous, operation);
+    _taskOperations[taskId] = next;
+    try {
+      await next;
+    } finally {
+      if (identical(_taskOperations[taskId], next)) {
+        _taskOperations.remove(taskId);
+      }
+    }
+  }
+
+  Future<void> _runAfter(
+    Future<void>? previous,
+    Future<void> Function() operation,
+  ) async {
+    try {
+      await previous;
+    } catch (_) {
+      // A failed publication must not block a later revision for the same
+      // task. The caller still receives the current operation's error.
+    }
+    await operation();
   }
 }

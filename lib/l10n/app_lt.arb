@@ -157,5 +157,20 @@
   "importKeyButton": "Importuoti esamą raktą",
   "importKeyFieldLabel": "nsec arba šešioliktainis privatus raktas",
   "importButton": "Importuoti",
-  "storageFailureMessage": "Kairos nepavyko atverti šifruotos vietinės duomenų bazės. Paleiskite programą iš naujo. Nevalykite programos duomenų; jei problema kartojasi, praneškite apie ją privačiai."
+  "storageFailureMessage": "Kairos nepavyko atverti šifruotos vietinės duomenų bazės. Paleiskite programą iš naujo. Nevalykite programos duomenų; jei problema kartojasi, praneškite apie ją privačiai.",
+  "remindersLabel": "Priminimai",
+  "addReminderButton": "Pridėti priminimą",
+  "remindersNeedDueDate": "Nustatyk terminą, kad galėtum pridėti priminimų",
+  "removeReminderTooltip": "Pašalinti priminimą",
+  "reminderAtDueTime": "Termino metu",
+  "reminderMinutesBefore": "{count, plural, one{prieš {count} minutę} few{prieš {count} minutes} many{prieš {count} minutės} other{prieš {count} minučių}}",
+  "reminderHoursBefore": "{count, plural, one{prieš {count} valandą} few{prieš {count} valandas} many{prieš {count} valandos} other{prieš {count} valandų}}",
+  "reminderDaysBefore": "{count, plural, one{prieš {count} dieną} few{prieš {count} dienas} many{prieš {count} dienos} other{prieš {count} dienų}}",
+  "maxRemindersReached": "Užduotis gali turėti daugiausia {count} priminimų",
+  "notificationsTitle": "Užduočių priminimai",
+  "notificationsSubtitle": "Pranešti man prieš užduoties terminą",
+  "sectionReminders": "Priminimai",
+  "addToCalendarTitle": "Pridėti į Astraea kalendorių",
+  "addToCalendarSubtitle": "Ši užduotis termino dieną taip pat matoma Astraea kalendoriuje ir valdiklyje.",
+  "addToCalendarNeedsSync": "Reikia paskyros, relės ir termino"
 }

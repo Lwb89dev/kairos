@@ -6,6 +6,63 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Task reminders. A task with a due date can carry several notifications
+  ("at the due time", 5/15/30 minutes, 1/2 hours or 1 day before); setting a
+  deadline for the first time adds a one-hour reminder that can be changed or
+  removed. Reminders are handed to the system when the task is saved and
+  delivered by it, so nothing runs in the background, and they follow the task
+  to the account's other devices. A single switch in Settings turns them all
+  off and back on without losing the per-task choices.
+- Astraea calendar integration. A dated task can be published as an Astraea
+  calendar event, so it appears in that app's calendar and home-screen widget
+  on the day it is due. Opt-in per task, from the editor. The two apps meet on
+  the relays using the account's own key — nothing is installed, shared or
+  configured between them, and Astraea needs no changes.
+- Four more suggested relays (`relay.primal.net`, `relay.nostr.band`,
+  `nostr.mom`, `relay.snort.social`) alongside the existing two, for
+  redundancy when one is slow or unreachable. As before, none is selected
+  unless the user taps it.
+- Relays on the local network can now be added to the ordinary relay list,
+  not only to the dedicated home-relay slot, over `wss://` or plaintext
+  `ws://`. Plaintext remains refused towards any host outside the local
+  network.
+
+### Fixed
+
+- A personal home relay using a `ws://` or private-network address was
+  accepted by the interface but silently discarded when saved, and again when
+  reloaded, so the setting was lost on restart. Relay normalization existed in
+  three divergent copies; there is now a single one used everywhere.
+
+### Security
+
+- Bounded the work a relay reply can impose. A relay answering a request with
+  thousands of events carrying the account's public key and an invalid
+  signature could block the interface for tens of seconds. Replies are now
+  reduced before any signature verification, the amount verified per sync is
+  capped, and verification yields regularly so the app stays responsive.
+- Closed several ways to write an internal address that got past the
+  loopback/private-network refusal on public relay entries, including
+  IPv4-in-IPv6 forms and integer notations such as `2130706433` or `127.1`.
+- Applied that same refusal to profile-avatar downloads, which follow
+  redirects chosen by a remote host and previously had no such check.
+- Rejected relay URLs containing control characters or out-of-range ports
+  instead of storing a normalized version of them.
+- Closed websocket connections to relays removed from the configuration
+  instead of leaving them open until the app restarted.
+- Restricted Android TLS trust to the system certificate store.
+
+### Removed
+
+- Unused `since` parameter on the task fetch and the never-read `about` field
+  on cached profiles.
+- The separate "public relay" and "home relay" URL rules, which had grown
+  identical in everything except a flag every caller passed the same way.
+  There is now one rule: encrypted transport everywhere, plaintext only
+  towards the local network.
+
 ## [0.1.0] - 2026-07-19
 
 First public release.

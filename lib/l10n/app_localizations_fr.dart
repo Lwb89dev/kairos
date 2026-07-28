@@ -384,4 +384,78 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos n\'a pas pu ouvrir sa base de données locale chiffrée. Redémarrez l\'application. Ne réinitialisez pas les données de l\'application ; si le problème persiste, signalez-le en privé.';
+
+  @override
+  String get remindersLabel => 'Rappels';
+
+  @override
+  String get addReminderButton => 'Ajouter un rappel';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Définissez une échéance pour ajouter des rappels';
+
+  @override
+  String get removeReminderTooltip => 'Supprimer le rappel';
+
+  @override
+  String get reminderAtDueTime => 'À l’heure de l’échéance';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutes avant',
+      one: '1 minute avant',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count heures avant',
+      one: '1 heure avant',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jours avant',
+      one: '1 jour avant',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Une tâche peut avoir au maximum $count rappels';
+  }
+
+  @override
+  String get notificationsTitle => 'Rappels de tâches';
+
+  @override
+  String get notificationsSubtitle => 'M’avertir avant l’échéance d’une tâche';
+
+  @override
+  String get sectionReminders => 'Rappels';
+
+  @override
+  String get addToCalendarTitle => 'Ajouter au calendrier Astraea';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Cette tâche apparaît aussi dans le calendrier et le widget d’Astraea, le jour de son échéance.';
+
+  @override
+  String get addToCalendarNeedsSync =>
+      'Nécessite un compte, un relais et une échéance';
 }

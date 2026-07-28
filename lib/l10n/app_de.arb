@@ -157,5 +157,20 @@
   "importKeyButton": "Vorhandenen Schlüssel importieren",
   "importKeyFieldLabel": "nsec oder hexadezimaler privater Schlüssel",
   "importButton": "Importieren",
-  "storageFailureMessage": "Kairos konnte die verschlüsselte lokale Datenbank nicht öffnen. Starte die App neu. Lösche keine App-Daten; falls das Problem weiterhin besteht, melde es vertraulich."
+  "storageFailureMessage": "Kairos konnte die verschlüsselte lokale Datenbank nicht öffnen. Starte die App neu. Lösche keine App-Daten; falls das Problem weiterhin besteht, melde es vertraulich.",
+  "remindersLabel": "Erinnerungen",
+  "addReminderButton": "Erinnerung hinzufügen",
+  "remindersNeedDueDate": "Lege ein Fälligkeitsdatum fest, um Erinnerungen hinzuzufügen",
+  "removeReminderTooltip": "Erinnerung entfernen",
+  "reminderAtDueTime": "Zum Fälligkeitszeitpunkt",
+  "reminderMinutesBefore": "{count, plural, =1{1 Minute vorher} other{{count} Minuten vorher}}",
+  "reminderHoursBefore": "{count, plural, =1{1 Stunde vorher} other{{count} Stunden vorher}}",
+  "reminderDaysBefore": "{count, plural, =1{1 Tag vorher} other{{count} Tage vorher}}",
+  "maxRemindersReached": "Eine Aufgabe kann höchstens {count} Erinnerungen haben",
+  "notificationsTitle": "Aufgabenerinnerungen",
+  "notificationsSubtitle": "Vor Fälligkeit einer Aufgabe benachrichtigen",
+  "sectionReminders": "Erinnerungen",
+  "addToCalendarTitle": "Zum Astraea-Kalender hinzufügen",
+  "addToCalendarSubtitle": "Diese Aufgabe erscheint am Fälligkeitstag auch in Astraeas Kalender und Widget.",
+  "addToCalendarNeedsSync": "Erfordert Konto, Relay und Fälligkeitsdatum"
 }

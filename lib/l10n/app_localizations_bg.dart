@@ -384,4 +384,78 @@ class AppLocalizationsBg extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos не можа да отвори криптираната си локална база данни. Рестартирайте приложението. Не изтривайте данните на приложението; ако проблемът продължава, докладвайте го поверително.';
+
+  @override
+  String get remindersLabel => 'Напомняния';
+
+  @override
+  String get addReminderButton => 'Добавяне на напомняне';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Задай краен срок, за да добавиш напомняния';
+
+  @override
+  String get removeReminderTooltip => 'Премахване на напомнянето';
+
+  @override
+  String get reminderAtDueTime => 'В момента на срока';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count минути по-рано',
+      one: '1 минута по-рано',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count часа по-рано',
+      one: '1 час по-рано',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count дни по-рано',
+      one: '1 ден по-рано',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Една задача може да има най-много $count напомняния';
+  }
+
+  @override
+  String get notificationsTitle => 'Напомняния за задачи';
+
+  @override
+  String get notificationsSubtitle =>
+      'Уведомявай ме преди крайния срок на задача';
+
+  @override
+  String get sectionReminders => 'Напомняния';
+
+  @override
+  String get addToCalendarTitle => 'Добавяне в календара на Astraea';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Тази задача се показва и в календара и приспособлението на Astraea, в деня на срока.';
+
+  @override
+  String get addToCalendarNeedsSync => 'Изисква акаунт, реле и краен срок';
 }

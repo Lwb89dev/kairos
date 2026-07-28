@@ -388,4 +388,79 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos konnte die verschlüsselte lokale Datenbank nicht öffnen. Starte die App neu. Lösche keine App-Daten; falls das Problem weiterhin besteht, melde es vertraulich.';
+
+  @override
+  String get remindersLabel => 'Erinnerungen';
+
+  @override
+  String get addReminderButton => 'Erinnerung hinzufügen';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Lege ein Fälligkeitsdatum fest, um Erinnerungen hinzuzufügen';
+
+  @override
+  String get removeReminderTooltip => 'Erinnerung entfernen';
+
+  @override
+  String get reminderAtDueTime => 'Zum Fälligkeitszeitpunkt';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Minuten vorher',
+      one: '1 Minute vorher',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Stunden vorher',
+      one: '1 Stunde vorher',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Tage vorher',
+      one: '1 Tag vorher',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Eine Aufgabe kann höchstens $count Erinnerungen haben';
+  }
+
+  @override
+  String get notificationsTitle => 'Aufgabenerinnerungen';
+
+  @override
+  String get notificationsSubtitle =>
+      'Vor Fälligkeit einer Aufgabe benachrichtigen';
+
+  @override
+  String get sectionReminders => 'Erinnerungen';
+
+  @override
+  String get addToCalendarTitle => 'Zum Astraea-Kalender hinzufügen';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Diese Aufgabe erscheint am Fälligkeitstag auch in Astraeas Kalender und Widget.';
+
+  @override
+  String get addToCalendarNeedsSync =>
+      'Erfordert Konto, Relay und Fälligkeitsdatum';
 }

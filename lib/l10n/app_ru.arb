@@ -157,5 +157,20 @@
   "importKeyButton": "Импортировать существующий ключ",
   "importKeyFieldLabel": "nsec или приватный ключ в hex",
   "importButton": "Импортировать",
-  "storageFailureMessage": "Kairos не удалось открыть зашифрованную локальную базу данных. Перезапустите приложение. Не удаляйте данные приложения; если проблема не исчезнет, сообщите о ней конфиденциально."
+  "storageFailureMessage": "Kairos не удалось открыть зашифрованную локальную базу данных. Перезапустите приложение. Не удаляйте данные приложения; если проблема не исчезнет, сообщите о ней конфиденциально.",
+  "remindersLabel": "Напоминания",
+  "addReminderButton": "Добавить напоминание",
+  "remindersNeedDueDate": "Укажите срок, чтобы добавить напоминания",
+  "removeReminderTooltip": "Удалить напоминание",
+  "reminderAtDueTime": "В момент срока",
+  "reminderMinutesBefore": "{count, plural, =1{за 1 минуту} few{за {count} минуты} many{за {count} минут} other{за {count} минуты}}",
+  "reminderHoursBefore": "{count, plural, =1{за 1 час} few{за {count} часа} many{за {count} часов} other{за {count} часа}}",
+  "reminderDaysBefore": "{count, plural, =1{за 1 день} few{за {count} дня} many{за {count} дней} other{за {count} дня}}",
+  "maxRemindersReached": "У задачи может быть не более {count} напоминаний",
+  "notificationsTitle": "Напоминания о задачах",
+  "notificationsSubtitle": "Уведомлять до наступления срока задачи",
+  "sectionReminders": "Напоминания",
+  "addToCalendarTitle": "Добавить в календарь Astraea",
+  "addToCalendarSubtitle": "Эта задача появится также в календаре и виджете Astraea в день срока.",
+  "addToCalendarNeedsSync": "Требуются аккаунт, реле и срок"
 }

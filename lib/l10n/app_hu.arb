@@ -157,5 +157,20 @@
   "importKeyButton": "Meglévő kulcs importálása",
   "importKeyFieldLabel": "nsec vagy hexadecimális privát kulcs",
   "importButton": "Importálás",
-  "storageFailureMessage": "A Kairos nem tudta megnyitni a titkosított helyi adatbázisát. Indítsd újra az alkalmazást. Ne töröld az alkalmazás adatait; ha a probléma továbbra is fennáll, jelentsd privát módon."
+  "storageFailureMessage": "A Kairos nem tudta megnyitni a titkosított helyi adatbázisát. Indítsd újra az alkalmazást. Ne töröld az alkalmazás adatait; ha a probléma továbbra is fennáll, jelentsd privát módon.",
+  "remindersLabel": "Emlékeztetők",
+  "addReminderButton": "Emlékeztető hozzáadása",
+  "remindersNeedDueDate": "Állíts be határidőt az emlékeztetők hozzáadásához",
+  "removeReminderTooltip": "Emlékeztető eltávolítása",
+  "reminderAtDueTime": "A határidő időpontjában",
+  "reminderMinutesBefore": "{count, plural, =1{1 perccel előtte} other{{count} perccel előtte}}",
+  "reminderHoursBefore": "{count, plural, =1{1 órával előtte} other{{count} órával előtte}}",
+  "reminderDaysBefore": "{count, plural, =1{1 nappal előtte} other{{count} nappal előtte}}",
+  "maxRemindersReached": "Egy feladathoz legfeljebb {count} emlékeztető tartozhat",
+  "notificationsTitle": "Feladat-emlékeztetők",
+  "notificationsSubtitle": "Értesíts a feladat határideje előtt",
+  "sectionReminders": "Emlékeztetők",
+  "addToCalendarTitle": "Hozzáadás az Astraea naptárhoz",
+  "addToCalendarSubtitle": "Ez a feladat a határidő napján az Astraea naptárában és widgetjében is megjelenik.",
+  "addToCalendarNeedsSync": "Fiók, relay és határidő szükséges"
 }

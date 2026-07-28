@@ -381,4 +381,80 @@ class AppLocalizationsHr extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos nije mogao otvoriti svoju šifriranu lokalnu bazu podataka. Ponovno pokrenite aplikaciju. Ne brišite podatke aplikacije; ako se problem nastavi, prijavite ga privatno.';
+
+  @override
+  String get remindersLabel => 'Podsjetnici';
+
+  @override
+  String get addReminderButton => 'Dodaj podsjetnik';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Postavi rok da bi mogao dodati podsjetnike';
+
+  @override
+  String get removeReminderTooltip => 'Ukloni podsjetnik';
+
+  @override
+  String get reminderAtDueTime => 'U trenutku roka';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minuta prije',
+      few: '$count minute prije',
+      one: '1 minutu prije',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sati prije',
+      few: '$count sata prije',
+      one: '1 sat prije',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dana prije',
+      few: '$count dana prije',
+      one: '1 dan prije',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Zadatak može imati najviše $count podsjetnika';
+  }
+
+  @override
+  String get notificationsTitle => 'Podsjetnici na zadatke';
+
+  @override
+  String get notificationsSubtitle => 'Obavijesti me prije roka zadatka';
+
+  @override
+  String get sectionReminders => 'Podsjetnici';
+
+  @override
+  String get addToCalendarTitle => 'Dodaj u Astraea kalendar';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Ovaj se zadatak na dan roka pojavljuje i u Astraeinu kalendaru i widgetu.';
+
+  @override
+  String get addToCalendarNeedsSync => 'Potreban je račun, relej i rok';
 }

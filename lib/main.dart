@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 import 'l10n/app_localizations.dart';
 import 'providers/app_entry_provider.dart';
@@ -11,9 +14,12 @@ import 'providers/theme_provider.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/tasks_list_screen.dart';
 import 'utils/constants.dart';
+import 'utils/logger.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await _initializeTimezone();
 
   // Read the persisted theme/language before the first frame so they can be
   // seeded into the container below and the app never flashes the wrong
@@ -38,11 +44,33 @@ Future<void> main() async {
     return;
   }
 
+  // Reminders are handed to the OS, so the plugin has to exist before any
+  // task is saved. Failures are contained inside init(): a device that
+  // refuses notifications must still get its task list.
+  await container.read(notificationServiceProvider).init();
+
   runApp(
     UncontrolledProviderScope(container: container, child: const KairosApp()),
   );
   // The on-entry relay sync lives in TasksListScreen (it fires both on
   // first mount and on every app resume), so main() has nothing more to do.
+}
+
+/// Seeds the `timezone` package's local zone from the device.
+///
+/// Reminders fire at a wall-clock moment computed from a UTC due date, so the
+/// zone has to be the device's real IANA zone, not the UTC fallback the
+/// package starts with — otherwise every reminder would land offset by the
+/// user's UTC difference. A lookup failure falls back to UTC rather than
+/// blocking startup.
+Future<void> _initializeTimezone() async {
+  tz.initializeTimeZones();
+  try {
+    final name = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(name));
+  } catch (_) {
+    debugLog('Could not resolve the device timezone', name: 'main');
+  }
 }
 
 class _StorageFailureApp extends StatelessWidget {

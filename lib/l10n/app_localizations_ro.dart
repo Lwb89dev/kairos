@@ -383,4 +383,82 @@ class AppLocalizationsRo extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos nu a putut deschide baza de date locală criptată. Repornește aplicația. Nu șterge datele aplicației; dacă problema persistă, raportează-o confidențial.';
+
+  @override
+  String get remindersLabel => 'Mementouri';
+
+  @override
+  String get addReminderButton => 'Adaugă memento';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Stabilește un termen pentru a adăuga mementouri';
+
+  @override
+  String get removeReminderTooltip => 'Elimină mementoul';
+
+  @override
+  String get reminderAtDueTime => 'La ora scadenței';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'cu $count de minute înainte',
+      few: 'cu $count minute înainte',
+      one: 'cu 1 minut înainte',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'cu $count de ore înainte',
+      few: 'cu $count ore înainte',
+      one: 'cu 1 oră înainte',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'cu $count de zile înainte',
+      few: 'cu $count zile înainte',
+      one: 'cu 1 zi înainte',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'O sarcină poate avea cel mult $count mementouri';
+  }
+
+  @override
+  String get notificationsTitle => 'Mementouri pentru sarcini';
+
+  @override
+  String get notificationsSubtitle =>
+      'Anunță-mă înainte de termenul unei sarcini';
+
+  @override
+  String get sectionReminders => 'Mementouri';
+
+  @override
+  String get addToCalendarTitle => 'Adaugă în calendarul Astraea';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Această sarcină apare și în calendarul și widgetul Astraea, în ziua scadenței.';
+
+  @override
+  String get addToCalendarNeedsSync =>
+      'Necesită un cont, un releu și un termen';
 }

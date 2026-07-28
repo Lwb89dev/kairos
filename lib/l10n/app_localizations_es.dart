@@ -383,4 +383,78 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos no pudo abrir su base de datos local cifrada. Reinicia la app. No borres los datos de la app; si el problema persiste, repórtalo de forma privada.';
+
+  @override
+  String get remindersLabel => 'Recordatorios';
+
+  @override
+  String get addReminderButton => 'Añadir recordatorio';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Establece una fecha límite para añadir recordatorios';
+
+  @override
+  String get removeReminderTooltip => 'Quitar recordatorio';
+
+  @override
+  String get reminderAtDueTime => 'A la hora de vencimiento';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutos antes',
+      one: '1 minuto antes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count horas antes',
+      one: '1 hora antes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count días antes',
+      one: '1 día antes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Una tarea puede tener como máximo $count recordatorios';
+  }
+
+  @override
+  String get notificationsTitle => 'Recordatorios de tareas';
+
+  @override
+  String get notificationsSubtitle => 'Avisarme antes de que venza una tarea';
+
+  @override
+  String get sectionReminders => 'Recordatorios';
+
+  @override
+  String get addToCalendarTitle => 'Añadir al calendario de Astraea';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Esta tarea también aparece en el calendario y el widget de Astraea, el día de vencimiento.';
+
+  @override
+  String get addToCalendarNeedsSync =>
+      'Requiere una cuenta, un relé y una fecha límite';
 }

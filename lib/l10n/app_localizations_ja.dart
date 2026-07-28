@@ -371,4 +371,73 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairosは暗号化されたローカルデータベースを開けませんでした。アプリを再起動してください。アプリのデータは消去せず、問題が続く場合は非公開で報告してください。';
+
+  @override
+  String get remindersLabel => 'リマインダー';
+
+  @override
+  String get addReminderButton => 'リマインダーを追加';
+
+  @override
+  String get remindersNeedDueDate => 'リマインダーを追加するには期限を設定してください';
+
+  @override
+  String get removeReminderTooltip => 'リマインダーを削除';
+
+  @override
+  String get reminderAtDueTime => '期限の時刻';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 分前',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 時間前',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 日前',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'タスクに設定できるリマインダーは最大 $count 件です';
+  }
+
+  @override
+  String get notificationsTitle => 'タスクのリマインダー';
+
+  @override
+  String get notificationsSubtitle => 'タスクの期限前に通知する';
+
+  @override
+  String get sectionReminders => 'リマインダー';
+
+  @override
+  String get addToCalendarTitle => 'Astraea のカレンダーに追加';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'このタスクは期限の日に Astraea のカレンダーとウィジェットにも表示されます。';
+
+  @override
+  String get addToCalendarNeedsSync => 'アカウント、リレー、期限が必要です';
 }

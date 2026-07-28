@@ -119,21 +119,21 @@ void main() {
       author: author,
       task: task,
       relayUrls: relays,
-      homeRelayUrl: relay.url,
     );
     expect(eventId, isNotEmpty);
     expect(relay.storedEvents, hasLength(1));
 
-    final fetched = await service.fetchTasks(
-      author: author,
-      relayUrls: relays,
-      homeRelayUrl: relay.url,
-    );
+    final fetched = await service.fetchTasks(author: author, relayUrls: relays);
     expect(fetched, hasLength(1));
     expect(fetched.single.id, task.id);
     expect(fetched.single.title, task.title);
     expect(fetched.single.synced, isTrue);
     expect(fetched.single.nostrEventId, eventId);
+    expect(
+      Nostr.instance.services.relays.eventsRegistry,
+      isEmpty,
+      reason: 'relay event cache must not retain fetched payloads',
+    );
   });
 
   test('cold start: fetch-only session restores a pre-existing event', () async {
@@ -166,7 +166,6 @@ void main() {
     final fetched = await service.fetchTasks(
       author: author,
       relayUrls: [relay.url],
-      homeRelayUrl: relay.url,
     );
     expect(
       fetched,
@@ -187,18 +186,15 @@ void main() {
       author: author,
       task: task,
       relayUrls: [relay.url],
-      homeRelayUrl: relay.url,
     );
 
     final first = await service.fetchTasks(
       author: author,
       relayUrls: [relay.url],
-      homeRelayUrl: relay.url,
     );
     final second = await service.fetchTasks(
       author: author,
       relayUrls: [relay.url],
-      homeRelayUrl: relay.url,
     );
     expect(first, hasLength(1));
     expect(
@@ -229,7 +225,6 @@ void main() {
               author: author,
               task: task,
               relayUrls: const [deadRelay],
-              homeRelayUrl: deadRelay,
             )
             .timeout(const Duration(seconds: 25)),
         throwsA(isA<StateError>()),
@@ -243,12 +238,7 @@ void main() {
   test('a local-only task is refused by the publish path', () async {
     final pinned = buildTask().copyWith(localOnly: true);
     await expectLater(
-      service.publishTask(
-        author: author,
-        task: pinned,
-        relayUrls: [relay.url],
-        homeRelayUrl: relay.url,
-      ),
+      service.publishTask(author: author, task: pinned, relayUrls: [relay.url]),
       throwsA(isA<StateError>()),
       reason: 'Task.localOnly must never reach a relay, not even by mistake',
     );

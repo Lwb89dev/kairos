@@ -1,6 +1,5 @@
 {
   "@@locale": "en",
-
   "settingsTitle": "Settings",
   "sectionAccount": "Account",
   "addAccountTitle": "Add a Nostr account",
@@ -42,7 +41,6 @@
       }
     }
   },
-
   "relayInvalidUrlWss": "Enter a valid encrypted wss:// relay URL.",
   "relayUrlHint": "wss://your-relay…",
   "addRelayTooltip": "Add relay",
@@ -55,7 +53,6 @@
   "homeRelayUrlHint": "wss://your-home-relay, or ws:// on your LAN",
   "homeRelayInvalidUrl": "Enter a valid wss:// relay URL (ws:// is only allowed for a home relay on your own network).",
   "saveButton": "Save",
-
   "onboardingSaveError": "Could not save setup on this device.",
   "backButton": "Back",
   "getStartedButton": "Get started",
@@ -83,7 +80,6 @@
   "relaySetupTitle": "Choose your relays",
   "relaySetupBody": "Relays store encrypted tasks for synchronization with Kairos on your other devices. Add one or more, or leave this empty and configure sync later.",
   "relaySettingsLoadError": "Could not load relay settings.",
-
   "taskGoneMessage": "This task no longer exists.",
   "taskDetailsTitle": "Task",
   "editTooltip": "Edit",
@@ -120,7 +116,6 @@
   "deleteTaskConfirmBody": "The task is removed locally and a deletion request is sent to your relays.",
   "deleteButton": "Delete",
   "deleteTaskError": "Could not delete the task locally.",
-
   "saveTaskError": "Could not save the task locally.",
   "editTaskTitle": "Edit task",
   "newTaskTitle": "New task",
@@ -140,7 +135,6 @@
   "tooManyTagsError": "Use at most 32 tags.",
   "tagTooLongError": "Each tag must be at most 64 characters.",
   "priorityScaleHint": "1 = low, 5 = high",
-
   "syncNowTooltip": "Sync now",
   "settingsTooltip": "Settings",
   "newTaskTooltip": "New task",
@@ -155,7 +149,6 @@
       }
     }
   },
-
   "invalidKeyError": "That private key is not valid. Check it and try again.",
   "signInError": "Could not sign in. Please try again.",
   "signInAmberButton": "Sign in with Amber",
@@ -164,6 +157,85 @@
   "importKeyButton": "Import an existing key",
   "importKeyFieldLabel": "nsec or hex private key",
   "importButton": "Import",
-
-  "storageFailureMessage": "Kairos could not open its encrypted local database. Restart the app. Do not clear app data; if the problem persists, report it privately."
+  "storageFailureMessage": "Kairos could not open its encrypted local database. Restart the app. Do not clear app data; if the problem persists, report it privately.",
+  "remindersLabel": "Reminders",
+  "@remindersLabel": {
+    "description": "Section header for a task's reminder list in the editor"
+  },
+  "addReminderButton": "Add reminder",
+  "@addReminderButton": {
+    "description": "Button that adds another reminder to a task"
+  },
+  "remindersNeedDueDate": "Set a due date to add reminders",
+  "@remindersNeedDueDate": {
+    "description": "Explains why reminders are unavailable on a task without a deadline"
+  },
+  "removeReminderTooltip": "Remove reminder",
+  "@removeReminderTooltip": {
+    "description": "Tooltip on the button removing one reminder"
+  },
+  "reminderAtDueTime": "At the due time",
+  "@reminderAtDueTime": {
+    "description": "Reminder offset of zero minutes"
+  },
+  "reminderMinutesBefore": "{count, plural, =1{1 minute before} other{{count} minutes before}}",
+  "@reminderMinutesBefore": {
+    "description": "Reminder offset expressed in minutes",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderHoursBefore": "{count, plural, =1{1 hour before} other{{count} hours before}}",
+  "@reminderHoursBefore": {
+    "description": "Reminder offset expressed in hours",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reminderDaysBefore": "{count, plural, =1{1 day before} other{{count} days before}}",
+  "@reminderDaysBefore": {
+    "description": "Reminder offset expressed in days",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "maxRemindersReached": "A task can have at most {count} reminders",
+  "@maxRemindersReached": {
+    "description": "Message shown when the reminder limit is hit",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notificationsTitle": "Task reminders",
+  "@notificationsTitle": {
+    "description": "Settings row toggling all reminders"
+  },
+  "notificationsSubtitle": "Notify me before a task is due",
+  "@notificationsSubtitle": {
+    "description": "Explanation under the reminders toggle in Settings"
+  },
+  "sectionReminders": "Reminders",
+  "@sectionReminders": {
+    "description": "Settings section header for reminder options"
+  },
+  "addToCalendarTitle": "Add to Astraea calendar",
+  "@addToCalendarTitle": {
+    "description": "Editor option publishing the task as a calendar event"
+  },
+  "addToCalendarSubtitle": "This task also appears in Astraea's calendar and widget, on the day it is due.",
+  "@addToCalendarSubtitle": {
+    "description": "Explanation under the Astraea calendar option"
+  },
+  "addToCalendarNeedsSync": "Requires an account, a relay and a due date",
+  "@addToCalendarNeedsSync": {
+    "description": "Explains why the Astraea calendar option is unavailable"
+  }
 }

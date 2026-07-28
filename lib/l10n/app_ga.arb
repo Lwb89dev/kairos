@@ -157,5 +157,20 @@
   "importKeyButton": "Iompórtáil eochair atá ann cheana",
   "importKeyFieldLabel": "nsec nó eochair phríobháideach heicsidheachúlach",
   "importButton": "Iompórtáil",
-  "storageFailureMessage": "Níorbh fhéidir le Kairos a bhunachar sonraí áitiúil criptithe a oscailt. Atosaigh an aip. Ná glan sonraí na haipe; má leanann an fhadhb, tuairiscigh í go príobháideach."
+  "storageFailureMessage": "Níorbh fhéidir le Kairos a bhunachar sonraí áitiúil criptithe a oscailt. Atosaigh an aip. Ná glan sonraí na haipe; má leanann an fhadhb, tuairiscigh í go príobháideach.",
+  "remindersLabel": "Meabhrúcháin",
+  "addReminderButton": "Cuir meabhrúchán leis",
+  "remindersNeedDueDate": "Socraigh spriocdháta chun meabhrúcháin a chur leis",
+  "removeReminderTooltip": "Bain an meabhrúchán",
+  "reminderAtDueTime": "Ag am an spriocdháta",
+  "reminderMinutesBefore": "{count, plural, one{{count} nóiméad roimh ré} two{{count} nóiméad roimh ré} few{{count} nóiméad roimh ré} many{{count} nóiméad roimh ré} other{{count} nóiméad roimh ré}}",
+  "reminderHoursBefore": "{count, plural, one{{count} uair roimh ré} two{{count} uair roimh ré} few{{count} huaire roimh ré} many{{count} n-uaire roimh ré} other{{count} uair roimh ré}}",
+  "reminderDaysBefore": "{count, plural, one{{count} lá roimh ré} two{{count} lá roimh ré} few{{count} lá roimh ré} many{{count} lá roimh ré} other{{count} lá roimh ré}}",
+  "maxRemindersReached": "Ní féidir níos mó ná {count} meabhrúchán a bheith ag tasc",
+  "notificationsTitle": "Meabhrúcháin tascanna",
+  "notificationsSubtitle": "Cuir in iúl dom roimh spriocdháta taisc",
+  "sectionReminders": "Meabhrúcháin",
+  "addToCalendarTitle": "Cuir le féilire Astraea",
+  "addToCalendarSubtitle": "Taispeántar an tasc seo i bhféilire agus i ngiuirléid Astraea freisin, ar lá an spriocdháta.",
+  "addToCalendarNeedsSync": "Teastaíonn cuntas, athsheachadán agus spriocdháta"
 }

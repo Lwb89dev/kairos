@@ -76,6 +76,21 @@ dependencies:
   # address via a lightning: URI, with a clipboard-copy fallback.
   url_launcher: ^6.3.2
 
+  # Task reminders. Handed to the OS at save time via zonedSchedule() and
+  # delivered by it — no polling, no background service. Same version as
+  # Astraea so a device running both apps loads one copy of the plugin.
+  flutter_local_notifications: ^18.0.1
+
+  # IANA timezone database. Due dates are stored in UTC; a reminder has to
+  # fire at the right *wall-clock* moment, which is only well-defined in a
+  # named zone (a DST change between saving and firing would otherwise move
+  # the notification by an hour).
+  timezone: ^0.9.4
+
+  # Reads the device's current IANA timezone name at startup to seed the
+  # `timezone` package's local location.
+  flutter_timezone: ^3.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

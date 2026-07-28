@@ -1,5 +1,6 @@
 import '../utils/constants.dart';
 import '../utils/task_colors.dart';
+import 'reminder_model.dart';
 
 /// Lifecycle state of a task. Deliberately just two states (inline checkbox
 /// semantics) — richer workflows are out of scope for the MVP.
@@ -30,6 +31,18 @@ class Task {
 
   /// Free-form category tags, e.g. `["work", "personal"]`.
   final List<String> tags;
+
+  /// Bounds shared by the model's own validation, the editor's form fields
+  /// and [TasksNotifier]'s argument checks, so the three can't drift apart.
+  static const int maxTags = 32;
+  static const int maxTagLength = 64;
+  static const int maxTitleLength = 512;
+  static const int maxDescriptionLength = 16384;
+
+  /// Longest sensible `tag, tag, tag` input: every tag at full length plus
+  /// the ", " separators between them.
+  static const int maxTagsInputLength =
+      maxTags * maxTagLength + (maxTags - 1) * 2;
 
   /// Optional protocol-level cross-reference to a calendar event.
   final String? linkedEventId;
@@ -78,6 +91,32 @@ class Task {
   /// relays always come back with `false`.
   final bool localOnly;
 
+  /// Local notifications the user asked for, as offsets before [dueDateUtc].
+  /// Empty when the task has no due date — there would be nothing to count
+  /// back from. Part of [toSyncJson]: a reminder set on one device is a
+  /// property of the task, so it follows it to the user's other devices.
+  final List<Reminder> reminders;
+
+  /// The user's per-task choice to also publish this task as an Astraea
+  /// calendar event, so a dated task shows up in that app's calendar and
+  /// home-screen widget (see [AstraeaCalendarMirror]).
+  ///
+  /// Opt-in, and meaningless without a due date. This is part of the task's
+  /// synchronized user choice; the relay-confirmed event id below remains
+  /// device-local bookkeeping.
+  final bool mirrorToCalendar;
+
+  /// Relay-confirmed id of the last kind-30078 calendar event published for
+  /// this task, kept so the mirror can send both a tombstone and a best-effort
+  /// NIP-09 cleanup when the task is deleted or the mirror is switched off.
+  /// Device-local bookkeeping.
+  final String? calendarNostrEventId;
+
+  /// Local retry marker for a mirror that must be retracted. It covers the
+  /// small race where a newer revision disables mirroring before the prior
+  /// publish has written its relay event id to local storage.
+  final bool calendarMirrorRetractionPending;
+
   const Task({
     required this.id,
     required this.title,
@@ -96,6 +135,10 @@ class Task {
     this.deleted = false,
     this.deletionRequestPending = false,
     this.localOnly = false,
+    this.reminders = const [],
+    this.mirrorToCalendar = false,
+    this.calendarNostrEventId,
+    this.calendarMirrorRetractionPending = false,
   });
 
   /// The Kind-30789 `d` tag: `checkmarks:<uuid>`. Immutable for the lifetime
@@ -127,6 +170,11 @@ class Task {
     bool? deletionRequestPending,
     bool clearDeletionRequestPending = false,
     bool? localOnly,
+    List<Reminder>? reminders,
+    bool? mirrorToCalendar,
+    String? calendarNostrEventId,
+    bool clearCalendarNostrEventId = false,
+    bool? calendarMirrorRetractionPending,
   }) {
     return Task(
       id: id,
@@ -150,7 +198,26 @@ class Task {
           ? false
           : (deletionRequestPending ?? this.deletionRequestPending),
       localOnly: localOnly ?? this.localOnly,
+      // A task with no due date has nothing to schedule against, so dropping
+      // its due date drops its reminders and its calendar mirror with it.
+      reminders: _effectiveDueDate(dueDateUtc, clearDueDate) == null
+          ? const []
+          : (reminders ?? this.reminders),
+      mirrorToCalendar:
+          _effectiveDueDate(dueDateUtc, clearDueDate) != null &&
+          (mirrorToCalendar ?? this.mirrorToCalendar),
+      calendarNostrEventId: clearCalendarNostrEventId
+          ? null
+          : (calendarNostrEventId ?? this.calendarNostrEventId),
+      calendarMirrorRetractionPending:
+          calendarMirrorRetractionPending ??
+          this.calendarMirrorRetractionPending,
     );
+  }
+
+  DateTime? _effectiveDueDate(DateTime? incoming, bool cleared) {
+    if (cleared) return null;
+    return incoming ?? dueDateUtc;
   }
 
   Map<String, dynamic> toJson() {
@@ -172,6 +239,10 @@ class Task {
       'deleted': deleted,
       'deletionRequestPending': deletionRequestPending,
       'localOnly': localOnly,
+      'reminders': reminders.map((r) => r.toJson()).toList(),
+      'mirrorToCalendar': mirrorToCalendar,
+      'calendarNostrEventId': calendarNostrEventId,
+      'calendarMirrorRetractionPending': calendarMirrorRetractionPending,
     };
   }
 
@@ -190,6 +261,8 @@ class Task {
     'createdAt': createdAt.toIso8601String(),
     'updatedAt': updatedAt.toIso8601String(),
     'deleted': deleted,
+    'reminders': reminders.map((r) => r.toJson()).toList(),
+    'mirrorToCalendar': mirrorToCalendar,
   };
 
   factory Task.fromJson(Map<String, dynamic> json) {
@@ -197,12 +270,12 @@ class Task {
     final title = _requiredBoundedString(
       json['title'],
       'title',
-      maxLength: 512,
+      maxLength: maxTitleLength,
     );
     final description = _optionalBoundedString(
       json['description'],
       'description',
-      maxLength: 16384,
+      maxLength: maxDescriptionLength,
     );
     final rawTags = json['tags'];
     if (rawTags != null && rawTags is! List) {
@@ -212,9 +285,9 @@ class Task {
         .whereType<String>()
         .map((tag) => tag.trim())
         .where((tag) => tag.isNotEmpty)
-        .take(32)
+        .take(maxTags)
         .toList(growable: false);
-    if (tags.any((tag) => tag.length > 64)) {
+    if (tags.any((tag) => tag.length > maxTagLength)) {
       throw const FormatException('Task tag is too long.');
     }
     final priority = json['priority'];
@@ -224,13 +297,19 @@ class Task {
     }
     final synced = json['synced'] as bool? ?? false;
     final deleted = json['deleted'] as bool? ?? false;
+    final dueDateUtc = json['dueDate'] == null
+        ? null
+        : DateTime.parse(json['dueDate'] as String).toUtc();
+    // Reminders count back from the due date and the calendar mirror needs a
+    // date to place the event on, so neither can outlive it. Enforced here as
+    // well as in copyWith because this is where relay- and disk-supplied data
+    // enters, and those are not obliged to be consistent.
+    final hasDueDate = dueDateUtc != null;
     return Task(
       id: id,
       title: title,
       description: description,
-      dueDateUtc: json['dueDate'] == null
-          ? null
-          : DateTime.parse(json['dueDate'] as String).toUtc(),
+      dueDateUtc: dueDateUtc,
       status: TaskStatus.fromName(json['status'] as String?),
       tags: tags,
       linkedEventId: _optionalBoundedString(
@@ -257,6 +336,18 @@ class Task {
       deletionRequestPending:
           json['deletionRequestPending'] as bool? ?? (deleted && !synced),
       localOnly: json['localOnly'] as bool? ?? false,
+      reminders: hasDueDate
+          ? Reminder.listFromJson(json['reminders'])
+          : const [],
+      mirrorToCalendar:
+          hasDueDate && (json['mirrorToCalendar'] as bool? ?? false),
+      calendarNostrEventId: _optionalBoundedString(
+        json['calendarNostrEventId'],
+        'calendarNostrEventId',
+        maxLength: 128,
+      ),
+      calendarMirrorRetractionPending:
+          json['calendarMirrorRetractionPending'] as bool? ?? false,
     );
   }
 }

@@ -37,7 +37,7 @@ class SyncConfigNotifier extends AsyncNotifier<SyncConfig> {
   Future<void> setHomeRelay(String? url) async {
     final trimmed = url == null || url.trim().isEmpty
         ? null
-        : normalizeSecureRelayUrl(url, allowInsecureLocal: true);
+        : normalizeSecureRelayUrl(url);
     if (url != null && url.trim().isNotEmpty && trimmed == null) return;
     await _save((c) {
       if (trimmed == null || trimmed.isEmpty) {
@@ -51,27 +51,24 @@ class SyncConfigNotifier extends AsyncNotifier<SyncConfig> {
     });
   }
 
-  Future<void> save(SyncConfig config) async {
-    final safe = _sanitize(config);
-    final current =
-        state.value ??
-        await ref.read(localStorageServiceProvider).loadSyncConfig();
-    await ref.read(localStorageServiceProvider).saveSyncConfig(safe);
-    final addedRelay = safe.allSyncRelays.any(
-      (relay) => !current.allSyncRelays.contains(relay),
-    );
-    if (addedRelay) {
-      await ref.read(taskLocalStorageServiceProvider).markAllUnsynced();
-    }
-    state = AsyncData(safe);
-  }
+  Future<void> save(SyncConfig config) => _save((_) => config);
 
+  /// Applies [update] to the current configuration, persists the sanitized
+  /// result and publishes it. A relay the user just added has to receive the
+  /// tasks it missed, so every existing revision is marked pending.
   Future<void> _save(SyncConfig Function(SyncConfig) update) async {
-    final current =
-        state.value ??
-        await ref.read(localStorageServiceProvider).loadSyncConfig();
-    final next = update(current);
-    await ref.read(localStorageServiceProvider).saveSyncConfig(next);
+    final storage = ref.read(localStorageServiceProvider);
+    final current = state.value ?? await storage.loadSyncConfig();
+    final next = update(current).sanitized();
+    await storage.saveSyncConfig(next);
+
+    // Deselecting a relay has to actually close its socket. This is the only
+    // place that knows the user changed the selection, and the transport
+    // layer's registry never drops anything on its own.
+    await ref
+        .read(nostrServiceProvider)
+        .dropDeselectedRelays(next.allSyncRelays.toSet());
+
     final addedRelay = next.allSyncRelays.any(
       (relay) => !current.allSyncRelays.contains(relay),
     );
@@ -79,24 +76,6 @@ class SyncConfigNotifier extends AsyncNotifier<SyncConfig> {
       await ref.read(taskLocalStorageServiceProvider).markAllUnsynced();
     }
     state = AsyncData(next);
-  }
-
-  SyncConfig _sanitize(SyncConfig config) {
-    final home = normalizeSecureRelayUrl(
-      config.homeRelayUrl ?? '',
-      allowInsecureLocal: true,
-    );
-    final relayLimit = home == null
-        ? AppConstants.maxRelayConnections
-        : AppConstants.maxRelayConnections - 1;
-    final relays = config.relays
-        .map(normalizeSecureRelayUrl)
-        .whereType<String>()
-        .where((relay) => relay != home)
-        .toSet()
-        .take(relayLimit)
-        .toList(growable: false);
-    return SyncConfig(relays: relays, homeRelayUrl: home);
   }
 }
 

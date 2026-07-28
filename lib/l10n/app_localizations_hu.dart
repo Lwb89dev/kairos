@@ -383,4 +383,77 @@ class AppLocalizationsHu extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'A Kairos nem tudta megnyitni a titkosított helyi adatbázisát. Indítsd újra az alkalmazást. Ne töröld az alkalmazás adatait; ha a probléma továbbra is fennáll, jelentsd privát módon.';
+
+  @override
+  String get remindersLabel => 'Emlékeztetők';
+
+  @override
+  String get addReminderButton => 'Emlékeztető hozzáadása';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Állíts be határidőt az emlékeztetők hozzáadásához';
+
+  @override
+  String get removeReminderTooltip => 'Emlékeztető eltávolítása';
+
+  @override
+  String get reminderAtDueTime => 'A határidő időpontjában';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count perccel előtte',
+      one: '1 perccel előtte',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count órával előtte',
+      one: '1 órával előtte',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nappal előtte',
+      one: '1 nappal előtte',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Egy feladathoz legfeljebb $count emlékeztető tartozhat';
+  }
+
+  @override
+  String get notificationsTitle => 'Feladat-emlékeztetők';
+
+  @override
+  String get notificationsSubtitle => 'Értesíts a feladat határideje előtt';
+
+  @override
+  String get sectionReminders => 'Emlékeztetők';
+
+  @override
+  String get addToCalendarTitle => 'Hozzáadás az Astraea naptárhoz';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Ez a feladat a határidő napján az Astraea naptárában és widgetjében is megjelenik.';
+
+  @override
+  String get addToCalendarNeedsSync => 'Fiók, relay és határidő szükséges';
 }

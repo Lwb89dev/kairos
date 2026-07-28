@@ -825,6 +825,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Kairos could not open its encrypted local database. Restart the app. Do not clear app data; if the problem persists, report it privately.'**
   String get storageFailureMessage;
+
+  /// Section header for a task's reminder list in the editor
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get remindersLabel;
+
+  /// Button that adds another reminder to a task
+  ///
+  /// In en, this message translates to:
+  /// **'Add reminder'**
+  String get addReminderButton;
+
+  /// Explains why reminders are unavailable on a task without a deadline
+  ///
+  /// In en, this message translates to:
+  /// **'Set a due date to add reminders'**
+  String get remindersNeedDueDate;
+
+  /// Tooltip on the button removing one reminder
+  ///
+  /// In en, this message translates to:
+  /// **'Remove reminder'**
+  String get removeReminderTooltip;
+
+  /// Reminder offset of zero minutes
+  ///
+  /// In en, this message translates to:
+  /// **'At the due time'**
+  String get reminderAtDueTime;
+
+  /// Reminder offset expressed in minutes
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 minute before} other{{count} minutes before}}'**
+  String reminderMinutesBefore(int count);
+
+  /// Reminder offset expressed in hours
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 hour before} other{{count} hours before}}'**
+  String reminderHoursBefore(int count);
+
+  /// Reminder offset expressed in days
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day before} other{{count} days before}}'**
+  String reminderDaysBefore(int count);
+
+  /// Message shown when the reminder limit is hit
+  ///
+  /// In en, this message translates to:
+  /// **'A task can have at most {count} reminders'**
+  String maxRemindersReached(int count);
+
+  /// Settings row toggling all reminders
+  ///
+  /// In en, this message translates to:
+  /// **'Task reminders'**
+  String get notificationsTitle;
+
+  /// Explanation under the reminders toggle in Settings
+  ///
+  /// In en, this message translates to:
+  /// **'Notify me before a task is due'**
+  String get notificationsSubtitle;
+
+  /// Settings section header for reminder options
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get sectionReminders;
+
+  /// Editor option publishing the task as a calendar event
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Astraea calendar'**
+  String get addToCalendarTitle;
+
+  /// Explanation under the Astraea calendar option
+  ///
+  /// In en, this message translates to:
+  /// **'This task also appears in Astraea\'s calendar and widget, on the day it is due.'**
+  String get addToCalendarSubtitle;
+
+  /// Explains why the Astraea calendar option is unavailable
+  ///
+  /// In en, this message translates to:
+  /// **'Requires an account, a relay and a due date'**
+  String get addToCalendarNeedsSync;
 }
 
 class _AppLocalizationsDelegate

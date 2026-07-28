@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:amberflutter/amberflutter.dart';
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:flutter/services.dart' show MissingPluginException;
+import 'package:meta/meta.dart' show visibleForTesting;
 
 import '../models/profile.dart';
 import '../models/task_model.dart';
@@ -11,6 +12,7 @@ import '../models/user_model.dart';
 import '../utils/constants.dart';
 import '../utils/crypto.dart';
 import '../utils/logger.dart';
+import '../utils/relay_url.dart';
 
 /// Wraps all interaction with the Nostr protocol: key generation/import,
 /// npub/nsec conversion (NIP-19 bech32), login (local key or Amber), event
@@ -30,8 +32,15 @@ import '../utils/logger.dart';
 ///    enters the app; signing and NIP-44 encrypt/decrypt are delegated to
 ///    Amber over intents.
 class NostrService {
+  static const _maxDependencyEventCache = 64;
+  static bool _dependencyEventGuardInstalled = false;
+
   final Nostr _nostr = Nostr.instance;
   final Amberflutter _amber = Amberflutter();
+
+  /// The relay set the current websockets were opened for, so a change in
+  /// the user's selection can close the ones that are no longer wanted.
+  Set<String> _connectedRelays = const {};
 
   NostrService() {
     // dart_nostr enables verbose logs by default and may include complete
@@ -39,6 +48,19 @@ class NostrService {
     // the transport silent in every build; Kairos' own redacted diagnostics
     // are sufficient in debug mode.
     _nostr.disableLogs();
+    _installDependencyEventGuard();
+  }
+
+  /// dart_nostr keeps receiving and registering events even after a REQ is
+  /// closed if a relay ignores CLOSE. Install one process-wide guard so that
+  /// its global event cache cannot become an unbounded retention sink.
+  void _installDependencyEventGuard() {
+    if (_dependencyEventGuardInstalled) return;
+    _dependencyEventGuardInstalled = true;
+    _nostr.services.relays.streamsController.events.listen((_) {
+      final registry = _nostr.services.relays.eventsRegistry;
+      if (registry.length > _maxDependencyEventCache) registry.clear();
+    });
   }
 
   // -------------------------------------------------------------------
@@ -197,16 +219,14 @@ class NostrService {
   /// [homeRelayUrl], when given, is the one URL in [relayUrls] allowed to use
   /// a plaintext `ws://` scheme — the personal home-relay exception (see
   /// `normalizeSecureRelayUrl`). Every other relay must still be `wss://`.
-  Future<void> connectToRelays(
-    List<String> relayUrls, {
-    String? homeRelayUrl,
-  }) async {
+  Future<void> connectToRelays(List<String> relayUrls) async {
     debugLog(
       'NostrService.connectToRelays called (${relayUrls.length} relays)',
       name: 'NostrService',
     );
     if (relayUrls.isEmpty) return;
-    _validateRelayUrls(relayUrls, insecureAllowedUrl: homeRelayUrl);
+    _validateRelayUrls(relayUrls);
+
     await _nostr.services.relays.init(
       relaysUrl: relayUrls,
       // A manual/foreground sync will reconnect. Disabling library-level
@@ -215,6 +235,39 @@ class NostrService {
       retryOnError: false,
       retryOnClose: false,
     );
+    // Union, not assignment: the library's registry is append-only (see
+    // [dropDeselectedRelays]), so a socket opened by an earlier call is still
+    // open even if this call didn't ask for it.
+    _connectedRelays = {..._connectedRelays, ...relayUrls};
+  }
+
+  /// Closes every open websocket if any of them is no longer in
+  /// [stillSelected]. Call this when the user's relay configuration changes,
+  /// not on every sync.
+  ///
+  /// `dart_nostr`'s registry is append-only in practice: `init()` accepts an
+  /// `ensureToClearRegistriesBeforeStarting` flag but never forwards it to
+  /// the function that does the connecting, so the flag has no effect, and
+  /// `_registerNewRelays` only ever adds. Without this, a relay the user
+  /// deleted in Settings kept an open connection — and kept seeing the user's
+  /// IP — until the app was restarted.
+  ///
+  /// `disconnectFromRelays()` is all-or-nothing (it clears the whole
+  /// registry), so the next sync transparently reconnects whatever is still
+  /// selected. Doing this only on a real configuration change is what keeps
+  /// it from churning connections: the profile lookup and the task sync
+  /// legitimately connect to different subsets of the same selection.
+  Future<void> dropDeselectedRelays(Set<String> stillSelected) async {
+    if (_connectedRelays.difference(stillSelected).isEmpty) return;
+
+    debugLog('Closing sockets to deselected relays', name: 'NostrService');
+    try {
+      await _nostr.services.relays.disconnectFromRelays();
+    } catch (_) {
+      // A socket that is already gone must not block reconnecting.
+      debugLog('Relay disconnect reported an error', name: 'NostrService');
+    }
+    _connectedRelays = const {};
   }
 
   /// Fetches [publicKeyHex]'s public profile card (kind 0), if any relay has
@@ -241,24 +294,27 @@ class NostrService {
       ),
       relayUrls: urls,
     );
-    final authentic = events
-        .where(
-          (event) => _isAuthenticEvent(
-            event,
-            expectedAuthor: publicKeyHex,
-            expectedKind: 0,
-          ),
-        )
-        .toList();
-    if (authentic.isEmpty) return null;
-
     // Relays don't have to enforce "one kind-0 per author" or return results
-    // in order — pick the most recent event actually received. `createdAt` is
-    // nullable; treat a missing timestamp as oldest rather than crashing.
+    // in order — sort by recency and verify candidates from the newest down,
+    // rather than verifying the whole reply. Signature verification is the
+    // expensive step, so a relay answering a `limit: 1` profile request with
+    // thousands of events must not buy thousands of secp256k1 operations.
     final epoch = DateTime.fromMillisecondsSinceEpoch(0);
-    final latest = authentic.reduce(
-      (a, b) => (a.createdAt ?? epoch).isAfter(b.createdAt ?? epoch) ? a : b,
+    final candidates =
+        events
+            .where((event) => event.pubkey == publicKeyHex && event.kind == 0)
+            .toList()
+          ..sort(
+            (a, b) => (b.createdAt ?? epoch).compareTo(a.createdAt ?? epoch),
+          );
+
+    final latest = await _firstAuthentic(
+      candidates.take(AppConstants.maxProfileCandidates),
+      expectedAuthor: publicKeyHex,
+      expectedKind: 0,
     );
+    if (latest == null) return null;
+
     final content = latest.content;
     if (content == null || content.isEmpty || content.length > 65536) {
       return null;
@@ -283,35 +339,69 @@ class NostrService {
   /// due-date / status tags in cleartext, or the relay operator could read
   /// the user's whole task list. Other Kairos devices decrypt the content
   /// with the same identity and get every field from the JSON body.
+  // `async` matters here: the guard below has to surface as a failed Future,
+  // not a synchronous throw, or every caller awaiting this would have to
+  // wrap it in its own try/catch instead.
   Future<String> publishTask({
     required User author,
     required Task task,
     required List<String> relayUrls,
-    String? homeRelayUrl,
   }) async {
     debugLog('NostrService.publishTask called', name: 'NostrService');
-    if (relayUrls.isEmpty) throw StateError('No relay configured.');
     // Last barrier before the network: a task the user pinned to the device
     // must never be encrypted-and-published, whatever the caller got wrong.
     if (task.localOnly) {
       throw StateError('A local-only task must never be published.');
     }
-    await connectToRelays(relayUrls, homeRelayUrl: homeRelayUrl);
-
-    final content = await _encrypt(author, jsonEncode(task.toSyncJson()));
-    final signed = await _signEvent(
+    return publishRawEvent(
       author: author,
       kind: AppConstants.taskEventKind,
+      dTag: task.dTag,
+      plaintextContent: jsonEncode(task.toSyncJson()),
+      createdAt: task.updatedAt,
+      relayUrls: relayUrls,
+    );
+  }
+
+  /// NIP-44 self-encrypts [plaintextContent], signs it as a parameterized
+  /// replaceable event of [kind] under [dTag], publishes it to [relayUrls] and
+  /// returns the relay-confirmed event id.
+  ///
+  /// The kind and `d` tag are parameters because Kairos writes two different
+  /// document types with the same identity: its own kind-30789 tasks, and the
+  /// kind-30078 `epochs:` calendar events that make a dated task visible in
+  /// Astraea (see [AstraeaCalendarMirror]). Everything else — encryption,
+  /// signing via local key or Amber, the acknowledgement requirement — is
+  /// identical, and duplicating it per document type is how the two would
+  /// drift apart.
+  ///
+  /// Nothing but the `d` tag is ever in cleartext: no title, date or status
+  /// tags, or the relay operator could read the user's whole list.
+  Future<String> publishRawEvent({
+    required User author,
+    required int kind,
+    required String dTag,
+    required String plaintextContent,
+    required DateTime createdAt,
+    required List<String> relayUrls,
+  }) async {
+    if (relayUrls.isEmpty) throw StateError('No relay configured.');
+    await connectToRelays(relayUrls);
+
+    final content = await _encrypt(author, plaintextContent);
+    final signed = await _signEvent(
+      author: author,
+      kind: kind,
       tags: [
-        ['d', task.dTag],
+        ['d', dTag],
       ],
       content: content,
-      createdAt: task.updatedAt,
+      createdAt: createdAt,
     );
 
     // `relays:` is always passed explicitly: dart_nostr's registry keeps every
     // socket ever opened this session, and a null `relays` broadcasts to ALL
-    // of them — which would hand the user's encrypted tasks to relays they
+    // of them — which would hand the user's encrypted data to relays they
     // never chose.
     await _sendToEveryRelay(signed, relayUrls);
     return signed.id!;
@@ -324,15 +414,21 @@ class NostrService {
   ///
   /// Relays can only match exact `#d` values, not a prefix, so we request all
   /// of the author's kind-30789 events and filter to `checkmarks:` client-side.
+  ///
+  /// The reply is reduced *before* any cryptography runs (see
+  /// [_selectNewestPerCoordinate]): signature verification and NIP-44
+  /// decryption are the expensive operations, and a relay is free to answer
+  /// with thousands of events carrying the requested pubkey and a junk
+  /// signature. Only the newest event per `d` tag can ever matter for a
+  /// replaceable kind, so deduplicating first turns that flood into one
+  /// verification per real task.
   Future<List<Task>> fetchTasks({
     required User author,
     required List<String> relayUrls,
-    DateTime? since,
-    String? homeRelayUrl,
   }) async {
     debugLog('NostrService.fetchTasks called', name: 'NostrService');
     if (relayUrls.isEmpty) return const [];
-    await connectToRelays(relayUrls, homeRelayUrl: homeRelayUrl);
+    await connectToRelays(relayUrls);
 
     final events = await _fetchFromRelays(
       request: NostrRequest(
@@ -340,16 +436,18 @@ class NostrService {
           NostrFilter(
             authors: [author.publicKeyHex],
             kinds: const [AppConstants.taskEventKind],
-            since: since,
           ),
         ],
       ),
       relayUrls: relayUrls,
-      homeRelayUrl: homeRelayUrl,
     );
 
+    final candidates = _selectNewestPerCoordinate(events, author);
     final result = <Task>[];
-    for (final raw in events) {
+    var processed = 0;
+    for (final entry in candidates.entries) {
+      await _yieldPeriodically(processed++);
+      final raw = entry.value;
       if (!_isAuthenticEvent(
         raw,
         expectedAuthor: author.publicKeyHex,
@@ -357,15 +455,100 @@ class NostrService {
       )) {
         continue;
       }
-      final content = raw.content;
-      final id = raw.id;
-      if (content == null || content.isEmpty || id == null) continue;
-      final dTag = _dTagOf(raw);
-      if (dTag == null || !dTag.startsWith(AppConstants.dTagPrefix)) continue;
-      final task = await _decryptTask(author, content, id);
-      if (task != null && task.dTag == dTag) result.add(task);
+      final task = await _decryptTask(author, raw.content!, raw.id!);
+      if (task != null && task.dTag == entry.key) result.add(task);
     }
     return result;
+  }
+
+  /// Cheap (string-comparison only) pre-filter over an untrusted relay reply:
+  /// keeps at most one event per `checkmarks:` `d` tag — the one with the
+  /// newest `created_at`, which is the only revision a parameterized
+  /// replaceable kind can meaningfully have — and stops at
+  /// [AppConstants.maxVerifiedEventsPerFetch] distinct tags.
+  ///
+  /// Nothing here is a security check. It is purely a work limiter placed in
+  /// front of the real authentication; every surviving event still has to
+  /// pass [_isAuthenticEvent].
+  Map<String, NostrEvent> _selectNewestPerCoordinate(
+    List<NostrEvent> events,
+    User author,
+  ) {
+    final epoch = DateTime.fromMillisecondsSinceEpoch(0);
+    final newest = <String, NostrEvent>{};
+    for (final event in events) {
+      if (event.pubkey != author.publicKeyHex) continue;
+      if (event.kind != AppConstants.taskEventKind) continue;
+      if (event.id == null) continue;
+      final content = event.content;
+      if (content == null || content.isEmpty) continue;
+      final dTag = _dTagOf(event);
+      if (dTag == null || !dTag.startsWith(AppConstants.dTagPrefix)) continue;
+
+      final existing = newest[dTag];
+      if (existing == null &&
+          newest.length >= AppConstants.maxVerifiedEventsPerFetch) {
+        continue;
+      }
+      final incomingAt = event.createdAt ?? epoch;
+      if (existing == null || incomingAt.isAfter(existing.createdAt ?? epoch)) {
+        newest[dTag] = event;
+      }
+    }
+    return newest;
+  }
+
+  // -------------------------------------------------------------------
+  // Test-only hooks — the untrusted-relay handling is the part worth
+  // exercising directly, without standing up a websocket.
+  // -------------------------------------------------------------------
+
+  @visibleForTesting
+  Map<String, NostrEvent> debugSelectNewestPerCoordinate(
+    List<NostrEvent> events,
+    User author,
+  ) => _selectNewestPerCoordinate(events, author);
+
+  @visibleForTesting
+  bool debugIsAuthenticEvent(
+    NostrEvent event, {
+    required String expectedAuthor,
+    required int expectedKind,
+  }) => _isAuthenticEvent(
+    event,
+    expectedAuthor: expectedAuthor,
+    expectedKind: expectedKind,
+  );
+
+  /// Returns the first event in [candidates] that passes full authentication,
+  /// or null. Bounded by construction: callers pass an already-truncated
+  /// iterable.
+  Future<NostrEvent?> _firstAuthentic(
+    Iterable<NostrEvent> candidates, {
+    required String expectedAuthor,
+    required int expectedKind,
+  }) async {
+    var index = 0;
+    for (final event in candidates) {
+      await _yieldPeriodically(index++);
+      if (_isAuthenticEvent(
+        event,
+        expectedAuthor: expectedAuthor,
+        expectedKind: expectedKind,
+      )) {
+        return event;
+      }
+    }
+    return null;
+  }
+
+  /// Hands the event loop a turn every [AppConstants.cryptoYieldInterval]
+  /// items so a long verify/decrypt run renders frames instead of freezing
+  /// the app until it finishes.
+  Future<void> _yieldPeriodically(int index) async {
+    if (index > 0 && index % AppConstants.cryptoYieldInterval == 0) {
+      await Future<void>.delayed(Duration.zero);
+    }
   }
 
   /// Publishes a NIP-09 deletion request retracting one previous concrete
@@ -375,11 +558,10 @@ class NostrService {
     required User author,
     required String nostrEventId,
     required List<String> relayUrls,
-    String? homeRelayUrl,
   }) async {
     debugLog('NostrService.publishDeletion called', name: 'NostrService');
     if (relayUrls.isEmpty) return;
-    await connectToRelays(relayUrls, homeRelayUrl: homeRelayUrl);
+    await connectToRelays(relayUrls);
 
     final signed = await _signEvent(
       author: author,
@@ -466,19 +648,48 @@ class NostrService {
     required List<List<String>> tags,
     required String content,
     required DateTime createdAt,
+  }) {
+    final sign = author.loginMethod.isLocalKey
+        ? _signWithLocalKey
+        : _signWithAmber;
+    return sign(
+      author: author,
+      kind: kind,
+      tags: tags,
+      content: content,
+      createdAt: createdAt,
+    );
+  }
+
+  Future<NostrEvent> _signWithLocalKey({
+    required User author,
+    required int kind,
+    required List<List<String>> tags,
+    required String content,
+    required DateTime createdAt,
   }) async {
-    if (author.loginMethod.isLocalKey) {
-      final privateKeyHex = _requireLocalKey(author);
-      final keyPair = _nostr.services.keys
-          .generateKeyPairFromExistingPrivateKey(privateKeyHex);
-      return NostrEvent.fromPartialData(
-        kind: kind,
-        content: content,
-        keyPairs: keyPair,
-        tags: tags,
-        createdAt: createdAt,
-      );
-    }
+    final keyPair = _nostr.services.keys.generateKeyPairFromExistingPrivateKey(
+      _requireLocalKey(author),
+    );
+    return NostrEvent.fromPartialData(
+      kind: kind,
+      content: content,
+      keyPairs: keyPair,
+      tags: tags,
+      createdAt: createdAt,
+    );
+  }
+
+  /// Delegates signing to Amber (NIP-55) and then checks that what came back
+  /// is the event we asked for. Amber is a separate app: its reply is data
+  /// crossing a trust boundary, not a return value.
+  Future<NostrEvent> _signWithAmber({
+    required User author,
+    required int kind,
+    required List<List<String>> tags,
+    required String content,
+    required DateTime createdAt,
+  }) async {
     final unsigned = {
       'pubkey': author.publicKeyHex,
       'created_at': createdAt.millisecondsSinceEpoch ~/ 1000,
@@ -494,27 +705,47 @@ class NostrService {
     );
     final signedJson = result['event'] as String?;
     if (signedJson == null) throw StateError('Amber returned no signed event.');
+
     final signed = _nostrEventFromMap(
       jsonDecode(signedJson) as Map<String, dynamic>,
     );
-    final signedCreatedAt = signed.createdAt;
-    final sameCreatedSecond =
-        signedCreatedAt != null &&
-        signedCreatedAt.millisecondsSinceEpoch ~/ 1000 ==
-            createdAt.millisecondsSinceEpoch ~/ 1000;
-    if (!_isAuthenticEvent(
-          signed,
-          expectedAuthor: author.publicKeyHex,
-          expectedKind: kind,
-        ) ||
-        signed.content != content ||
-        jsonEncode(signed.tags) != jsonEncode(tags) ||
-        !sameCreatedSecond) {
+    if (!_matchesSigningRequest(
+      signed,
+      author: author,
+      kind: kind,
+      tags: tags,
+      content: content,
+      createdAt: createdAt,
+    )) {
       throw StateError(
         'Amber returned a signed event that does not match the request.',
       );
     }
     return signed;
+  }
+
+  bool _matchesSigningRequest(
+    NostrEvent signed, {
+    required User author,
+    required int kind,
+    required List<List<String>> tags,
+    required String content,
+    required DateTime createdAt,
+  }) {
+    final signedCreatedAt = signed.createdAt;
+    if (signedCreatedAt == null) return false;
+    // Nostr timestamps are whole seconds, so compare at that resolution.
+    if (signedCreatedAt.millisecondsSinceEpoch ~/ 1000 !=
+        createdAt.millisecondsSinceEpoch ~/ 1000) {
+      return false;
+    }
+    if (signed.content != content) return false;
+    if (jsonEncode(signed.tags) != jsonEncode(tags)) return false;
+    return _isAuthenticEvent(
+      signed,
+      expectedAuthor: author.publicKeyHex,
+      expectedKind: kind,
+    );
   }
 
   // -------------------------------------------------------------------
@@ -547,17 +778,16 @@ class NostrService {
   Future<List<NostrEvent>> _fetchFromRelays({
     required NostrRequest request,
     required List<String> relayUrls,
-    String? homeRelayUrl,
   }) async {
     if (relayUrls.isEmpty) return const [];
-    _validateRelayUrls(relayUrls, insecureAllowedUrl: homeRelayUrl);
+    _validateRelayUrls(relayUrls);
 
     final expectedEose = relayUrls.toSet().length;
     final eoseRelays = <String>{};
     final finished = Completer<void>();
     final events = <NostrEvent>[];
     var totalContentBytes = 0;
-    const maxEvents = 5000;
+    const maxEvents = AppConstants.maxBufferedEventsPerFetch;
     const maxAggregateContentBytes = 16 * 1024 * 1024;
     const maxEventContentBytes = 90000;
 
@@ -574,13 +804,19 @@ class NostrService {
     final listener = subscription.stream.listen(
       (event) {
         final contentLength = event.content?.length ?? 0;
-        if (events.length >= maxEvents ||
-            contentLength > maxEventContentBytes ||
-            totalContentBytes + contentLength > maxAggregateContentBytes) {
-          return;
+        final canBuffer =
+            events.length < maxEvents &&
+            contentLength <= maxEventContentBytes &&
+            totalContentBytes + contentLength <= maxAggregateContentBytes;
+        if (canBuffer && _hasAcceptableEventShape(event)) {
+          totalContentBytes += contentLength;
+          events.add(event);
         }
-        totalContentBytes += contentLength;
-        events.add(event);
+        // dart_nostr retains every unique event in a process-wide registry,
+        // even after the subscription is closed. Keep that dependency cache
+        // bounded; the app does its own bounded collection above.
+        final registry = _nostr.services.relays.eventsRegistry;
+        if (registry.length > _maxDependencyEventCache) registry.clear();
       },
       onError: (_, _) {
         if (!finished.isCompleted) finished.complete();
@@ -594,6 +830,7 @@ class NostrService {
     } finally {
       await listener.cancel();
       subscription.close();
+      _nostr.services.relays.eventsRegistry.clear();
     }
     return events;
   }
@@ -643,6 +880,7 @@ class NostrService {
     required int expectedKind,
   }) {
     try {
+      if (!_hasAcceptableEventShape(event)) return false;
       final id = event.id;
       final content = event.content;
       final createdAt = event.createdAt;
@@ -668,37 +906,46 @@ class NostrService {
     }
   }
 
-  /// [insecureAllowedUrl], when given, is the one URL allowed to use `ws://`
-  /// instead of `wss://` — the personal home-relay exception. Every other
-  /// relay must still be `wss://`; this mirrors `normalizeSecureRelayUrl`'s
-  /// `allowInsecureLocal` rule so a tampered/hand-edited relay list can never
-  /// smuggle an extra plaintext connection through this layer.
-  void _validateRelayUrls(
-    Iterable<String> relayUrls, {
-    String? insecureAllowedUrl,
-  }) {
+  /// Rejects malformed/oversized event structure before it can reach crypto.
+  /// The Nostr dependency parses and retains relay events before this service
+  /// sees them, so this is paired with the bounded registry cleanup in
+  /// [_fetchFromRelays].
+  bool _hasAcceptableEventShape(NostrEvent event) {
+    if (event.id?.length != 64 ||
+        event.pubkey.length != 64 ||
+        event.sig?.length != 128) {
+      return false;
+    }
+    final tags = event.tags;
+    if (tags == null || tags.length > 64) return false;
+
+    var tagCharacters = 0;
+    for (final tag in tags) {
+      if (tag.length > 16) return false;
+      for (final value in tag) {
+        if (value.length > 1024) return false;
+        tagCharacters += value.length;
+        if (tagCharacters > 16384) return false;
+      }
+    }
+    return true;
+  }
+
+  /// Last barrier before a socket is opened. Re-applies
+  /// [normalizeSecureRelayUrl] — plaintext only towards the local network —
+  /// so a tampered or hand-edited relay list cannot smuggle a cleartext
+  /// connection to a public host through this layer, and caps the fan-out.
+  void _validateRelayUrls(Iterable<String> relayUrls) {
     final unique = relayUrls.toSet();
     if (unique.length > AppConstants.maxRelayConnections) {
       throw ArgumentError(
-        'Too many relay connections (maximum ${AppConstants.maxRelayConnections}).',
+        'Too many relay connections '
+        '(maximum ${AppConstants.maxRelayConnections}).',
       );
     }
     for (final raw in unique) {
-      final uri = Uri.tryParse(raw);
-      final schemeOk =
-          uri?.scheme == 'wss' ||
-          (raw == insecureAllowedUrl && uri?.scheme == 'ws');
-      if (uri == null ||
-          !schemeOk ||
-          uri.host.isEmpty ||
-          uri.userInfo.isNotEmpty ||
-          uri.hasFragment ||
-          raw.length > 2048) {
-        throw ArgumentError.value(
-          raw,
-          'relayUrls',
-          'Invalid secure relay URL.',
-        );
+      if (normalizeSecureRelayUrl(raw) == null) {
+        throw ArgumentError.value(raw, 'relayUrls', 'Invalid relay URL.');
       }
     }
   }

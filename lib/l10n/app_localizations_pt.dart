@@ -382,4 +382,76 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'O Kairos não conseguiu abrir seu banco de dados local criptografado. Reinicie o app. Não limpe os dados do app; se o problema persistir, relate-o de forma privada.';
+
+  @override
+  String get remindersLabel => 'Lembretes';
+
+  @override
+  String get addReminderButton => 'Adicionar lembrete';
+
+  @override
+  String get remindersNeedDueDate => 'Define um prazo para adicionar lembretes';
+
+  @override
+  String get removeReminderTooltip => 'Remover lembrete';
+
+  @override
+  String get reminderAtDueTime => 'À hora do prazo';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutos antes',
+      one: '1 minuto antes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count horas antes',
+      one: '1 hora antes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dias antes',
+      one: '1 dia antes',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Uma tarefa pode ter no máximo $count lembretes';
+  }
+
+  @override
+  String get notificationsTitle => 'Lembretes de tarefas';
+
+  @override
+  String get notificationsSubtitle => 'Avisar-me antes do prazo de uma tarefa';
+
+  @override
+  String get sectionReminders => 'Lembretes';
+
+  @override
+  String get addToCalendarTitle => 'Adicionar ao calendário Astraea';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Esta tarefa aparece também no calendário e no widget do Astraea, no dia do prazo.';
+
+  @override
+  String get addToCalendarNeedsSync => 'Requer uma conta, um relay e um prazo';
 }

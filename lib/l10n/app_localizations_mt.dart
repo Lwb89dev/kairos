@@ -384,4 +384,87 @@ class AppLocalizationsMt extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos ma setax jiftaħ id-database lokali kriptata tiegħu. Erġa\' ibda l-app. Tħassarx id-dejta tal-app; jekk il-problema tippersisti, irrapportaha b\'mod privat.';
+
+  @override
+  String get remindersLabel => 'Tfakkiriet';
+
+  @override
+  String get addReminderButton => 'Żid tfakkira';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Issettja data ta’ skadenza biex iżżid tfakkiriet';
+
+  @override
+  String get removeReminderTooltip => 'Neħħi t-tfakkira';
+
+  @override
+  String get reminderAtDueTime => 'Fil-ħin tal-iskadenza';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minuti qabel',
+      many: '$count minuti qabel',
+      few: '$count minuti qabel',
+      two: '$count minuti qabel',
+      one: '$count minuta qabel',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sigħat qabel',
+      many: '$count sigħat qabel',
+      few: '$count sigħat qabel',
+      two: '$count sigħat qabel',
+      one: '$count siegħa qabel',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ijiem qabel',
+      many: '$count ijiem qabel',
+      few: '$count ijiem qabel',
+      two: '$count ijiem qabel',
+      one: '$count jum qabel',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Kompitu jista’ jkollu mhux aktar minn $count tfakkiriet';
+  }
+
+  @override
+  String get notificationsTitle => 'Tfakkiriet tal-kompiti';
+
+  @override
+  String get notificationsSubtitle => 'Avżani qabel l-iskadenza ta’ kompitu';
+
+  @override
+  String get sectionReminders => 'Tfakkiriet';
+
+  @override
+  String get addToCalendarTitle => 'Żid mal-kalendarju Astraea';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Dan il-kompitu jidher ukoll fil-kalendarju u fil-widget ta’ Astraea, fil-jum tal-iskadenza.';
+
+  @override
+  String get addToCalendarNeedsSync =>
+      'Jeħtieġ kont, relay u data ta’ skadenza';
 }

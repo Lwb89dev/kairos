@@ -157,5 +157,20 @@
   "importKeyButton": "Importa ċavetta eżistenti",
   "importKeyFieldLabel": "nsec jew ċavetta privata eżadeċimali",
   "importButton": "Importa",
-  "storageFailureMessage": "Kairos ma setax jiftaħ id-database lokali kriptata tiegħu. Erġa' ibda l-app. Tħassarx id-dejta tal-app; jekk il-problema tippersisti, irrapportaha b'mod privat."
+  "storageFailureMessage": "Kairos ma setax jiftaħ id-database lokali kriptata tiegħu. Erġa' ibda l-app. Tħassarx id-dejta tal-app; jekk il-problema tippersisti, irrapportaha b'mod privat.",
+  "remindersLabel": "Tfakkiriet",
+  "addReminderButton": "Żid tfakkira",
+  "remindersNeedDueDate": "Issettja data ta’ skadenza biex iżżid tfakkiriet",
+  "removeReminderTooltip": "Neħħi t-tfakkira",
+  "reminderAtDueTime": "Fil-ħin tal-iskadenza",
+  "reminderMinutesBefore": "{count, plural, one{{count} minuta qabel} two{{count} minuti qabel} few{{count} minuti qabel} many{{count} minuti qabel} other{{count} minuti qabel}}",
+  "reminderHoursBefore": "{count, plural, one{{count} siegħa qabel} two{{count} sigħat qabel} few{{count} sigħat qabel} many{{count} sigħat qabel} other{{count} sigħat qabel}}",
+  "reminderDaysBefore": "{count, plural, one{{count} jum qabel} two{{count} ijiem qabel} few{{count} ijiem qabel} many{{count} ijiem qabel} other{{count} ijiem qabel}}",
+  "maxRemindersReached": "Kompitu jista’ jkollu mhux aktar minn {count} tfakkiriet",
+  "notificationsTitle": "Tfakkiriet tal-kompiti",
+  "notificationsSubtitle": "Avżani qabel l-iskadenza ta’ kompitu",
+  "sectionReminders": "Tfakkiriet",
+  "addToCalendarTitle": "Żid mal-kalendarju Astraea",
+  "addToCalendarSubtitle": "Dan il-kompitu jidher ukoll fil-kalendarju u fil-widget ta’ Astraea, fil-jum tal-iskadenza.",
+  "addToCalendarNeedsSync": "Jeħtieġ kont, relay u data ta’ skadenza"
 }

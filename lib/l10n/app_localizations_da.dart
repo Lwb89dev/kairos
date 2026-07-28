@@ -380,4 +380,78 @@ class AppLocalizationsDa extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos kunne ikke åbne sin krypterede lokale database. Genstart appen. Ryd ikke appdata; hvis problemet fortsætter, så rapporter det privat.';
+
+  @override
+  String get remindersLabel => 'Påmindelser';
+
+  @override
+  String get addReminderButton => 'Tilføj påmindelse';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Angiv en forfaldsdato for at tilføje påmindelser';
+
+  @override
+  String get removeReminderTooltip => 'Fjern påmindelse';
+
+  @override
+  String get reminderAtDueTime => 'På forfaldstidspunktet';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutter før',
+      one: '1 minut før',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count timer før',
+      one: '1 time før',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dage før',
+      one: '1 dag før',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'En opgave kan højst have $count påmindelser';
+  }
+
+  @override
+  String get notificationsTitle => 'Opgavepåmindelser';
+
+  @override
+  String get notificationsSubtitle => 'Giv mig besked, før en opgave forfalder';
+
+  @override
+  String get sectionReminders => 'Påmindelser';
+
+  @override
+  String get addToCalendarTitle => 'Føj til Astraea-kalender';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Denne opgave vises også i Astraeas kalender og widget på forfaldsdagen.';
+
+  @override
+  String get addToCalendarNeedsSync =>
+      'Kræver en konto, et relay og en forfaldsdato';
 }

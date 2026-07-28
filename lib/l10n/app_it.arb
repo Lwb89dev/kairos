@@ -157,5 +157,20 @@
   "importKeyButton": "Importa una chiave esistente",
   "importKeyFieldLabel": "nsec o chiave privata esadecimale",
   "importButton": "Importa",
-  "storageFailureMessage": "Kairos non è riuscito ad aprire il proprio database locale crittografato. Riavvia l'app. Non cancellare i dati dell'app; se il problema persiste, segnalalo in privato."
+  "storageFailureMessage": "Kairos non è riuscito ad aprire il proprio database locale crittografato. Riavvia l'app. Non cancellare i dati dell'app; se il problema persiste, segnalalo in privato.",
+  "remindersLabel": "Promemoria",
+  "addReminderButton": "Aggiungi promemoria",
+  "remindersNeedDueDate": "Imposta una scadenza per aggiungere promemoria",
+  "removeReminderTooltip": "Rimuovi promemoria",
+  "reminderAtDueTime": "All’orario di scadenza",
+  "reminderMinutesBefore": "{count, plural, =1{1 minuto prima} other{{count} minuti prima}}",
+  "reminderHoursBefore": "{count, plural, =1{1 ora prima} other{{count} ore prima}}",
+  "reminderDaysBefore": "{count, plural, =1{1 giorno prima} other{{count} giorni prima}}",
+  "maxRemindersReached": "Un task può avere al massimo {count} promemoria",
+  "notificationsTitle": "Promemoria dei task",
+  "notificationsSubtitle": "Avvisami prima della scadenza di un task",
+  "sectionReminders": "Promemoria",
+  "addToCalendarTitle": "Aggiungi al calendario Astraea",
+  "addToCalendarSubtitle": "Questo task compare anche nel calendario e nel widget di Astraea, nel giorno di scadenza.",
+  "addToCalendarNeedsSync": "Richiede un account, un relay e una scadenza"
 }

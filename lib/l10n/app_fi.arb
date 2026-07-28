@@ -157,5 +157,20 @@
   "importKeyButton": "Tuo olemassa oleva avain",
   "importKeyFieldLabel": "nsec tai heksadesimaalinen yksityinen avain",
   "importButton": "Tuo",
-  "storageFailureMessage": "Kairos ei voinut avata salattua paikallista tietokantaansa. Käynnistä sovellus uudelleen. Älä tyhjennä sovelluksen tietoja; jos ongelma jatkuu, ilmoita siitä yksityisesti."
+  "storageFailureMessage": "Kairos ei voinut avata salattua paikallista tietokantaansa. Käynnistä sovellus uudelleen. Älä tyhjennä sovelluksen tietoja; jos ongelma jatkuu, ilmoita siitä yksityisesti.",
+  "remindersLabel": "Muistutukset",
+  "addReminderButton": "Lisää muistutus",
+  "remindersNeedDueDate": "Aseta määräaika lisätäksesi muistutuksia",
+  "removeReminderTooltip": "Poista muistutus",
+  "reminderAtDueTime": "Määräajan hetkellä",
+  "reminderMinutesBefore": "{count, plural, =1{1 minuutti ennen} other{{count} minuuttia ennen}}",
+  "reminderHoursBefore": "{count, plural, =1{1 tunti ennen} other{{count} tuntia ennen}}",
+  "reminderDaysBefore": "{count, plural, =1{1 päivä ennen} other{{count} päivää ennen}}",
+  "maxRemindersReached": "Tehtävällä voi olla enintään {count} muistutusta",
+  "notificationsTitle": "Tehtävämuistutukset",
+  "notificationsSubtitle": "Ilmoita ennen tehtävän määräaikaa",
+  "sectionReminders": "Muistutukset",
+  "addToCalendarTitle": "Lisää Astraean kalenteriin",
+  "addToCalendarSubtitle": "Tämä tehtävä näkyy määräpäivänä myös Astraean kalenterissa ja widgetissä.",
+  "addToCalendarNeedsSync": "Vaatii tilin, releen ja määräajan"
 }

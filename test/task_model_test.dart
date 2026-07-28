@@ -149,6 +149,8 @@ void main() {
 
   test('relay URLs require encrypted transport and normalize host casing', () {
     expect(normalizeSecureRelayUrl(' WSS://NOS.LOL '), 'wss://nos.lol');
+    // Plaintext towards a public relay stays refused; only the local network
+    // may be reached over ws:// (see relay_url_hardening_test.dart).
     expect(normalizeSecureRelayUrl('ws://nos.lol'), isNull);
     expect(normalizeSecureRelayUrl('https://nos.lol'), isNull);
     expect(normalizeSecureRelayUrl('wss://user@nos.lol'), isNull);
@@ -163,43 +165,25 @@ void main() {
     );
   });
 
-  test('public relay slot rejects loopback/private/link-local hosts', () {
-    expect(normalizeSecureRelayUrl('wss://127.0.0.1'), isNull);
-    expect(normalizeSecureRelayUrl('wss://localhost'), isNull);
-    expect(normalizeSecureRelayUrl('wss://10.0.0.5'), isNull);
-    expect(normalizeSecureRelayUrl('wss://172.16.0.5'), isNull);
-    expect(normalizeSecureRelayUrl('wss://192.168.1.1'), isNull);
-    expect(normalizeSecureRelayUrl('wss://169.254.169.254'), isNull);
-    expect(normalizeSecureRelayUrl('wss://[::1]'), isNull);
+  test('any relay slot may point at the local network', () {
+    // Self-hosting is a supported setup: a relay on the user's own network is
+    // reachable from the ordinary list, not just the dedicated home-relay
+    // slot. Over TLS or, because the traffic never leaves the LAN, plaintext.
+    for (final host in ['127.0.0.1', 'localhost', '10.0.0.5', '[::1]']) {
+      expect(normalizeSecureRelayUrl('wss://$host'), isNotNull);
+      expect(normalizeSecureRelayUrl('ws://$host'), isNotNull);
+    }
     expect(normalizeSecureRelayUrl('wss://relay.damus.io'), isNotNull);
   });
 
-  test(
-    'home relay slot (allowInsecureLocal) accepts ws:// and private hosts',
-    () {
-      expect(
-        normalizeSecureRelayUrl(
-          'ws://192.168.1.50:4848',
-          allowInsecureLocal: true,
-        ),
-        'ws://192.168.1.50:4848',
-      );
-      expect(
-        normalizeSecureRelayUrl(
-          'ws://relay.example.com',
-          allowInsecureLocal: true,
-        ),
-        'ws://relay.example.com',
-      );
-      // Still no other scheme, userinfo or fragment, even with the exception.
-      expect(
-        normalizeSecureRelayUrl('http://nos.lol', allowInsecureLocal: true),
-        isNull,
-      );
-      expect(
-        normalizeSecureRelayUrl('ws://user@nos.lol', allowInsecureLocal: true),
-        isNull,
-      );
-    },
-  );
+  test('plaintext never leaves the local network', () {
+    expect(
+      normalizeSecureRelayUrl('ws://192.168.1.50:4848'),
+      'ws://192.168.1.50:4848',
+    );
+    expect(normalizeSecureRelayUrl('ws://relay.example.com'), isNull);
+    // No other scheme, userinfo or fragment, whatever the host.
+    expect(normalizeSecureRelayUrl('http://nos.lol'), isNull);
+    expect(normalizeSecureRelayUrl('ws://user@192.168.1.50'), isNull);
+  });
 }

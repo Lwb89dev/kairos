@@ -383,4 +383,80 @@ class AppLocalizationsLv extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos neizdevās atvērt savu šifrēto lokālo datubāzi. Restartējiet lietotni. Nedzēsiet lietotnes datus; ja problēma turpinās, ziņojiet par to privāti.';
+
+  @override
+  String get remindersLabel => 'Atgādinājumi';
+
+  @override
+  String get addReminderButton => 'Pievienot atgādinājumu';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Iestati termiņu, lai pievienotu atgādinājumus';
+
+  @override
+  String get removeReminderTooltip => 'Noņemt atgādinājumu';
+
+  @override
+  String get reminderAtDueTime => 'Termiņa brīdī';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minūtes iepriekš',
+      one: '$count minūti iepriekš',
+      zero: '$count minūšu iepriekš',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count stundas iepriekš',
+      one: '$count stundu iepriekš',
+      zero: '$count stundu iepriekš',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dienas iepriekš',
+      one: '$count dienu iepriekš',
+      zero: '$count dienu iepriekš',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Uzdevumam var būt ne vairāk kā $count atgādinājumi';
+  }
+
+  @override
+  String get notificationsTitle => 'Uzdevumu atgādinājumi';
+
+  @override
+  String get notificationsSubtitle => 'Paziņot man pirms uzdevuma termiņa';
+
+  @override
+  String get sectionReminders => 'Atgādinājumi';
+
+  @override
+  String get addToCalendarTitle => 'Pievienot Astraea kalendāram';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Šis uzdevums termiņa dienā parādās arī Astraea kalendārā un logrīkā.';
+
+  @override
+  String get addToCalendarNeedsSync => 'Nepieciešams konts, relejs un termiņš';
 }

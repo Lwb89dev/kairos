@@ -157,5 +157,20 @@
   "importKeyButton": "Impordi olemasolev võti",
   "importKeyFieldLabel": "nsec või kuueteistkümnendsüsteemis privaatvõti",
   "importButton": "Impordi",
-  "storageFailureMessage": "Kairos ei suutnud avada oma krüpteeritud kohalikku andmebaasi. Käivitage rakendus uuesti. Ärge kustutage rakenduse andmeid; kui probleem püsib, teatage sellest privaatselt."
+  "storageFailureMessage": "Kairos ei suutnud avada oma krüpteeritud kohalikku andmebaasi. Käivitage rakendus uuesti. Ärge kustutage rakenduse andmeid; kui probleem püsib, teatage sellest privaatselt.",
+  "remindersLabel": "Meeldetuletused",
+  "addReminderButton": "Lisa meeldetuletus",
+  "remindersNeedDueDate": "Määra tähtaeg, et lisada meeldetuletusi",
+  "removeReminderTooltip": "Eemalda meeldetuletus",
+  "reminderAtDueTime": "Tähtaja hetkel",
+  "reminderMinutesBefore": "{count, plural, =1{1 minut varem} other{{count} minutit varem}}",
+  "reminderHoursBefore": "{count, plural, =1{1 tund varem} other{{count} tundi varem}}",
+  "reminderDaysBefore": "{count, plural, =1{1 päev varem} other{{count} päeva varem}}",
+  "maxRemindersReached": "Ülesandel võib olla kuni {count} meeldetuletust",
+  "notificationsTitle": "Ülesannete meeldetuletused",
+  "notificationsSubtitle": "Teavita mind enne ülesande tähtaega",
+  "sectionReminders": "Meeldetuletused",
+  "addToCalendarTitle": "Lisa Astraea kalendrisse",
+  "addToCalendarSubtitle": "See ülesanne ilmub tähtajapäeval ka Astraea kalendrisse ja vidinasse.",
+  "addToCalendarNeedsSync": "Nõuab kontot, releed ja tähtaega"
 }

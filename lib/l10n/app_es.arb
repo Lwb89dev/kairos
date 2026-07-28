@@ -157,5 +157,20 @@
   "importKeyButton": "Importar una clave existente",
   "importKeyFieldLabel": "nsec o clave privada hexadecimal",
   "importButton": "Importar",
-  "storageFailureMessage": "Kairos no pudo abrir su base de datos local cifrada. Reinicia la app. No borres los datos de la app; si el problema persiste, repórtalo de forma privada."
+  "storageFailureMessage": "Kairos no pudo abrir su base de datos local cifrada. Reinicia la app. No borres los datos de la app; si el problema persiste, repórtalo de forma privada.",
+  "remindersLabel": "Recordatorios",
+  "addReminderButton": "Añadir recordatorio",
+  "remindersNeedDueDate": "Establece una fecha límite para añadir recordatorios",
+  "removeReminderTooltip": "Quitar recordatorio",
+  "reminderAtDueTime": "A la hora de vencimiento",
+  "reminderMinutesBefore": "{count, plural, =1{1 minuto antes} other{{count} minutos antes}}",
+  "reminderHoursBefore": "{count, plural, =1{1 hora antes} other{{count} horas antes}}",
+  "reminderDaysBefore": "{count, plural, =1{1 día antes} other{{count} días antes}}",
+  "maxRemindersReached": "Una tarea puede tener como máximo {count} recordatorios",
+  "notificationsTitle": "Recordatorios de tareas",
+  "notificationsSubtitle": "Avisarme antes de que venza una tarea",
+  "sectionReminders": "Recordatorios",
+  "addToCalendarTitle": "Añadir al calendario de Astraea",
+  "addToCalendarSubtitle": "Esta tarea también aparece en el calendario y el widget de Astraea, el día de vencimiento.",
+  "addToCalendarNeedsSync": "Requiere una cuenta, un relé y una fecha límite"
 }

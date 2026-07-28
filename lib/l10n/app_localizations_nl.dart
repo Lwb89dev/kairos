@@ -380,4 +380,78 @@ class AppLocalizationsNl extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos kon de versleutelde lokale database niet openen. Start de app opnieuw. Wis geen app-gegevens; als het probleem aanhoudt, meld dit dan privé.';
+
+  @override
+  String get remindersLabel => 'Herinneringen';
+
+  @override
+  String get addReminderButton => 'Herinnering toevoegen';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Stel een vervaldatum in om herinneringen toe te voegen';
+
+  @override
+  String get removeReminderTooltip => 'Herinnering verwijderen';
+
+  @override
+  String get reminderAtDueTime => 'Op het moment zelf';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minuten vooraf',
+      one: '1 minuut vooraf',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count uur vooraf',
+      one: '1 uur vooraf',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dagen vooraf',
+      one: '1 dag vooraf',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Een taak kan maximaal $count herinneringen hebben';
+  }
+
+  @override
+  String get notificationsTitle => 'Taakherinneringen';
+
+  @override
+  String get notificationsSubtitle => 'Waarschuw mij voordat een taak verloopt';
+
+  @override
+  String get sectionReminders => 'Herinneringen';
+
+  @override
+  String get addToCalendarTitle => 'Aan Astraea-agenda toevoegen';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Deze taak verschijnt op de vervaldag ook in de agenda en widget van Astraea.';
+
+  @override
+  String get addToCalendarNeedsSync =>
+      'Vereist een account, een relay en een vervaldatum';
 }

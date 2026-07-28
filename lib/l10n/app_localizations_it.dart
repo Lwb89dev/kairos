@@ -382,4 +382,79 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos non è riuscito ad aprire il proprio database locale crittografato. Riavvia l\'app. Non cancellare i dati dell\'app; se il problema persiste, segnalalo in privato.';
+
+  @override
+  String get remindersLabel => 'Promemoria';
+
+  @override
+  String get addReminderButton => 'Aggiungi promemoria';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Imposta una scadenza per aggiungere promemoria';
+
+  @override
+  String get removeReminderTooltip => 'Rimuovi promemoria';
+
+  @override
+  String get reminderAtDueTime => 'All’orario di scadenza';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minuti prima',
+      one: '1 minuto prima',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ore prima',
+      one: '1 ora prima',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count giorni prima',
+      one: '1 giorno prima',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Un task può avere al massimo $count promemoria';
+  }
+
+  @override
+  String get notificationsTitle => 'Promemoria dei task';
+
+  @override
+  String get notificationsSubtitle =>
+      'Avvisami prima della scadenza di un task';
+
+  @override
+  String get sectionReminders => 'Promemoria';
+
+  @override
+  String get addToCalendarTitle => 'Aggiungi al calendario Astraea';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Questo task compare anche nel calendario e nel widget di Astraea, nel giorno di scadenza.';
+
+  @override
+  String get addToCalendarNeedsSync =>
+      'Richiede un account, un relay e una scadenza';
 }

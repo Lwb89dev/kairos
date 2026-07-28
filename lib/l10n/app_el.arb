@@ -157,5 +157,20 @@
   "importKeyButton": "Εισαγωγή υπάρχοντος κλειδιού",
   "importKeyFieldLabel": "nsec ή δεκαεξαδικό ιδιωτικό κλειδί",
   "importButton": "Εισαγωγή",
-  "storageFailureMessage": "Το Kairos δεν μπόρεσε να ανοίξει την κρυπτογραφημένη τοπική βάση δεδομένων του. Επανεκκινήστε την εφαρμογή. Μην διαγράψετε τα δεδομένα της εφαρμογής· αν το πρόβλημα παραμένει, αναφέρετέ το ιδιωτικά."
+  "storageFailureMessage": "Το Kairos δεν μπόρεσε να ανοίξει την κρυπτογραφημένη τοπική βάση δεδομένων του. Επανεκκινήστε την εφαρμογή. Μην διαγράψετε τα δεδομένα της εφαρμογής· αν το πρόβλημα παραμένει, αναφέρετέ το ιδιωτικά.",
+  "remindersLabel": "Υπενθυμίσεις",
+  "addReminderButton": "Προσθήκη υπενθύμισης",
+  "remindersNeedDueDate": "Όρισε προθεσμία για να προσθέσεις υπενθυμίσεις",
+  "removeReminderTooltip": "Αφαίρεση υπενθύμισης",
+  "reminderAtDueTime": "Την ώρα της προθεσμίας",
+  "reminderMinutesBefore": "{count, plural, =1{1 λεπτό πριν} other{{count} λεπτά πριν}}",
+  "reminderHoursBefore": "{count, plural, =1{1 ώρα πριν} other{{count} ώρες πριν}}",
+  "reminderDaysBefore": "{count, plural, =1{1 ημέρα πριν} other{{count} ημέρες πριν}}",
+  "maxRemindersReached": "Μια εργασία μπορεί να έχει το πολύ {count} υπενθυμίσεις",
+  "notificationsTitle": "Υπενθυμίσεις εργασιών",
+  "notificationsSubtitle": "Ειδοποίησέ με πριν από την προθεσμία μιας εργασίας",
+  "sectionReminders": "Υπενθυμίσεις",
+  "addToCalendarTitle": "Προσθήκη στο ημερολόγιο Astraea",
+  "addToCalendarSubtitle": "Αυτή η εργασία εμφανίζεται και στο ημερολόγιο και το widget του Astraea, την ημέρα της προθεσμίας.",
+  "addToCalendarNeedsSync": "Απαιτεί λογαριασμό, relay και προθεσμία"
 }

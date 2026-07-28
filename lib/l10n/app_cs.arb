@@ -157,5 +157,20 @@
   "importKeyButton": "Importovat existující klíč",
   "importKeyFieldLabel": "nsec nebo soukromý klíč v hex",
   "importButton": "Importovat",
-  "storageFailureMessage": "Aplikaci Kairos se nepodařilo otevřít šifrovanou lokální databázi. Restartujte aplikaci. Nemažte data aplikace; pokud problém přetrvává, nahlaste ho soukromě."
+  "storageFailureMessage": "Aplikaci Kairos se nepodařilo otevřít šifrovanou lokální databázi. Restartujte aplikaci. Nemažte data aplikace; pokud problém přetrvává, nahlaste ho soukromě.",
+  "remindersLabel": "Připomenutí",
+  "addReminderButton": "Přidat připomenutí",
+  "remindersNeedDueDate": "Nastav termín, abys mohl přidat připomenutí",
+  "removeReminderTooltip": "Odebrat připomenutí",
+  "reminderAtDueTime": "V čase termínu",
+  "reminderMinutesBefore": "{count, plural, =1{1 minutu předem} few{{count} minuty předem} many{{count} minuty předem} other{{count} minut předem}}",
+  "reminderHoursBefore": "{count, plural, =1{1 hodinu předem} few{{count} hodiny předem} many{{count} hodiny předem} other{{count} hodin předem}}",
+  "reminderDaysBefore": "{count, plural, =1{1 den předem} few{{count} dny předem} many{{count} dne předem} other{{count} dní předem}}",
+  "maxRemindersReached": "Úkol může mít nejvýše {count} připomenutí",
+  "notificationsTitle": "Připomenutí úkolů",
+  "notificationsSubtitle": "Upozornit mě před termínem úkolu",
+  "sectionReminders": "Připomenutí",
+  "addToCalendarTitle": "Přidat do kalendáře Astraea",
+  "addToCalendarSubtitle": "Tento úkol se v den termínu objeví také v kalendáři a widgetu Astraea.",
+  "addToCalendarNeedsSync": "Vyžaduje účet, relay a termín"
 }

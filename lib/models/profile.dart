@@ -10,14 +10,12 @@ class NostrProfile {
   final String? name;
   final String? displayName;
   final String? picture;
-  final String? about;
 
   const NostrProfile({
     required this.publicKeyHex,
     this.name,
     this.displayName,
     this.picture,
-    this.about,
   });
 
   /// The best available human-readable label, preferring `display_name` (the
@@ -45,7 +43,6 @@ class NostrProfile {
       name: json['name'] as String?,
       displayName: json['display_name'] as String?,
       picture: json['picture'] as String?,
-      about: json['about'] as String?,
     );
   }
 
@@ -56,7 +53,6 @@ class NostrProfile {
     'name': name,
     'displayName': displayName,
     'picture': picture,
-    'about': about,
   };
 
   factory NostrProfile.fromJson(Map<String, dynamic> json) {
@@ -65,7 +61,6 @@ class NostrProfile {
       name: json['name'] as String?,
       displayName: json['displayName'] as String?,
       picture: json['picture'] as String?,
-      about: json['about'] as String?,
     );
   }
 }

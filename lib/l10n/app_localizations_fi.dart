@@ -383,4 +383,76 @@ class AppLocalizationsFi extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos ei voinut avata salattua paikallista tietokantaansa. Käynnistä sovellus uudelleen. Älä tyhjennä sovelluksen tietoja; jos ongelma jatkuu, ilmoita siitä yksityisesti.';
+
+  @override
+  String get remindersLabel => 'Muistutukset';
+
+  @override
+  String get addReminderButton => 'Lisää muistutus';
+
+  @override
+  String get remindersNeedDueDate => 'Aseta määräaika lisätäksesi muistutuksia';
+
+  @override
+  String get removeReminderTooltip => 'Poista muistutus';
+
+  @override
+  String get reminderAtDueTime => 'Määräajan hetkellä';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minuuttia ennen',
+      one: '1 minuutti ennen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count tuntia ennen',
+      one: '1 tunti ennen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count päivää ennen',
+      one: '1 päivä ennen',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Tehtävällä voi olla enintään $count muistutusta';
+  }
+
+  @override
+  String get notificationsTitle => 'Tehtävämuistutukset';
+
+  @override
+  String get notificationsSubtitle => 'Ilmoita ennen tehtävän määräaikaa';
+
+  @override
+  String get sectionReminders => 'Muistutukset';
+
+  @override
+  String get addToCalendarTitle => 'Lisää Astraean kalenteriin';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Tämä tehtävä näkyy määräpäivänä myös Astraean kalenterissa ja widgetissä.';
+
+  @override
+  String get addToCalendarNeedsSync => 'Vaatii tilin, releen ja määräajan';
 }

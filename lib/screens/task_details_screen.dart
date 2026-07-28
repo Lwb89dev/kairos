@@ -6,7 +6,7 @@ import '../l10n/app_localizations.dart';
 import '../models/task_model.dart';
 import '../providers/tasks_provider.dart';
 import '../utils/task_colors.dart';
-import 'task_editor_screen.dart';
+import 'task_editor_screen.dart' show TaskEditorScreen, formatReminderOffset;
 
 /// Read view of a single task, with quick actions: toggle done, edit
 /// (pushes [TaskEditorScreen]), delete. Watches the provider by [taskId] so
@@ -58,26 +58,7 @@ class TaskDetailsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Checkbox(
-                value: task.isDone,
-                shape: const CircleBorder(),
-                onChanged: (_) =>
-                    ref.read(tasksProvider.notifier).toggleStatus(task),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  task.title,
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    decoration: task.isDone ? TextDecoration.lineThrough : null,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          _TitleRow(task: task),
           const SizedBox(height: 16),
           if (task.description != null) ...[
             Text(task.description!, style: theme.textTheme.bodyLarge),
@@ -103,53 +84,30 @@ class TaskDetailsScreen extends ConsumerWidget {
                 : l.priorityValue(task.priority!),
           ),
           if (task.color != null)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.palette_outlined,
-                    size: 20,
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                  const SizedBox(width: 16),
-                  SizedBox(
-                    width: 130,
-                    child: Text(
-                      l.colorLabel,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: task.color!.background,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: theme.colorScheme.outlineVariant,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(task.color!.name, style: theme.textTheme.bodyMedium),
-                ],
-              ),
+            _DetailRow(
+              icon: Icons.palette_outlined,
+              label: l.colorLabel,
+              value: task.color!.name,
+              leadingValue: _ColorDot(color: task.color!),
+            ),
+          if (task.reminders.isNotEmpty)
+            _DetailRow(
+              icon: Icons.notifications_active_outlined,
+              label: l.remindersLabel,
+              value: task.reminders
+                  .map((r) => formatReminderOffset(l, r.minutesBefore))
+                  .join(', '),
+            ),
+          if (task.mirrorToCalendar)
+            _DetailRow(
+              icon: Icons.event_available_outlined,
+              label: l.addToCalendarTitle,
+              value: l.syncedStatus,
             ),
           _DetailRow(
-            icon: task.localOnly
-                ? Icons.smartphone
-                : task.synced
-                ? Icons.cloud_done_outlined
-                : Icons.cloud_off_outlined,
+            icon: _syncIcon(task),
             label: l.syncStatusLabel,
-            value: task.localOnly
-                ? l.localOnlyStatus
-                : task.synced
-                ? l.syncedStatus
-                : l.notSyncedStatus,
+            value: _syncStatusLabel(task, l),
           ),
           if (task.linkedEventId != null)
             _DetailRow(
@@ -170,6 +128,16 @@ class TaskDetailsScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  IconData _syncIcon(Task task) {
+    if (task.localOnly) return Icons.smartphone;
+    return task.synced ? Icons.cloud_done_outlined : Icons.cloud_off_outlined;
+  }
+
+  String _syncStatusLabel(Task task, AppLocalizations l) {
+    if (task.localOnly) return l.localOnlyStatus;
+    return task.synced ? l.syncedStatus : l.notSyncedStatus;
   }
 
   Future<void> _confirmDelete(
@@ -208,20 +176,57 @@ class TaskDetailsScreen extends ConsumerWidget {
   }
 }
 
+/// The task title with its inline completion checkbox.
+class _TitleRow extends ConsumerWidget {
+  const _TitleRow({required this.task});
+
+  final Task task;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Checkbox(
+          value: task.isDone,
+          shape: const CircleBorder(),
+          onChanged: (_) => ref.read(tasksProvider.notifier).toggleStatus(task),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            task.title,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              decoration: task.isDone ? TextDecoration.lineThrough : null,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// One `icon — label — value` line. [leadingValue] optionally puts a widget
+/// (currently the color swatch) in front of the text, so the color row shares
+/// this alignment instead of hand-rolling the same Row a second time.
 class _DetailRow extends StatelessWidget {
   const _DetailRow({
     required this.icon,
     required this.label,
     required this.value,
+    this.leadingValue,
   });
 
   final IconData icon;
   final String label;
   final String value;
+  final Widget? leadingValue;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final leading = leadingValue;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -238,8 +243,28 @@ class _DetailRow extends StatelessWidget {
               ),
             ),
           ),
+          if (leading != null) ...[leading, const SizedBox(width: 8)],
           Expanded(child: Text(value, style: theme.textTheme.bodyMedium)),
         ],
+      ),
+    );
+  }
+}
+
+class _ColorDot extends StatelessWidget {
+  const _ColorDot({required this.color});
+
+  final TaskColor color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 20,
+      height: 20,
+      decoration: BoxDecoration(
+        color: color.background,
+        shape: BoxShape.circle,
+        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
       ),
     );
   }

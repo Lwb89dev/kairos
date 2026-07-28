@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Transport policy for Kairos.
+
+  cleartextTrafficPermitted stays true because the optional personal home
+  relay may be a LAN relay that does not terminate TLS (ws://). That is the
+  single deliberate exception to the app's wss-only rule, and it is enforced
+  in Dart at three layers (relay_url.dart, SyncConfigNotifier, NostrService)
+  — Android has no way to express "cleartext only towards RFC 1918", since
+  network-security-config matches domains, not CIDR ranges. Every Nostr
+  payload is NIP-44 encrypted regardless of transport.
+
+  The part Android *can* enforce is who is allowed to vouch for a TLS
+  certificate. Restricting the trust anchors to the system store means a
+  user-installed or administratively-pushed CA cannot silently terminate the
+  wss:// relay connections, which is the realistic interception path on a
+  device the user does not fully control.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Debug builds also trust locally-added CAs so a developer can inspect
+         relay traffic with a proxy. Never applied to release builds. -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>

@@ -380,4 +380,78 @@ class AppLocalizationsSv extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Kairos kunde inte öppna sin krypterade lokala databas. Starta om appen. Rensa inte appdata; om problemet kvarstår, rapportera det privat.';
+
+  @override
+  String get remindersLabel => 'Påminnelser';
+
+  @override
+  String get addReminderButton => 'Lägg till påminnelse';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Ange ett förfallodatum för att lägga till påminnelser';
+
+  @override
+  String get removeReminderTooltip => 'Ta bort påminnelse';
+
+  @override
+  String get reminderAtDueTime => 'Vid förfallotidpunkten';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minuter innan',
+      one: '1 minut innan',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count timmar innan',
+      one: '1 timme innan',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count dagar innan',
+      one: '1 dag innan',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'En uppgift kan ha högst $count påminnelser';
+  }
+
+  @override
+  String get notificationsTitle => 'Uppgiftspåminnelser';
+
+  @override
+  String get notificationsSubtitle => 'Meddela mig innan en uppgift förfaller';
+
+  @override
+  String get sectionReminders => 'Påminnelser';
+
+  @override
+  String get addToCalendarTitle => 'Lägg till i Astraea-kalendern';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Uppgiften visas även i Astraeas kalender och widget på förfallodagen.';
+
+  @override
+  String get addToCalendarNeedsSync =>
+      'Kräver ett konto, ett relä och ett förfallodatum';
 }

@@ -157,5 +157,20 @@
   "importKeyButton": "Importă o cheie existentă",
   "importKeyFieldLabel": "nsec sau cheie privată hex",
   "importButton": "Importă",
-  "storageFailureMessage": "Kairos nu a putut deschide baza de date locală criptată. Repornește aplicația. Nu șterge datele aplicației; dacă problema persistă, raportează-o confidențial."
+  "storageFailureMessage": "Kairos nu a putut deschide baza de date locală criptată. Repornește aplicația. Nu șterge datele aplicației; dacă problema persistă, raportează-o confidențial.",
+  "remindersLabel": "Mementouri",
+  "addReminderButton": "Adaugă memento",
+  "remindersNeedDueDate": "Stabilește un termen pentru a adăuga mementouri",
+  "removeReminderTooltip": "Elimină mementoul",
+  "reminderAtDueTime": "La ora scadenței",
+  "reminderMinutesBefore": "{count, plural, =1{cu 1 minut înainte} few{cu {count} minute înainte} other{cu {count} de minute înainte}}",
+  "reminderHoursBefore": "{count, plural, =1{cu 1 oră înainte} few{cu {count} ore înainte} other{cu {count} de ore înainte}}",
+  "reminderDaysBefore": "{count, plural, =1{cu 1 zi înainte} few{cu {count} zile înainte} other{cu {count} de zile înainte}}",
+  "maxRemindersReached": "O sarcină poate avea cel mult {count} mementouri",
+  "notificationsTitle": "Mementouri pentru sarcini",
+  "notificationsSubtitle": "Anunță-mă înainte de termenul unei sarcini",
+  "sectionReminders": "Mementouri",
+  "addToCalendarTitle": "Adaugă în calendarul Astraea",
+  "addToCalendarSubtitle": "Această sarcină apare și în calendarul și widgetul Astraea, în ziua scadenței.",
+  "addToCalendarNeedsSync": "Necesită un cont, un releu și un termen"
 }

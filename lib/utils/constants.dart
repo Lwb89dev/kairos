@@ -27,12 +27,55 @@ class AppConstants {
   static const String dTagPrefix = 'checkmarks:';
 
   // ---------------------------------------------------------------------
+  // Astraea calendar interoperability
+  //
+  // Astraea is the sibling calendar app in this ecosystem. It shares the
+  // account keypair, so a task the user schedules can be published in the
+  // shape Astraea already reads and will simply appear in that calendar (and
+  // its home-screen widgets) with no coordination between the two apps.
+  // These three values are Astraea's wire format, not ours: changing any of
+  // them breaks the interoperability. See [AstraeaCalendarMirror].
+  // ---------------------------------------------------------------------
+
+  /// NIP-78 "application-specific data", the parameterized replaceable kind
+  /// Astraea stores calendar events under.
+  static const int astraeaCalendarEventKind = 30078;
+
+  /// Astraea's `d`-tag namespace, retained from before its rename.
+  static const String astraeaDTagPrefix = 'epochs:';
+
+  /// Astraea's own default event colour, used for a task with no colour of
+  /// its own rather than inventing one the user never chose.
+  static const String astraeaDefaultEventColor = '0xFF2196F3';
+
+  // ---------------------------------------------------------------------
   // Suggested relays. Fresh installs select none until the user opts in.
   // ---------------------------------------------------------------------
 
+  /// The implicit relay set for installations that chose relays before the
+  /// selection screen existed. It must stay exactly what it always was: an
+  /// in-place update must never silently start talking to relay operators the
+  /// user never chose.
   static const List<String> defaultRelays = [
     'wss://nos.lol',
     'wss://relay.damus.io',
+  ];
+
+  /// Public relays offered during onboarding and in Settings. Deliberately
+  /// *not* selected on the user's behalf — each is added only when the user
+  /// taps it, since connecting reveals their IP address and public key to the
+  /// operator.
+  ///
+  /// Longer than [defaultRelays] on purpose: with a task list that lives only
+  /// on relays, one slow or unreachable operator should not cost the user a
+  /// sync. Same set as Astraea, so an account used across both apps converges
+  /// on the same infrastructure instead of two disjoint halves of its data.
+  static const List<String> suggestedRelays = [
+    ...defaultRelays,
+    'wss://relay.primal.net',
+    'wss://relay.nostr.band',
+    'wss://nostr.mom',
+    'wss://relay.snort.social',
   ];
 
   /// Hard ceiling for simultaneously configured WebSocket endpoints. This
@@ -53,6 +96,17 @@ class AppConstants {
   /// blank state while [ProfileNotifier] re-fetches from the relays.
   static const String prefsProfileCacheKey = 'checkmarks.profile_cache';
   static const String prefsLoginMethodKey = 'checkmarks.login_method';
+
+  /// Master switch for task reminders (Settings). Off cancels every scheduled
+  /// notification; on re-schedules them from the stored tasks.
+  static const String prefsNotificationsEnabledKey = 'kairos.notifications';
+
+  /// Map of task id -> the OS notification ids scheduled for it, so a task can
+  /// cancel exactly its own alarms without touching anything else's.
+  static const String prefsNotificationIdsKey = 'kairos.notification_ids';
+
+  /// Monotonic counter handing out OS notification ids.
+  static const String prefsNotificationSeqKey = 'kairos.notification_seq';
 
   /// Set once the user has passed the entry screen — either by signing in
   /// (Amber / imported / generated key) or by explicitly choosing offline,
@@ -78,11 +132,47 @@ class AppConstants {
   /// relay's EOSE ("end of stored events").
   static const Duration syncEoseTimeout = Duration(seconds: 10);
 
+  /// How many events a single REQ will buffer before it starts dropping
+  /// them. Relays are untrusted: this only bounds memory, not CPU — see
+  /// [maxVerifiedEventsPerFetch] for the expensive half.
+  static const int maxBufferedEventsPerFetch = 2000;
+
+  /// How many events per fetch may reach Schnorr verification and NIP-44
+  /// decryption.
+  ///
+  /// This is a CPU budget, and it is the one that matters. Verifying an event
+  /// costs ~7 ms and decrypting one ~4 ms of pure-Dart secp256k1 work, so an
+  /// unbounded loop over a hostile relay's reply blocks the UI isolate for
+  /// tens of seconds — far past Android's 5 s ANR threshold. Kind 30789 is
+  /// parameterized-replaceable, so at most one event per `d` tag is ever
+  /// meaningful; anything beyond this many *distinct* tasks is a relay
+  /// flooding us, not a user's task list.
+  static const int maxVerifiedEventsPerFetch = 512;
+
+  /// Verification/decryption yields to the event loop every this many events,
+  /// so the frame pipeline keeps running instead of freezing mid-sync.
+  static const int cryptoYieldInterval = 8;
+
+  /// How many kind-0 events a profile lookup will verify before giving up.
+  /// There is only ever one real profile per account; the rest is noise.
+  static const int maxProfileCandidates = 4;
+
   /// Upper bound on how long we wait for Amber to respond to a request.
   /// `amberflutter`'s Android side only resolves on RESULT_OK: if the user
   /// cancels in Amber it never resolves or rejects, so this timeout is our
   /// only way to recover from a hung request.
   static const Duration amberInteractionTimeout = Duration(seconds: 60);
+
+  // ---------------------------------------------------------------------
+  // Reminders
+  // ---------------------------------------------------------------------
+
+  /// Android notification channel for task reminders. The id is what the OS
+  /// keys the user's per-channel settings on, so it must stay stable.
+  static const String reminderChannelId = 'kairos_task_reminders';
+  static const String reminderChannelName = 'Task reminders';
+  static const String reminderChannelDescription =
+      'Notifications for tasks with a due date.';
 
   // ---------------------------------------------------------------------
   // Support

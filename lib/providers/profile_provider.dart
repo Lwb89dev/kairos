@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/profile.dart';
 import '../utils/constants.dart';
 import '../utils/logger.dart';
+import '../utils/relay_url.dart';
 import 'auth_provider.dart';
 import 'service_providers.dart';
 import 'sync_mode_provider.dart';
@@ -89,91 +90,119 @@ final avatarFileProvider = FutureProvider.family<File?, String>((
   ref,
   url,
 ) async {
-  const maxAvatarBytes = 5 * 1024 * 1024;
   final cacheService = ref.watch(fileCacheServiceProvider);
   final key = sha256.convert(utf8.encode(url)).toString();
 
   final cached = await cacheService.get(key);
   if (cached != null) return cached;
 
-  // The URL comes from a relay-supplied profile event, i.e. it's untrusted
-  // input: https only (no cleartext fetch announcing the user's IP to an
-  // arbitrary host), and a hard timeout so a slow host can't pin the request.
-  final initialUri = Uri.tryParse(url);
-  if (url.length > 2048 || !_isSafeAvatarUri(initialUri)) return null;
+  final uri = _safeAvatarUri(url);
+  if (uri == null) return null;
 
   try {
-    var uri = initialUri!;
-    const maxRedirects = 3;
-    for (
-      var redirectCount = 0;
-      redirectCount <= maxRedirects;
-      redirectCount++
-    ) {
-      final client = http.Client();
-      try {
-        final request = http.Request('GET', uri)..followRedirects = false;
-        final response = await client
-            .send(request)
-            .timeout(const Duration(seconds: 15));
-        if (_isRedirect(response.statusCode)) {
-          if (redirectCount == maxRedirects) return null;
-          final location = response.headers['location'];
-          if (location == null) return null;
-          final next = uri.resolve(location);
-          if (!_isSafeAvatarUri(next)) return null;
-          uri = next;
-          continue;
-        }
-        if (response.statusCode != 200) return null;
-        final contentType = response.headers['content-type']
-            ?.split(';')
-            .first
-            .trim()
-            .toLowerCase();
-        if (!const {
-          'image/png',
-          'image/jpeg',
-          'image/webp',
-          'image/gif',
-        }.contains(contentType)) {
-          return null;
-        }
-        final declaredLength = response.contentLength;
-        if (declaredLength != null && declaredLength > maxAvatarBytes) {
-          return null;
-        }
-        final builder = await response.stream
-            .fold<BytesBuilder>(BytesBuilder(copy: false), (bytes, chunk) {
-              if (bytes.length + chunk.length > maxAvatarBytes) {
-                throw const FormatException('Avatar exceeds size limit.');
-              }
-              bytes.add(chunk);
-              return bytes;
-            })
-            .timeout(const Duration(seconds: 15));
-        return await cacheService.put(
-          key,
-          Uint8List.fromList(builder.takeBytes()),
-        );
-      } finally {
-        client.close();
-      }
-    }
+    final bytes = await _downloadAvatar(uri);
+    return bytes == null ? null : await cacheService.put(key, bytes);
   } catch (_) {
     debugLog('Could not download profile avatar', name: 'avatarFileProvider');
     return null;
   }
-  return null;
 });
 
-bool _isSafeAvatarUri(Uri? uri) {
-  return uri != null &&
-      uri.toString().length <= 2048 &&
-      uri.scheme == 'https' &&
-      uri.host.isNotEmpty &&
-      uri.userInfo.isEmpty &&
-      !uri.hasFragment;
+const int _maxAvatarBytes = 5 * 1024 * 1024;
+const int _maxAvatarRedirects = 3;
+const Duration _avatarTimeout = Duration(seconds: 15);
+
+const Set<String> _allowedAvatarTypes = {
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'image/gif',
+};
+
+/// Follows up to [_maxAvatarRedirects] hops manually — `followRedirects` is
+/// off so every hop is re-validated by [_safeAvatarUri] instead of trusting
+/// the client to stay on a safe host — and returns the image bytes, or null
+/// if any hop is unusable.
+Future<Uint8List?> _downloadAvatar(Uri start) async {
+  var uri = start;
+  for (var hop = 0; hop <= _maxAvatarRedirects; hop++) {
+    final client = http.Client();
+    try {
+      final request = http.Request('GET', uri)..followRedirects = false;
+      final response = await client.send(request).timeout(_avatarTimeout);
+      // Await the body before closing the client. Returning the Future here
+      // would run the finally block immediately and cancel the response
+      // stream before the avatar had been read.
+      if (!_isRedirect(response.statusCode)) {
+        return await _readImageBody(response);
+      }
+
+      final next = _redirectTarget(response, uri);
+      if (next == null) return null;
+      uri = next;
+    } finally {
+      client.close();
+    }
+  }
+  return null; // Redirect budget exhausted.
+}
+
+/// The validated target of a redirect response, or null when the hop is
+/// missing a `Location` or points somewhere we refuse to follow.
+Uri? _redirectTarget(http.StreamedResponse response, Uri current) {
+  final location = response.headers['location'];
+  if (location == null) return null;
+  return _safeAvatarUri(current.resolve(location).toString());
+}
+
+/// Reads a non-redirect response into memory, enforcing the status, the
+/// raster MIME allowlist and the size ceiling both from the declared
+/// `Content-Length` and while streaming (a lying header must not get past).
+Future<Uint8List?> _readImageBody(http.StreamedResponse response) async {
+  if (response.statusCode != 200) return null;
+
+  final contentType = response.headers['content-type']
+      ?.split(';')
+      .first
+      .trim()
+      .toLowerCase();
+  if (!_allowedAvatarTypes.contains(contentType)) return null;
+
+  final declaredLength = response.contentLength;
+  if (declaredLength != null && declaredLength > _maxAvatarBytes) return null;
+
+  final builder = await response.stream
+      .fold<BytesBuilder>(BytesBuilder(copy: false), _accumulateBounded)
+      .timeout(_avatarTimeout);
+  return Uint8List.fromList(builder.takeBytes());
+}
+
+BytesBuilder _accumulateBounded(BytesBuilder bytes, List<int> chunk) {
+  if (bytes.length + chunk.length > _maxAvatarBytes) {
+    throw const FormatException('Avatar exceeds size limit.');
+  }
+  bytes.add(chunk);
+  return bytes;
+}
+
+/// Parses and validates an avatar URL, returning null unless it is one this
+/// app is willing to dial.
+///
+/// The URL originates in a relay-supplied profile event and every redirect
+/// hop is chosen by a remote host, so this is the app's only untrusted-
+/// destination fetch: https only (no cleartext request announcing the user's
+/// IP), and — crucially — the same loopback/private-address refusal the relay
+/// list uses. Without that check a cooperating avatar host could bounce the
+/// request onto the user's LAN or a cloud metadata endpoint.
+Uri? _safeAvatarUri(String url) {
+  if (url.length > kMaxUrlLength) return null;
+  final uri = Uri.tryParse(url);
+  if (uri == null || uri.toString().length > kMaxUrlLength) return null;
+  if (uri.scheme != 'https' || uri.host.isEmpty) return null;
+  if (uri.userInfo.isNotEmpty || uri.hasFragment) return null;
+  if (uri.port < 0 || uri.port > 65535) return null;
+  if (isPrivateOrLoopbackHost(uri.host)) return null;
+  return uri;
 }
 
 bool _isRedirect(int statusCode) {

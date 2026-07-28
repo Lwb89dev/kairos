@@ -84,7 +84,7 @@ class SuggestedRelayList extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (final url in AppConstants.defaultRelays)
+        for (final url in AppConstants.suggestedRelays)
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.dns_outlined),
@@ -206,9 +206,7 @@ class HomeRelayTile extends ConsumerWidget {
           _HomeRelayDialog(l: l, initialValue: current ?? ''),
     );
     if (url == null) return;
-    final normalized = url.isEmpty
-        ? null
-        : normalizeSecureRelayUrl(url, allowInsecureLocal: true);
+    final normalized = url.isEmpty ? null : normalizeSecureRelayUrl(url);
     if (url.isNotEmpty && normalized == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(

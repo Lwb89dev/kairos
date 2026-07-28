@@ -385,4 +385,87 @@ class AppLocalizationsGa extends AppLocalizations {
   @override
   String get storageFailureMessage =>
       'Níorbh fhéidir le Kairos a bhunachar sonraí áitiúil criptithe a oscailt. Atosaigh an aip. Ná glan sonraí na haipe; má leanann an fhadhb, tuairiscigh í go príobháideach.';
+
+  @override
+  String get remindersLabel => 'Meabhrúcháin';
+
+  @override
+  String get addReminderButton => 'Cuir meabhrúchán leis';
+
+  @override
+  String get remindersNeedDueDate =>
+      'Socraigh spriocdháta chun meabhrúcháin a chur leis';
+
+  @override
+  String get removeReminderTooltip => 'Bain an meabhrúchán';
+
+  @override
+  String get reminderAtDueTime => 'Ag am an spriocdháta';
+
+  @override
+  String reminderMinutesBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nóiméad roimh ré',
+      many: '$count nóiméad roimh ré',
+      few: '$count nóiméad roimh ré',
+      two: '$count nóiméad roimh ré',
+      one: '$count nóiméad roimh ré',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderHoursBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count uair roimh ré',
+      many: '$count n-uaire roimh ré',
+      few: '$count huaire roimh ré',
+      two: '$count uair roimh ré',
+      one: '$count uair roimh ré',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reminderDaysBefore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lá roimh ré',
+      many: '$count lá roimh ré',
+      few: '$count lá roimh ré',
+      two: '$count lá roimh ré',
+      one: '$count lá roimh ré',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String maxRemindersReached(int count) {
+    return 'Ní féidir níos mó ná $count meabhrúchán a bheith ag tasc';
+  }
+
+  @override
+  String get notificationsTitle => 'Meabhrúcháin tascanna';
+
+  @override
+  String get notificationsSubtitle => 'Cuir in iúl dom roimh spriocdháta taisc';
+
+  @override
+  String get sectionReminders => 'Meabhrúcháin';
+
+  @override
+  String get addToCalendarTitle => 'Cuir le féilire Astraea';
+
+  @override
+  String get addToCalendarSubtitle =>
+      'Taispeántar an tasc seo i bhféilire agus i ngiuirléid Astraea freisin, ar lá an spriocdháta.';
+
+  @override
+  String get addToCalendarNeedsSync =>
+      'Teastaíonn cuntas, athsheachadán agus spriocdháta';
 }

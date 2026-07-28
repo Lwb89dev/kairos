@@ -12,6 +12,7 @@ import '../providers/locale_provider.dart';
 import '../providers/profile_provider.dart';
 import '../providers/service_providers.dart';
 import '../providers/sync_mode_provider.dart';
+import '../providers/tasks_provider.dart';
 import '../providers/theme_provider.dart';
 import '../utils/constants.dart';
 import '../utils/formatter.dart';
@@ -32,107 +33,80 @@ class SettingsScreen extends ConsumerWidget {
     final auth = ref.watch(authProvider).value;
     final themeMode = ref.watch(themeModeProvider);
 
+    if (config == null) {
+      return Scaffold(
+        appBar: AppBar(title: Text(l.settingsTitle)),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text(l.settingsTitle)),
-      body: config == null
-          ? const Center(child: CircularProgressIndicator())
-          : ListView(
-              children: [
-                // ---------------------------------------------------------
-                // Account
-                // ---------------------------------------------------------
-                _SectionHeader(l.sectionAccount),
-                if (auth == null)
-                  ListTile(
-                    leading: const Icon(Icons.person_add_outlined),
-                    title: Text(l.addAccountTitle),
-                    subtitle: Text(l.addAccountSubtitle),
-                    onTap: () => _showLoginSheet(context, l),
-                  )
-                else ...[
-                  _AccountRow(user: auth),
-                  if (auth.loginMethod.isLocalKey)
-                    ListTile(
-                      leading: const Icon(Icons.key_outlined),
-                      title: Text(l.backupKeyTitle),
-                      subtitle: Text(l.backupKeySubtitle),
-                      onTap: () => _backupPrivateKey(context, ref, l),
-                    ),
-                  ListTile(
-                    leading: const Icon(Icons.logout),
-                    title: Text(l.logOut),
-                    onTap: () => _confirmLogout(context, ref, l),
-                  ),
-                ],
+      body: ListView(
+        children: [
+          _SectionHeader(l.sectionAccount),
+          ..._buildAccountSection(context, ref, l, auth),
 
-                // ---------------------------------------------------------
-                // Encrypted Nostr synchronization
-                // ---------------------------------------------------------
-                _SectionHeader(l.sectionSync),
-                ListTile(
-                  leading: const Icon(Icons.lock_outline),
-                  title: Text(l.syncInfoTitle),
-                  subtitle: Text(l.syncInfoBody),
-                ),
-                _SectionHeader(l.sectionRelays),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      RelayListView(relays: config.relays, shrinkWrap: true),
-                      const SizedBox(height: 8),
-                      const RelayUrlInput(),
-                      const Divider(height: 24),
-                      const HomeRelayTile(),
-                    ],
-                  ),
-                ),
+          _SectionHeader(l.sectionSync),
+          ListTile(
+            leading: const Icon(Icons.lock_outline),
+            title: Text(l.syncInfoTitle),
+            subtitle: Text(l.syncInfoBody),
+          ),
+          _SectionHeader(l.sectionRelays),
+          _RelaySection(relays: config.relays),
 
-                // ---------------------------------------------------------
-                // Appearance
-                // ---------------------------------------------------------
-                _SectionHeader(l.sectionAppearance),
-                ListTile(
-                  leading: const Icon(Icons.dark_mode_outlined),
-                  title: Text(l.themeLabel),
-                  trailing: SegmentedButton<ThemeMode>(
-                    segments: const [
-                      ButtonSegment(
-                        value: ThemeMode.dark,
-                        icon: Icon(Icons.dark_mode, size: 18),
-                      ),
-                      ButtonSegment(
-                        value: ThemeMode.light,
-                        icon: Icon(Icons.light_mode, size: 18),
-                      ),
-                      ButtonSegment(
-                        value: ThemeMode.system,
-                        icon: Icon(Icons.brightness_auto, size: 18),
-                      ),
-                    ],
-                    selected: {themeMode},
-                    onSelectionChanged: (selection) => ref
-                        .read(themeModeProvider.notifier)
-                        .setThemeMode(selection.first),
-                  ),
-                ),
+          _SectionHeader(l.sectionReminders),
+          const _RemindersTile(),
 
-                // ---------------------------------------------------------
-                // Language
-                // ---------------------------------------------------------
-                _SectionHeader(l.sectionLanguage),
-                const _LanguageSection(),
+          _SectionHeader(l.sectionAppearance),
+          _ThemeTile(themeMode: themeMode),
 
-                // ---------------------------------------------------------
-                // Support
-                // ---------------------------------------------------------
-                _SectionHeader(l.sectionSupport),
-                const _DonationTile(),
-                const SizedBox(height: 24),
-              ],
-            ),
+          _SectionHeader(l.sectionLanguage),
+          const _LanguageSection(),
+
+          _SectionHeader(l.sectionSupport),
+          const _DonationTile(),
+          const SizedBox(height: 24),
+        ],
+      ),
     );
+  }
+
+  /// Signed out: a single "add account" entry. Signed in: the profile row,
+  /// the key backup entry (local-key sessions only — an Amber session has no
+  /// key to show) and sign-out.
+  List<Widget> _buildAccountSection(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l,
+    User? auth,
+  ) {
+    if (auth == null) {
+      return [
+        ListTile(
+          leading: const Icon(Icons.person_add_outlined),
+          title: Text(l.addAccountTitle),
+          subtitle: Text(l.addAccountSubtitle),
+          onTap: () => _showLoginSheet(context, l),
+        ),
+      ];
+    }
+    return [
+      _AccountRow(user: auth),
+      if (auth.loginMethod.isLocalKey)
+        ListTile(
+          leading: const Icon(Icons.key_outlined),
+          title: Text(l.backupKeyTitle),
+          subtitle: Text(l.backupKeySubtitle),
+          onTap: () => _backupPrivateKey(context, ref, l),
+        ),
+      ListTile(
+        leading: const Icon(Icons.logout),
+        title: Text(l.logOut),
+        onTap: () => _confirmLogout(context, ref, l),
+      ),
+    ];
   }
 
   /// The same login options as onboarding, in a bottom sheet — closes
@@ -262,6 +236,86 @@ class SettingsScreen extends ConsumerWidget {
         await Clipboard.setData(const ClipboardData(text: ''));
       }
     });
+  }
+}
+
+/// The reminders master switch. Individual per-task reminders are untouched
+/// by it — switching back on restores exactly what was scheduled before.
+class _RemindersTile extends ConsumerWidget {
+  const _RemindersTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
+    final enabled = ref.watch(notificationsEnabledProvider);
+    return SwitchListTile(
+      secondary: const Icon(Icons.notifications_outlined),
+      title: Text(l.notificationsTitle),
+      subtitle: Text(l.notificationsSubtitle),
+      value: enabled.value ?? true,
+      onChanged: enabled.isLoading
+          ? null
+          : (value) =>
+                ref.read(notificationsEnabledProvider.notifier).set(value),
+    );
+  }
+}
+
+/// Current relay list plus the two ways to change it: a free-form `wss://`
+/// input for the public list, and the personal home-relay slot.
+class _RelaySection extends StatelessWidget {
+  const _RelaySection({required this.relays});
+
+  final List<String> relays;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          RelayListView(relays: relays, shrinkWrap: true),
+          const SizedBox(height: 8),
+          const RelayUrlInput(),
+          const Divider(height: 24),
+          const HomeRelayTile(),
+        ],
+      ),
+    );
+  }
+}
+
+class _ThemeTile extends ConsumerWidget {
+  const _ThemeTile({required this.themeMode});
+
+  final ThemeMode themeMode;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ListTile(
+      leading: const Icon(Icons.dark_mode_outlined),
+      title: Text(AppLocalizations.of(context).themeLabel),
+      trailing: SegmentedButton<ThemeMode>(
+        segments: const [
+          ButtonSegment(
+            value: ThemeMode.dark,
+            icon: Icon(Icons.dark_mode, size: 18),
+          ),
+          ButtonSegment(
+            value: ThemeMode.light,
+            icon: Icon(Icons.light_mode, size: 18),
+          ),
+          ButtonSegment(
+            value: ThemeMode.system,
+            icon: Icon(Icons.brightness_auto, size: 18),
+          ),
+        ],
+        selected: {themeMode},
+        onSelectionChanged: (selection) =>
+            ref.read(themeModeProvider.notifier).setThemeMode(selection.first),
+      ),
+    );
   }
 }
 

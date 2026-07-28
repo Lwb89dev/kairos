@@ -59,10 +59,7 @@ class TaskLocalStorageService {
     final legacy = await Hive.openBox<Map>(AppConstants.legacyTasksBoxName);
     try {
       for (final key in legacy.keys) {
-        if (!encrypted.containsKey(key)) {
-          final value = legacy.get(key);
-          if (value != null) await encrypted.put(key, value);
-        }
+        await _copyLegacyEntry(legacy, encrypted, key);
       }
       await encrypted.flush();
       final fullyCopied = legacy.keys.every(encrypted.containsKey);
@@ -73,6 +70,17 @@ class TaskLocalStorageService {
       await legacy.close();
     }
     await Hive.deleteBoxFromDisk(AppConstants.legacyTasksBoxName);
+  }
+
+  Future<void> _copyLegacyEntry(
+    Box<Map> legacy,
+    Box<Map> encrypted,
+    dynamic key,
+  ) async {
+    if (encrypted.containsKey(key)) return;
+    final value = legacy.get(key);
+    if (value == null) return;
+    await encrypted.put(key, value);
   }
 
   Box<Map> get _requireTasksBox {
@@ -150,6 +158,40 @@ class TaskLocalStorageService {
             nostrEventId: eventId,
             syncOwnerPubkey: ownerPubkey,
             clearDeletionRequestPending: clearDeletionRequestPending,
+          )
+          .toJson(),
+    );
+    return true;
+  }
+
+  /// Records the id of the calendar event currently mirroring [taskId], or
+  /// clears it with a null [calendarEventId] once the mirror is retracted.
+  /// The revision guard prevents a slow publication from overwriting the
+  /// bookkeeping of a newer task edit.
+  ///
+  /// Deliberately does *not* bump `updatedAt` or clear `synced`: which
+  /// calendar event a task is mirrored by is device-local bookkeeping, not a
+  /// task revision. Treating it as one would republish the task to the relays
+  /// every time its mirror was refreshed, in an endless loop.
+  Future<bool> updateCalendarMirror(
+    String taskId, {
+    required DateTime expectedUpdatedAt,
+    required String? calendarEventId,
+  }) async {
+    final current = getTask(taskId);
+    if (current == null) return false;
+    if (current.updatedAt != expectedUpdatedAt) return false;
+    if (current.calendarNostrEventId == calendarEventId &&
+        !current.calendarMirrorRetractionPending) {
+      return false;
+    }
+    await _requireTasksBox.put(
+      taskId,
+      current
+          .copyWith(
+            calendarNostrEventId: calendarEventId,
+            clearCalendarNostrEventId: calendarEventId == null,
+            calendarMirrorRetractionPending: false,
           )
           .toJson(),
     );

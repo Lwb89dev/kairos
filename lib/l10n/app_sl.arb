@@ -157,5 +157,20 @@
   "importKeyButton": "Uvozi obstoječi ključ",
   "importKeyFieldLabel": "nsec ali šestnajstiški zasebni ključ",
   "importButton": "Uvozi",
-  "storageFailureMessage": "Kairos ni mogel odpreti svoje šifrirane lokalne podatkovne zbirke. Znova zaženite aplikacijo. Ne brišite podatkov aplikacije; če se težava nadaljuje, jo prijavite zasebno."
+  "storageFailureMessage": "Kairos ni mogel odpreti svoje šifrirane lokalne podatkovne zbirke. Znova zaženite aplikacijo. Ne brišite podatkov aplikacije; če se težava nadaljuje, jo prijavite zasebno.",
+  "remindersLabel": "Opomniki",
+  "addReminderButton": "Dodaj opomnik",
+  "remindersNeedDueDate": "Nastavi rok, da lahko dodaš opomnike",
+  "removeReminderTooltip": "Odstrani opomnik",
+  "reminderAtDueTime": "Ob času roka",
+  "reminderMinutesBefore": "{count, plural, =1{1 minuto prej} two{{count} minuti prej} few{{count} minute prej} other{{count} minut prej}}",
+  "reminderHoursBefore": "{count, plural, =1{1 uro prej} two{{count} uri prej} few{{count} ure prej} other{{count} ur prej}}",
+  "reminderDaysBefore": "{count, plural, =1{1 dan prej} two{{count} dneva prej} few{{count} dni prej} other{{count} dni prej}}",
+  "maxRemindersReached": "Opravilo ima lahko največ {count} opomnikov",
+  "notificationsTitle": "Opomniki za opravila",
+  "notificationsSubtitle": "Obvesti me pred rokom opravila",
+  "sectionReminders": "Opomniki",
+  "addToCalendarTitle": "Dodaj v koledar Astraea",
+  "addToCalendarSubtitle": "To opravilo se na dan roka prikaže tudi v koledarju in pripomočku Astraea.",
+  "addToCalendarNeedsSync": "Zahteva račun, rele in rok"
 }

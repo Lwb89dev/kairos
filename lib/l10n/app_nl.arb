@@ -157,5 +157,20 @@
   "importKeyButton": "Bestaande sleutel importeren",
   "importKeyFieldLabel": "nsec of hexadecimale privésleutel",
   "importButton": "Importeren",
-  "storageFailureMessage": "Kairos kon de versleutelde lokale database niet openen. Start de app opnieuw. Wis geen app-gegevens; als het probleem aanhoudt, meld dit dan privé."
+  "storageFailureMessage": "Kairos kon de versleutelde lokale database niet openen. Start de app opnieuw. Wis geen app-gegevens; als het probleem aanhoudt, meld dit dan privé.",
+  "remindersLabel": "Herinneringen",
+  "addReminderButton": "Herinnering toevoegen",
+  "remindersNeedDueDate": "Stel een vervaldatum in om herinneringen toe te voegen",
+  "removeReminderTooltip": "Herinnering verwijderen",
+  "reminderAtDueTime": "Op het moment zelf",
+  "reminderMinutesBefore": "{count, plural, =1{1 minuut vooraf} other{{count} minuten vooraf}}",
+  "reminderHoursBefore": "{count, plural, =1{1 uur vooraf} other{{count} uur vooraf}}",
+  "reminderDaysBefore": "{count, plural, =1{1 dag vooraf} other{{count} dagen vooraf}}",
+  "maxRemindersReached": "Een taak kan maximaal {count} herinneringen hebben",
+  "notificationsTitle": "Taakherinneringen",
+  "notificationsSubtitle": "Waarschuw mij voordat een taak verloopt",
+  "sectionReminders": "Herinneringen",
+  "addToCalendarTitle": "Aan Astraea-agenda toevoegen",
+  "addToCalendarSubtitle": "Deze taak verschijnt op de vervaldag ook in de agenda en widget van Astraea.",
+  "addToCalendarNeedsSync": "Vereist een account, een relay en een vervaldatum"
 }

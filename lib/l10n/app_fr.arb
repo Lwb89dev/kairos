@@ -157,5 +157,20 @@
   "importKeyButton": "Importer une clé existante",
   "importKeyFieldLabel": "nsec ou clé privée hexadécimale",
   "importButton": "Importer",
-  "storageFailureMessage": "Kairos n'a pas pu ouvrir sa base de données locale chiffrée. Redémarrez l'application. Ne réinitialisez pas les données de l'application ; si le problème persiste, signalez-le en privé."
+  "storageFailureMessage": "Kairos n'a pas pu ouvrir sa base de données locale chiffrée. Redémarrez l'application. Ne réinitialisez pas les données de l'application ; si le problème persiste, signalez-le en privé.",
+  "remindersLabel": "Rappels",
+  "addReminderButton": "Ajouter un rappel",
+  "remindersNeedDueDate": "Définissez une échéance pour ajouter des rappels",
+  "removeReminderTooltip": "Supprimer le rappel",
+  "reminderAtDueTime": "À l’heure de l’échéance",
+  "reminderMinutesBefore": "{count, plural, =1{1 minute avant} other{{count} minutes avant}}",
+  "reminderHoursBefore": "{count, plural, =1{1 heure avant} other{{count} heures avant}}",
+  "reminderDaysBefore": "{count, plural, =1{1 jour avant} other{{count} jours avant}}",
+  "maxRemindersReached": "Une tâche peut avoir au maximum {count} rappels",
+  "notificationsTitle": "Rappels de tâches",
+  "notificationsSubtitle": "M’avertir avant l’échéance d’une tâche",
+  "sectionReminders": "Rappels",
+  "addToCalendarTitle": "Ajouter au calendrier Astraea",
+  "addToCalendarSubtitle": "Cette tâche apparaît aussi dans le calendrier et le widget d’Astraea, le jour de son échéance.",
+  "addToCalendarNeedsSync": "Nécessite un compte, un relais et une échéance"
 }

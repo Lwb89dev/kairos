@@ -33,9 +33,19 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('Settings shows Language and Support sections', (tester) async {
+  testWidgets('Settings shows Reminders, Language and Support sections', (
+    tester,
+  ) async {
     await pumpSettings(tester);
     final list = find.byType(Scrollable).first;
+
+    await tester.scrollUntilVisible(
+      find.text('Task reminders'),
+      200,
+      scrollable: list,
+    );
+    expect(find.text('Task reminders'), findsOneWidget);
+    expect(find.text('Notify me before a task is due'), findsOneWidget);
 
     await tester.scrollUntilVisible(
       find.text('Language'),
@@ -44,8 +54,11 @@ void main() {
     );
     expect(find.text('Language'), findsOneWidget);
 
+    // Scroll to the donation tile rather than the section header above it:
+    // stopping at the header leaves the tile just below the fold, which made
+    // this test depend on how many rows happened to precede it.
     await tester.scrollUntilVisible(
-      find.text('Support'),
+      find.text('Support Kairos'),
       200,
       scrollable: list,
     );

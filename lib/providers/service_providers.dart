@@ -1,8 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../services/astraea_calendar_mirror.dart';
 import '../services/file_cache_service.dart';
 import '../services/local_storage_service.dart';
 import '../services/nostr_service.dart';
+import '../services/notification_service.dart';
 import '../services/nostr_task_sync_service.dart';
 import '../services/task_local_storage_service.dart';
 
@@ -25,13 +27,24 @@ final taskLocalStorageServiceProvider = Provider<TaskLocalStorageService>((
   return TaskLocalStorageService(ref.watch(localStorageServiceProvider));
 });
 
+final notificationServiceProvider = Provider<NotificationService>((ref) {
+  return NotificationService(
+    localStorageService: ref.watch(localStorageServiceProvider),
+  );
+});
+
 final nostrServiceProvider = Provider<NostrService>((ref) {
   return NostrService();
+});
+
+final astraeaCalendarMirrorProvider = Provider<AstraeaCalendarMirror>((ref) {
+  return AstraeaCalendarMirror(nostrService: ref.watch(nostrServiceProvider));
 });
 
 final nostrTaskSyncServiceProvider = Provider<NostrTaskSyncService>((ref) {
   return NostrTaskSyncService(
     taskStorage: ref.watch(taskLocalStorageServiceProvider),
     nostrService: ref.watch(nostrServiceProvider),
+    calendarMirror: ref.watch(astraeaCalendarMirrorProvider),
   );
 });
