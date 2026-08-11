@@ -34,7 +34,7 @@ dependencies:
   # Encrypted storage dedicated to the account private key (nsec). The
   # private key must never end up in plaintext SharedPreferences: native
   # keystore/keychain instead.
-  flutter_secure_storage: ^10.3.1
+  flutter_secure_storage: ^11.0.0
 
   # Stable per-task ids (also used as the Kind-30789 `d` tag suffix).
   uuid: ^4.5.3
