@@ -4,6 +4,24 @@ All notable changes to Kairos are documented in this file. The format is based
 on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-08-20
+
+### Added
+
+- A "Sync to Nostr" toggle for tasks that are already syncing, not just new
+  ones: switching it off in the editor pins the task to this device and
+  retracts its existing relay copy (and calendar mirror, if mirrored);
+  switching it back on resumes publishing. Complements the existing "Sync
+  task" action, which already covered the opposite direction for a task
+  created local-only.
+
+### Fixed
+
+- The Android app icon: the source artwork's own rounded-square edges reached
+  the adaptive-icon safe zone boundary, so circular or squircle launcher masks
+  cropped the glyph. The foreground layer is now generated with enough padding
+  to sit fully inside the mask on every launcher shape.
+
 ## [0.1.1] - 2026-07-28
 
 ### Added
