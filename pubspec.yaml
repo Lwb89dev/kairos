@@ -2,7 +2,7 @@ name: kairos
 description: "Kairos - an offline-first, privacy-first task manager with optional encrypted Nostr synchronization."
 publish_to: 'none'
 
-version: 0.1.1+2
+version: 0.1.2+3
 
 environment:
   sdk: ^3.12.2
@@ -105,7 +105,15 @@ flutter_launcher_icons:
   android: true
   image_path: "assets/icon/icon.png"
   adaptive_icon_background: "#16092F"
-  adaptive_icon_foreground: "assets/icon/icon.png"
+  # icon.png is a flat, edge-to-edge square (its own rounded corners baked
+  # in). Used directly as the adaptive foreground it sat outside Android's
+  # safe zone, so circular/squircle launcher masks cropped the glyph.
+  # icon_foreground.png is the same artwork scaled to ~60% on a transparent
+  # canvas so it stays inside the safe zone under every mask shape.
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+  # Padding is already baked into icon_foreground.png (scaled to 60% on a
+  # transparent canvas), so no extra inset is needed on top of it.
+  adaptive_icon_foreground_inset: 0
 
 flutter:
   uses-material-design: true
