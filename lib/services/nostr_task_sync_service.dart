@@ -137,6 +137,40 @@ class NostrTaskSyncService {
     return _nostr.fetchTasks(author: author, relayUrls: config.allSyncRelays);
   }
 
+  /// Retracts a task's own publication from the relays (and its calendar
+  /// mirror, if any) without touching its content. Used when the user pins a
+  /// previously-synced task back to this device ([Task.localOnly]); unlike
+  /// [deleteTask] this never republishes — the task keeps living locally,
+  /// just not on the relays. [task] must be the pre-pin snapshot, i.e. still
+  /// carrying its `nostrEventId`/`calendarNostrEventId`.
+  Future<void> retractTask(
+    Task task, {
+    required SyncConfig config,
+    required User author,
+  }) => _enqueueTaskOperation(
+    task.id,
+    () => _retractTask(task, config: config, author: author),
+  );
+
+  Future<void> _retractTask(
+    Task task, {
+    required SyncConfig config,
+    required User author,
+  }) async {
+    SyncLog.nostr('retractTask ${task.id}');
+    final eventId = task.nostrEventId;
+    if (eventId != null) {
+      await _nostr.publishDeletion(
+        author: author,
+        nostrEventId: eventId,
+        relayUrls: config.allSyncRelays,
+      );
+    }
+    if (task.calendarNostrEventId != null) {
+      await _calendar.retract(task: task, config: config, author: author);
+    }
+  }
+
   /// Propagates a deletion. [task] must already be the local tombstone
   /// (`deleted: true`).
   ///

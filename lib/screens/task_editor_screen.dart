@@ -15,10 +15,12 @@ import '../utils/task_colors.dart';
 /// Saving is offline-first — the screen never blocks on the network; sync
 /// publication happens best-effort after the local write.
 ///
-/// When sync is available (account + at least one relay), a new task gets a
-/// "Sync to Nostr" toggle — off pins it to this device ([Task.localOnly]) —
-/// and an existing local-only task gets a "Sync task" button that saves the
-/// current edits and lifts the pin, publishing it a posteriori.
+/// When sync is available (account + at least one relay): a new task, or an
+/// existing task that is already syncing, gets a two-way "Sync to Nostr"
+/// toggle — off pins it to this device ([Task.localOnly]), on (again) lifts
+/// the pin; an existing local-only task instead gets a "Sync task" button
+/// that saves the current edits and lifts the pin, publishing it a
+/// posteriori.
 class TaskEditorScreen extends ConsumerStatefulWidget {
   const TaskEditorScreen({super.key, this.task});
 
@@ -41,8 +43,10 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
   List<Reminder> _reminders = const [];
   bool _mirrorToCalendar = false;
 
-  /// New tasks: driven by the "Sync to Nostr" toggle (defaults to on).
-  /// Existing local-only tasks: flipped to true by the "Sync task" button.
+  /// Driven by the "Sync to Nostr" toggle for a new task or an already-
+  /// syncing existing task (defaults to on, i.e. reflects the task's current
+  /// state). Existing local-only tasks ignore this field and are instead
+  /// flipped to synced by the "Sync task" button.
   bool _syncOnSave = true;
 
   bool get _isEditing => widget.task != null;
@@ -167,6 +171,11 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
 
     try {
       if (_isEditing) {
+        // The "Sync to Nostr" toggle only drives the save when the task was
+        // syncing already; a local-only task is only ever lifted by the
+        // explicit "Sync task" button ([enableSync]).
+        final disableSync =
+            !enableSync && !widget.task!.localOnly && !_syncOnSave;
         await notifier.updateFromEditor(
           widget.task!.copyWith(
             title: title,
@@ -183,6 +192,7 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
             mirrorToCalendar: _mirrorToCalendar,
           ),
           enableSync: enableSync,
+          disableSync: disableSync,
         );
       } else {
         await notifier.createTask(
@@ -459,8 +469,10 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
   /// through the local bridge, and also gets the Nostr mirror when relays are
   /// available. A local-only task remains excluded from both paths.
   Widget _buildCalendarMirrorTile(ThemeData theme, AppLocalizations l) {
-    final keptOffRelays = _isEditing ? widget.task!.localOnly : !_syncOnSave;
-    final available = _dueDateLocal != null && !keptOffRelays;
+    // Reachable only while the task is (or will be) syncing — see
+    // _buildSyncControls — so the live "Sync to Nostr" toggle is always the
+    // right source of truth, for both a new task and an existing synced one.
+    final available = _dueDateLocal != null && _syncOnSave;
     return SwitchListTile(
       contentPadding: EdgeInsets.zero,
       secondary: const Icon(Icons.event_available_outlined),
@@ -476,15 +488,21 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
   }
 
   /// Sync controls, only when sync can actually happen (account + at least
-  /// one relay). New task: opt-out toggle. Existing task pinned local-only:
-  /// opt-in "Sync task" button that saves the current edits and publishes a
-  /// posteriori. Anything else contributes nothing.
+  /// one relay). A new task, or an existing task that is already syncing:
+  /// a two-way "Sync to Nostr" toggle (off pins it local-only and — for an
+  /// existing task — retracts its relay copy on save). An existing task
+  /// pinned local-only: opt-in "Sync task" button that saves the current
+  /// edits and publishes a posteriori. Only the button direction is a
+  /// one-way door: an editor session cannot re-pin a task local-only and
+  /// then change its mind back to "sync" without saving in between, since
+  /// the button both flips the flag and saves immediately.
   List<Widget> _buildSyncControls(
     ThemeData theme,
     AppLocalizations l, {
     required bool syncAvailable,
   }) {
-    if (!_isEditing) {
+    final editingLocalOnly = _isEditing && widget.task!.localOnly;
+    if (!editingLocalOnly) {
       final calendarTile = _buildCalendarMirrorTile(theme, l);
       if (!syncAvailable) {
         return [const SizedBox(height: 24), calendarTile];
@@ -507,12 +525,6 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
                 }),
         ),
         calendarTile,
-      ];
-    }
-    if (!widget.task!.localOnly) {
-      return [
-        const SizedBox(height: 24),
-        _buildCalendarMirrorTile(theme, l),
       ];
     }
     if (!syncAvailable) return const [];

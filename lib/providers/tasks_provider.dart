@@ -133,12 +133,21 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
     // whatever this task had before, so a stale alarm can never survive.
     await ref.read(notificationServiceProvider).scheduleForTask(stamped);
     await _refresh();
-    unawaited(
-      _publishAndRefresh(
-        stamped,
-        wasMirrored: current?.mirrorToCalendar == true,
-      ),
-    );
+    // Just pinned back to this device after having been synced: the relay
+    // copy (and calendar mirror) must be retracted, not skipped — a plain
+    // publish attempt would no-op since publishTask refuses local-only tasks.
+    if (stamped.localOnly && current != null && !current.localOnly) {
+      unawaited(
+        _retractAndRefresh(current, wasMirrored: current.mirrorToCalendar),
+      );
+    } else {
+      unawaited(
+        _publishAndRefresh(
+          stamped,
+          wasMirrored: current?.mirrorToCalendar == true,
+        ),
+      );
+    }
   }
 
   /// Applies fields controlled by the editor while preserving changes that
@@ -149,7 +158,15 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
   /// [enableSync] is the editor's "Sync task" action for a task that was
   /// created local-only: it clears [Task.localOnly] so this save (and every
   /// future revision) publishes to the configured relays.
-  Future<void> updateFromEditor(Task edited, {bool enableSync = false}) async {
+  ///
+  /// [disableSync] is the reverse — the editor's "Sync to Nostr" toggle
+  /// turned off for a task that was syncing: it sets [Task.localOnly], and
+  /// [upsert] retracts the existing relay copy instead of publishing.
+  Future<void> updateFromEditor(
+    Task edited, {
+    bool enableSync = false,
+    bool disableSync = false,
+  }) async {
     final current = ref
         .read(taskLocalStorageServiceProvider)
         .getTask(edited.id);
@@ -165,7 +182,9 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
         nostrEventId: current.nostrEventId,
         deleted: current.deleted,
         deletionRequestPending: current.deletionRequestPending,
-        localOnly: enableSync ? false : current.localOnly,
+        localOnly: enableSync
+            ? false
+            : (disableSync ? true : current.localOnly),
         calendarNostrEventId: current.calendarNostrEventId,
         calendarMirrorRetractionPending:
             current.calendarMirrorRetractionPending,
@@ -303,6 +322,39 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
       await ref.read(astraeaCalendarMirrorProvider).syncLocal(task);
     } catch (_) {
       debugLog('Local Astraea update failed', name: 'TasksNotifier');
+    }
+  }
+
+  /// Retracts a task's relay copy (and calendar mirror, if any) after the
+  /// user pinned it back to this device. [previouslySynced] must be the
+  /// state the task had *before* the pin — it's the only copy that still
+  /// carries the relay-confirmed ids needed to retract it.
+  Future<void> _retractAndRefresh(
+    Task previouslySynced, {
+    required bool wasMirrored,
+  }) async {
+    if (wasMirrored) {
+      unawaited(
+        _syncLocalMirror(
+          previouslySynced.copyWith(mirrorToCalendar: false),
+          wasMirrored: true,
+        ),
+      );
+    }
+    final auth = ref.read(authProvider).value;
+    final config = ref.read(syncConfigProvider).value;
+    if (auth == null || config == null || config.allSyncRelays.isEmpty) {
+      return;
+    }
+    final owner = previouslySynced.syncOwnerPubkey;
+    if (owner != null && owner != auth.publicKeyHex) return;
+    try {
+      await ref
+          .read(nostrTaskSyncServiceProvider)
+          .retractTask(previouslySynced, config: config, author: auth);
+      await _refresh();
+    } catch (_) {
+      debugLog('Task retraction failed', name: 'TasksNotifier');
     }
   }
 
