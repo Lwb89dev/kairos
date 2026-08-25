@@ -104,15 +104,22 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   image_path: "assets/icon/icon.png"
-  adaptive_icon_background: "#16092F"
-  # icon.png is a flat, edge-to-edge square (its own rounded corners baked
-  # in). Used directly as the adaptive foreground it sat outside Android's
-  # safe zone, so circular/squircle launcher masks cropped the glyph.
-  # icon_foreground.png is the same artwork scaled to ~60% on a transparent
-  # canvas so it stays inside the safe zone under every mask shape.
+  # A lighter mid-purple than the artwork's own darkest corner tone: at
+  # launcher-icon size the previous #16092F was dark enough to read as a
+  # flat black ring around the icon rather than as background color.
+  adaptive_icon_background: "#3D1F72"
+  # icon.png is a flat square (its own rounded corners baked in) with a
+  # soft transparent glow bleeding out past the artwork edges. Used
+  # directly as the adaptive foreground it sat outside Android's safe
+  # zone (glow included), so circular/squircle launcher masks cropped the
+  # glyph. icon_foreground.png is the artwork cropped tight to its opaque
+  # bounds and re-scaled to ~72% on a transparent canvas, so it stays
+  # inside the safe zone under every mask shape while leaving a much
+  # smaller background ring than a naive 60% resize of the unglow-cropped
+  # original would.
   adaptive_icon_foreground: "assets/icon/icon_foreground.png"
-  # Padding is already baked into icon_foreground.png (scaled to 60% on a
-  # transparent canvas), so no extra inset is needed on top of it.
+  # Padding is already baked into icon_foreground.png, so no extra inset
+  # is needed on top of it.
   adaptive_icon_foreground_inset: 0
 
 flutter:

@@ -307,8 +307,8 @@ class TasksNotifier extends AsyncNotifier<List<Task>> {
           .read(nostrTaskSyncServiceProvider)
           .publishTask(task, config: config, author: auth);
       await _refresh();
-    } catch (_) {
-      debugLog('Task publish failed', name: 'TasksNotifier');
+    } catch (e, st) {
+      debugLog('Task publish failed: $e\n$st', name: 'TasksNotifier');
     }
   }
 
