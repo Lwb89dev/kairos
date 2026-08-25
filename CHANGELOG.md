@@ -4,6 +4,17 @@ All notable changes to Kairos are documented in this file. The format is based
 on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2026-08-25
+
+### Fixed
+
+- The Android adaptive app icon: the foreground artwork was scaled to only
+  60% of the canvas and sat on a background color dark enough to read as
+  flat black, so the launcher showed a large near-black ring around a small
+  icon. The foreground is now cropped to its actual opaque bounds and
+  rescaled to 72%, and the background color is a lighter mid-purple that
+  reads as part of the design rather than as a rendering bug.
+
 ## [0.1.2] - 2026-08-20
 
 ### Added
