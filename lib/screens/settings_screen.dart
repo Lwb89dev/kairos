@@ -16,7 +16,9 @@ import '../providers/tasks_provider.dart';
 import '../providers/theme_provider.dart';
 import '../utils/constants.dart';
 import '../utils/formatter.dart';
+import '../utils/kairos_theme.dart';
 import 'widgets/login_options.dart';
+import 'widgets/kairos_glass.dart';
 import 'widgets/relay_widgets.dart';
 
 /// Account, explicit relay configuration, appearance, language and support
@@ -42,33 +44,38 @@ class SettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(l.settingsTitle)),
-      body: ListView(
-        children: [
-          _SectionHeader(l.sectionAccount),
-          ..._buildAccountSection(context, ref, l, auth),
+      body: KairosAtmosphere(
+        child: ListView(
+          children: [
+            _SectionHeader(l.sectionAccount),
+            ..._buildAccountSection(context, ref, l, auth),
 
-          _SectionHeader(l.sectionSync),
-          ListTile(
-            leading: const Icon(Icons.lock_outline),
-            title: Text(l.syncInfoTitle),
-            subtitle: Text(l.syncInfoBody),
-          ),
-          _SectionHeader(l.sectionRelays),
-          _RelaySection(relays: config.relays),
+            _SectionHeader(l.sectionSync),
+            KairosGlassSurface(
+              margin: const EdgeInsets.symmetric(horizontal: KairosSpacing.md),
+              child: ListTile(
+                leading: const Icon(Icons.lock_outline),
+                title: Text(l.syncInfoTitle),
+                subtitle: Text(l.syncInfoBody),
+              ),
+            ),
+            _SectionHeader(l.sectionRelays),
+            _RelaySection(relays: config.relays),
 
-          _SectionHeader(l.sectionReminders),
-          const _RemindersTile(),
+            _SectionHeader(l.sectionReminders),
+            const _RemindersTile(),
 
-          _SectionHeader(l.sectionAppearance),
-          _ThemeTile(themeMode: themeMode),
+            _SectionHeader(l.sectionAppearance),
+            _ThemeTile(themeMode: themeMode),
 
-          _SectionHeader(l.sectionLanguage),
-          const _LanguageSection(),
+            _SectionHeader(l.sectionLanguage),
+            const _LanguageSection(),
 
-          _SectionHeader(l.sectionSupport),
-          const _DonationTile(),
-          const SizedBox(height: 24),
-        ],
+            _SectionHeader(l.sectionSupport),
+            const _DonationTile(),
+            const SizedBox(height: KairosSpacing.lg),
+          ],
+        ),
       ),
     );
   }
@@ -369,20 +376,15 @@ class _LanguageSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final locale = ref.watch(localeProvider);
-    final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        border: Border.all(color: colorScheme.outlineVariant),
-        borderRadius: BorderRadius.circular(12),
-      ),
+    return KairosGlassSurface(
+      margin: const EdgeInsets.symmetric(horizontal: KairosSpacing.md),
+      padding: const EdgeInsets.symmetric(horizontal: KairosSpacing.md),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String?>(
           value: locale?.languageCode,
           isExpanded: true,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(KairosRadii.sm),
           items: [
             DropdownMenuItem<String?>(value: null, child: Text(l.langSystem)),
             ..._buildLanguageItems(_euOfficialLanguages),
@@ -478,25 +480,20 @@ class _DonationTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final colorScheme = Theme.of(context).colorScheme;
-
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: InkWell(
-        onTap: () => _donate(context, l),
-        borderRadius: BorderRadius.circular(14),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: colorScheme.primary.withValues(alpha: 0.4),
-            ),
-            borderRadius: BorderRadius.circular(14),
-          ),
+      padding: const EdgeInsets.symmetric(horizontal: KairosSpacing.md),
+      child: KairosGlassSurface(
+        padding: const EdgeInsets.all(KairosSpacing.md),
+        child: InkWell(
+          onTap: () => _donate(context, l),
+          borderRadius: BorderRadius.circular(KairosRadii.sm),
           child: Row(
             children: [
-              Icon(Icons.bolt_rounded, color: colorScheme.primary),
-              const SizedBox(width: 16),
+              Icon(
+                Icons.bolt_rounded,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              const SizedBox(width: KairosSpacing.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -508,16 +505,14 @@ class _DonationTile extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       AppConstants.lightningAddress,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
                 ),
               ),
               Icon(
                 Icons.open_in_new_rounded,
-                color: colorScheme.onSurfaceVariant,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ],
           ),
@@ -534,15 +529,6 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
-      child: Text(
-        title,
-        style: theme.textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.primary,
-        ),
-      ),
-    );
+    return KairosSectionHeader(title: title);
   }
 }

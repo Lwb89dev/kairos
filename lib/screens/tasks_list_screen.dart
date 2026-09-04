@@ -7,7 +7,9 @@ import '../models/task_model.dart';
 import '../providers/sync_mode_provider.dart';
 import '../providers/tasks_provider.dart';
 import '../utils/constants.dart';
+import '../utils/kairos_theme.dart';
 import '../utils/task_colors.dart';
+import 'widgets/kairos_glass.dart';
 import 'settings_screen.dart';
 import 'task_details_screen.dart';
 import 'task_editor_screen.dart';
@@ -98,21 +100,25 @@ class _TasksListScreenState extends ConsumerState<TasksListScreen>
               )
             : null,
       ),
-      body: tasksState.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, _) => Center(child: Text(l.loadTasksError)),
-        data: (tasks) => RefreshIndicator(
-          onRefresh: () =>
-              ref.read(tasksProvider.notifier).syncNow(userInitiated: true),
-          child: tasks.isEmpty ? const _EmptyState() : _TaskList(tasks: tasks),
+      body: KairosAtmosphere(
+        child: tasksState.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (_, _) => Center(child: Text(l.loadTasksError)),
+          data: (tasks) => RefreshIndicator(
+            color: Theme.of(context).colorScheme.primary,
+            onRefresh: () =>
+                ref.read(tasksProvider.notifier).syncNow(userInitiated: true),
+            child: tasks.isEmpty
+                ? const _EmptyState()
+                : _TaskList(tasks: tasks),
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: KairosFloatingActionButton(
         tooltip: l.newTaskTooltip,
         onPressed: () => Navigator.of(
           context,
         ).push(MaterialPageRoute(builder: (_) => const TaskEditorScreen())),
-        child: const Icon(Icons.add),
       ),
     );
   }
@@ -123,30 +129,40 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final l = AppLocalizations.of(context);
+    final theme = Theme.of(context);
     // Inside a ListView so RefreshIndicator still works on the empty state.
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
       children: [
-        const SizedBox(height: 120),
-        Icon(
-          Icons.check_circle_outline,
-          size: 64,
-          color: theme.colorScheme.primary,
-        ),
-        const SizedBox(height: 16),
-        Text(
-          l.emptyTasksTitle,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.titleMedium,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          l.emptyTasksBody,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+        const SizedBox(height: 96),
+        Center(
+          child: KairosGlassSurface(
+            margin: const EdgeInsets.symmetric(horizontal: KairosSpacing.lg),
+            padding: const EdgeInsets.all(KairosSpacing.xl),
+            child: Column(
+              children: [
+                Icon(
+                  Icons.check_circle_outline,
+                  size: 56,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l.emptyTasksTitle,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l.emptyTasksBody,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -176,19 +192,20 @@ class _TaskListState extends State<_TaskList> {
 
     return ListView.builder(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.only(
-        bottom: 88,
-      ), // Keep the FAB off the last tile.
+      padding: const EdgeInsets.only(bottom: 104),
       itemCount: pending.length + headerRows + completedRows,
       itemBuilder: (context, index) {
         if (index < pending.length) return _TaskTile(task: pending[index]);
         if (index == pending.length) {
-          return ListTile(
-            title: Text(l.completedCount(done.length)),
-            trailing: Icon(
-              _showCompleted ? Icons.expand_less : Icons.expand_more,
+          return KairosSectionHeader(
+            title: l.completedCount(done.length),
+            trailing: IconButton(
+              tooltip: l.completedCount(done.length),
+              icon: Icon(
+                _showCompleted ? Icons.expand_less : Icons.expand_more,
+              ),
+              onPressed: () => setState(() => _showCompleted = !_showCompleted),
             ),
-            onTap: () => setState(() => _showCompleted = !_showCompleted),
           );
         }
         return _TaskTile(task: done[index - pending.length - 1]);
@@ -204,83 +221,178 @@ class _TaskTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
+    final tokens = kairosTokensOf(context);
     final due = task.dueDateUtc?.toLocal();
     final overdue = due != null && !task.isDone && due.isBefore(DateTime.now());
+    final muted = theme.colorScheme.onSurfaceVariant;
+    final tint = task.color?.background;
+    final indicator =
+        task.color?.background ?? theme.colorScheme.outlineVariant;
+    final metadata = _metadata(
+      theme,
+      due,
+      overdue,
+      muted,
+      l.addToCalendarTitle,
+    );
 
-    // Echoes-style per-task color coding: the card takes the task's own
-    // pastel background and the text/icon colors are derived for contrast
-    // (see task_colors.dart). Uncolored tasks keep the theme surface.
-    final background = task.color?.background;
-    final onBackground = background != null
-        ? readableTextColorOn(background)
-        : null;
-    final muted = background != null
-        ? mutedTextColorOn(background)
-        : theme.colorScheme.onSurfaceVariant;
-
-    return Card(
-      color: background,
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: ListTile(
-        leading: Checkbox(
-          value: task.isDone,
-          shape: const CircleBorder(),
-          side: onBackground != null
-              ? BorderSide(color: onBackground, width: 2)
-              : null,
-          onChanged: (_) => ref.read(tasksProvider.notifier).toggleStatus(task),
-        ),
-        title: Text(
-          task.title,
-          style: TextStyle(
-            color: task.isDone ? muted : onBackground,
-            decoration: task.isDone ? TextDecoration.lineThrough : null,
-            decorationColor: muted,
-          ),
-        ),
-        subtitle: _subtitle(theme, due, overdue, muted),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (task.priority != null && task.priority! >= 4)
-              Icon(
-                Icons.priority_high,
-                size: 18,
-                color: theme.colorScheme.error,
-              ),
-            // A deliberately local-only task is not "pending sync", so it
-            // gets no cloud badge at all instead of a misleading cloud-off.
-            if (!task.localOnly)
-              Icon(
-                task.synced
-                    ? Icons.cloud_done_outlined
-                    : Icons.cloud_off_outlined,
-                size: 18,
-                color: task.synced
-                    ? (onBackground ?? theme.colorScheme.primary)
-                    : muted,
-              ),
-          ],
-        ),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(builder: (_) => TaskDetailsScreen(taskId: task.id)),
+        ),
+        child: AnimatedContainer(
+          duration: KairosMotion.standard,
+          curve: KairosMotion.curve,
+          margin: const EdgeInsets.symmetric(horizontal: KairosSpacing.md),
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            color: tint?.withValues(alpha: 0.10),
+            border: Border(
+              bottom: BorderSide(color: tokens.border),
+              left: BorderSide(color: indicator, width: 3),
+            ),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              KairosCompletionControl(
+                value: task.isDone,
+                semanticLabel: task.title,
+                onChanged: (_) =>
+                    ref.read(tasksProvider.notifier).toggleStatus(task),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        task.title,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: task.isDone ? muted : null,
+                          decoration: task.isDone
+                              ? TextDecoration.lineThrough
+                              : null,
+                          decorationColor: muted,
+                        ),
+                      ),
+                      if (metadata.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Wrap(
+                            spacing: 10,
+                            runSpacing: 3,
+                            children: metadata,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+              _trailing(theme, muted),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget? _subtitle(ThemeData theme, DateTime? due, bool overdue, Color muted) {
-    final parts = <String>[
-      if (due != null) DateFormat.yMMMd().add_Hm().format(due),
-      if (task.tags.isNotEmpty) task.tags.join(' · '),
+  List<Widget> _metadata(
+    ThemeData theme,
+    DateTime? due,
+    bool overdue,
+    Color muted,
+    String calendarLabel,
+  ) {
+    return [
+      if (due != null)
+        _MetaItem(
+          icon: Icons.schedule_outlined,
+          text: DateFormat.yMMMd().add_Hm().format(due),
+          color: overdue ? theme.colorScheme.error : muted,
+        ),
+      if (task.tags.isNotEmpty)
+        _MetaItem(
+          icon: Icons.sell_outlined,
+          text: task.tags.join(' · '),
+          color: muted,
+        ),
+      if (task.reminders.isNotEmpty)
+        _MetaItem(
+          icon: Icons.notifications_none_rounded,
+          text: '${task.reminders.length}',
+          color: muted,
+        ),
+      if (task.mirrorToCalendar)
+        _MetaItem(
+          icon: Icons.event_available_outlined,
+          text: calendarLabel,
+          color: muted,
+        ),
     ];
-    if (parts.isEmpty) return null;
-    return Text(
-      parts.join('  —  '),
-      style: theme.textTheme.bodySmall?.copyWith(
-        color: overdue ? theme.colorScheme.error : muted,
+  }
+
+  Widget _trailing(ThemeData theme, Color muted) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8, left: 4),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (task.priority != null)
+            Icon(
+              task.priority! >= 4 ? Icons.flag_rounded : Icons.flag_outlined,
+              size: 17,
+              color: task.priority! >= 4 ? theme.colorScheme.error : muted,
+            ),
+          if (!task.localOnly)
+            Padding(
+              padding: const EdgeInsets.only(left: 7),
+              child: Icon(
+                task.synced
+                    ? Icons.cloud_done_outlined
+                    : Icons.cloud_off_outlined,
+                size: 17,
+                color: task.synced ? theme.colorScheme.primary : muted,
+              ),
+            ),
+        ],
       ),
+    );
+  }
+}
+
+class _MetaItem extends StatelessWidget {
+  const _MetaItem({
+    required this.icon,
+    required this.text,
+    required this.color,
+  });
+
+  final IconData icon;
+  final String text;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 13, color: color),
+        const SizedBox(width: 4),
+        Text(
+          text,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color),
+        ),
+      ],
     );
   }
 }

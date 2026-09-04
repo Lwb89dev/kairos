@@ -4,6 +4,41 @@ All notable changes to Kairos are documented in this file. The format is based
 on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-09-04
+
+The first stable release of Kairos. 🎉
+
+### Added
+
+- A complete Kairos visual and UX revamp built around the "Time through Glass"
+  design language: atmospheric backgrounds, bounded translucent surfaces,
+  precise typography and restrained depth in both dark and light themes.
+- A tactile completion control with immediate state changes and a short visual
+  check animation.
+- A lightweight task-list layout that keeps titles fast to scan while making
+  due dates, reminders, priorities, tags, sync and Astraea state easier to
+  understand.
+- A reusable visual foundation for glass surfaces, section headers, completion
+  controls and the primary task-creation action.
+- Refined onboarding, task editor, task details, settings and empty states.
+
+### Changed
+
+- Dark mode is now intentionally designed as a near-black atmospheric surface,
+  while light mode uses luminous cool neutrals instead of sterile white.
+- Task colors now act as restrained semantic indicators rather than filling
+  every task row with a heavy card background.
+- Blur is limited to bounded interactive surfaces so the scrolling task list
+  remains lightweight.
+
+### Preserved
+
+- Offline-first behavior, encrypted local storage and secure key handling.
+- Optional encrypted Nostr synchronization and relay security restrictions.
+- Reminders, task status behavior, NIP-09 deletion semantics and
+  Astraea calendar mirroring.
+- All 27 localizations and the existing Android application identity.
+
 ## [0.1.3] - 2026-08-25
 
 ### Fixed
@@ -137,6 +172,9 @@ First public release.
 - See [docs/SECURITY_AUDIT.md](docs/SECURITY_AUDIT.md) for the full audit
   record of this release.
 
-[Unreleased]: https://github.com/Lwb89dev/kairos/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/Lwb89dev/kairos/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/Lwb89dev/kairos/releases/tag/v1.0.0
+[0.1.3]: https://github.com/Lwb89dev/kairos/releases/tag/v0.1.3
+[0.1.2]: https://github.com/Lwb89dev/kairos/releases/tag/v0.1.2
 [0.1.1]: https://github.com/Lwb89dev/kairos/releases/tag/v0.1.1
 [0.1.0]: https://github.com/Lwb89dev/kairos/releases/tag/v0.1.0

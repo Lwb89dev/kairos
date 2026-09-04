@@ -5,6 +5,8 @@ import '../l10n/app_localizations.dart';
 import '../providers/app_entry_provider.dart';
 import '../providers/sync_mode_provider.dart';
 import '../utils/constants.dart';
+import '../utils/kairos_theme.dart';
+import 'widgets/kairos_glass.dart';
 import 'widgets/login_options.dart';
 import 'widgets/relay_widgets.dart';
 
@@ -71,34 +73,36 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (page) => setState(() => _page = page),
-                children: [
-                  const _IntroPage(),
-                  _LoginPage(onAdvance: () => _goToPage(2)),
-                  const _RelaySetupPage(),
-                ],
+      body: KairosAtmosphere(
+        child: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: (page) => setState(() => _page = page),
+                  children: [
+                    const _IntroPage(),
+                    _LoginPage(onAdvance: () => _goToPage(2)),
+                    const _RelaySetupPage(),
+                  ],
+                ),
               ),
-            ),
-            _OnboardingBottomBar(
-              page: _page,
-              pageCount: _pageCount,
-              finishing: _finishing,
-              onBack: () => _goToPage(_page - 1),
-              onNext: () => _goToPage(_page + 1),
-              // Skipping login means there's no Nostr account to sync with,
-              // so relay setup (page 3) would be meaningless — go straight
-              // to finishing onboarding instead of just advancing a page.
-              // Relays can still be configured later from Settings.
-              onSkip: _finish,
-              onFinish: _finish,
-            ),
-          ],
+              _OnboardingBottomBar(
+                page: _page,
+                pageCount: _pageCount,
+                finishing: _finishing,
+                onBack: () => _goToPage(_page - 1),
+                onNext: () => _goToPage(_page + 1),
+                // Skipping login means there's no Nostr account to sync with,
+                // so relay setup (page 3) would be meaningless — go straight
+                // to finishing onboarding instead of just advancing a page.
+                // Relays can still be configured later from Settings.
+                onSkip: _finish,
+                onFinish: _finish,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -130,8 +134,10 @@ class _OnboardingBottomBar extends StatelessWidget {
     final isFirst = page == 0;
     final isLast = page == pageCount - 1;
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 8, 16, 16),
+    return KairosGlassSurface(
+      margin: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+      padding: const EdgeInsets.fromLTRB(8, 6, 12, 6),
+      strong: true,
       child: Row(
         children: [
           SizedBox(
@@ -210,7 +216,12 @@ class _IntroPage extends StatelessWidget {
     final l = AppLocalizations.of(context);
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.fromLTRB(
+        KairosSpacing.lg,
+        KairosSpacing.md,
+        KairosSpacing.lg,
+        KairosSpacing.xl,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -231,25 +242,37 @@ class _IntroPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          _FeatureRow(
-            icon: Icons.smartphone,
-            title: l.featureLocalTitle,
-            body: l.featureLocalBody,
-          ),
-          _FeatureRow(
-            icon: Icons.sync,
-            title: l.featureSyncTitle,
-            body: l.featureSyncBody,
-          ),
-          _FeatureRow(
-            icon: Icons.lock_outline,
-            title: l.featureEncryptedTitle,
-            body: l.featureEncryptedBody,
-          ),
-          _FeatureRow(
-            icon: Icons.shield_outlined,
-            title: l.featureAmberTitle,
-            body: l.featureAmberBody,
+          KairosGlassSurface(
+            padding: const EdgeInsets.fromLTRB(
+              KairosSpacing.md,
+              KairosSpacing.lg,
+              KairosSpacing.md,
+              KairosSpacing.sm,
+            ),
+            child: Column(
+              children: [
+                _FeatureRow(
+                  icon: Icons.smartphone,
+                  title: l.featureLocalTitle,
+                  body: l.featureLocalBody,
+                ),
+                _FeatureRow(
+                  icon: Icons.sync,
+                  title: l.featureSyncTitle,
+                  body: l.featureSyncBody,
+                ),
+                _FeatureRow(
+                  icon: Icons.lock_outline,
+                  title: l.featureEncryptedTitle,
+                  body: l.featureEncryptedBody,
+                ),
+                _FeatureRow(
+                  icon: Icons.shield_outlined,
+                  title: l.featureAmberTitle,
+                  body: l.featureAmberBody,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -275,7 +298,18 @@ class _FeatureRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: Theme.of(context).colorScheme.primary),
+          Container(
+            width: 36,
+            height: 36,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Theme.of(
+                context,
+              ).colorScheme.primary.withValues(alpha: 0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: Theme.of(context).colorScheme.primary),
+          ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -326,7 +360,10 @@ class _LoginPage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
-          LoginOptions(onLoggedIn: onAdvance),
+          KairosGlassSurface(
+            padding: const EdgeInsets.all(KairosSpacing.md),
+            child: LoginOptions(onLoggedIn: onAdvance),
+          ),
         ],
       ),
     );

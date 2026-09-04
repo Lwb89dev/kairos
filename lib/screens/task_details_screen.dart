@@ -5,8 +5,10 @@ import 'package:intl/intl.dart';
 import '../l10n/app_localizations.dart';
 import '../models/task_model.dart';
 import '../providers/tasks_provider.dart';
+import '../utils/kairos_theme.dart';
 import '../utils/task_colors.dart';
 import 'task_editor_screen.dart' show TaskEditorScreen, formatReminderOffset;
+import 'widgets/kairos_glass.dart';
 
 /// Read view of a single task, with quick actions: toggle done, edit
 /// (pushes [TaskEditorScreen]), delete. Watches the provider by [taskId] so
@@ -55,77 +57,98 @@ class TaskDetailsScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _TitleRow(task: task),
-          const SizedBox(height: 16),
-          if (task.description != null) ...[
-            Text(task.description!, style: theme.textTheme.bodyLarge),
-            const SizedBox(height: 24),
+      body: KairosAtmosphere(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(
+            KairosSpacing.md,
+            KairosSpacing.md,
+            KairosSpacing.md,
+            KairosSpacing.xl,
+          ),
+          children: [
+            _TitleRow(task: task),
+            const SizedBox(height: KairosSpacing.lg),
+            KairosGlassSurface(
+              padding: const EdgeInsets.all(KairosSpacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (task.description != null) ...[
+                    Text(task.description!, style: theme.textTheme.bodyLarge),
+                    const SizedBox(height: KairosSpacing.md),
+                    const Divider(),
+                    const SizedBox(height: KairosSpacing.sm),
+                  ],
+                  _DetailRow(
+                    icon: Icons.event_outlined,
+                    label: l.dueDateLabel,
+                    value: due == null
+                        ? l.noneLabel
+                        : DateFormat.yMMMd().add_Hm().format(due),
+                  ),
+                  _DetailRow(
+                    icon: Icons.label_outline,
+                    label: l.tagsLabel,
+                    value: task.tags.isEmpty
+                        ? l.noneLabel
+                        : task.tags.join(', '),
+                  ),
+                  _DetailRow(
+                    icon: Icons.flag_outlined,
+                    label: l.priorityLabel,
+                    value: task.priority == null
+                        ? l.noneLabel
+                        : l.priorityValue(task.priority!),
+                  ),
+                  if (task.color != null)
+                    _DetailRow(
+                      icon: Icons.palette_outlined,
+                      label: l.colorLabel,
+                      value: task.color!.name,
+                      leadingValue: _ColorDot(color: task.color!),
+                    ),
+                  if (task.reminders.isNotEmpty)
+                    _DetailRow(
+                      icon: Icons.notifications_active_outlined,
+                      label: l.remindersLabel,
+                      value: task.reminders
+                          .map((r) => formatReminderOffset(l, r.minutesBefore))
+                          .join(', '),
+                    ),
+                  if (task.mirrorToCalendar)
+                    _DetailRow(
+                      icon: Icons.event_available_outlined,
+                      label: l.addToCalendarTitle,
+                      value: l.syncedStatus,
+                    ),
+                  _DetailRow(
+                    icon: _syncIcon(task),
+                    label: l.syncStatusLabel,
+                    value: _syncStatusLabel(task, l),
+                  ),
+                  if (task.linkedEventId != null)
+                    _DetailRow(
+                      icon: Icons.link,
+                      label: l.linkedEventLabel,
+                      value: task.linkedEventId!,
+                    ),
+                  const Divider(height: KairosSpacing.lg),
+                  Text(
+                    l.createdUpdatedInfo(
+                      DateFormat.yMMMd().add_Hm().format(
+                        task.createdAt.toLocal(),
+                      ),
+                      DateFormat.yMMMd().add_Hm().format(
+                        task.updatedAt.toLocal(),
+                      ),
+                    ),
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
           ],
-          _DetailRow(
-            icon: Icons.event_outlined,
-            label: l.dueDateLabel,
-            value: due == null
-                ? l.noneLabel
-                : DateFormat.yMMMd().add_Hm().format(due),
-          ),
-          _DetailRow(
-            icon: Icons.label_outline,
-            label: l.tagsLabel,
-            value: task.tags.isEmpty ? l.noneLabel : task.tags.join(', '),
-          ),
-          _DetailRow(
-            icon: Icons.flag_outlined,
-            label: l.priorityLabel,
-            value: task.priority == null
-                ? l.noneLabel
-                : l.priorityValue(task.priority!),
-          ),
-          if (task.color != null)
-            _DetailRow(
-              icon: Icons.palette_outlined,
-              label: l.colorLabel,
-              value: task.color!.name,
-              leadingValue: _ColorDot(color: task.color!),
-            ),
-          if (task.reminders.isNotEmpty)
-            _DetailRow(
-              icon: Icons.notifications_active_outlined,
-              label: l.remindersLabel,
-              value: task.reminders
-                  .map((r) => formatReminderOffset(l, r.minutesBefore))
-                  .join(', '),
-            ),
-          if (task.mirrorToCalendar)
-            _DetailRow(
-              icon: Icons.event_available_outlined,
-              label: l.addToCalendarTitle,
-              value: l.syncedStatus,
-            ),
-          _DetailRow(
-            icon: _syncIcon(task),
-            label: l.syncStatusLabel,
-            value: _syncStatusLabel(task, l),
-          ),
-          if (task.linkedEventId != null)
-            _DetailRow(
-              icon: Icons.link,
-              label: l.linkedEventLabel,
-              value: task.linkedEventId!,
-            ),
-          const Divider(height: 32),
-          Text(
-            l.createdUpdatedInfo(
-              DateFormat.yMMMd().add_Hm().format(task.createdAt.toLocal()),
-              DateFormat.yMMMd().add_Hm().format(task.updatedAt.toLocal()),
-            ),
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -188,9 +211,9 @@ class _TitleRow extends ConsumerWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Checkbox(
+        KairosCompletionControl(
           value: task.isDone,
-          shape: const CircleBorder(),
+          semanticLabel: task.title,
           onChanged: (_) => ref.read(tasksProvider.notifier).toggleStatus(task),
         ),
         const SizedBox(width: 8),

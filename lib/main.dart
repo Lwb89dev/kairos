@@ -14,6 +14,7 @@ import 'providers/theme_provider.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/tasks_list_screen.dart';
 import 'utils/constants.dart';
+import 'utils/kairos_theme.dart';
 import 'utils/logger.dart';
 
 Future<void> main() async {
@@ -90,7 +91,7 @@ class _StorageFailureApp extends StatelessWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: KairosApp._brandSeed,
+          seedColor: KairosPalette.accent,
           brightness: Brightness.dark,
         ),
         useMaterial3: true,
@@ -117,9 +118,6 @@ class _StorageFailureApp extends StatelessWidget {
 class KairosApp extends ConsumerWidget {
   const KairosApp({super.key});
 
-  /// Deep violet from Kairos' clock-and-constellation icon.
-  static const _brandSeed = Color(0xFF7454E8);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
@@ -139,20 +137,8 @@ class KairosApp extends ConsumerWidget {
       // Privacy-friendly default: dark theme (see [ThemeModeNotifier]) —
       // light is available from Settings. Consistent with Echoes/Astraea.
       themeMode: themeMode,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: _brandSeed,
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: _brandSeed,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
+      theme: buildKairosTheme(Brightness.light),
+      darkTheme: buildKairosTheme(Brightness.dark),
       home: const _AppRoot(),
     );
   }

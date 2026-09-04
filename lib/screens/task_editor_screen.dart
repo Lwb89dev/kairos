@@ -8,7 +8,9 @@ import '../models/task_model.dart';
 import '../providers/auth_provider.dart';
 import '../providers/sync_mode_provider.dart';
 import '../providers/tasks_provider.dart';
+import '../utils/kairos_theme.dart';
 import '../utils/task_colors.dart';
+import 'widgets/kairos_glass.dart';
 
 /// Create/edit form: title (required), description, due date+time, tags,
 /// priority. Pass [task] to edit; otherwise a new task is created on save.
@@ -243,26 +245,43 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
           ),
         ],
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            _buildTitleField(l),
-            const SizedBox(height: 16),
-            _buildDescriptionField(l),
-            const SizedBox(height: 16),
-            _buildDueDateTile(theme, l),
-            const SizedBox(height: 16),
-            _buildTagsField(l),
-            const SizedBox(height: 24),
-            _buildPrioritySection(theme, l),
-            const SizedBox(height: 24),
-            _buildColorSection(theme, l),
-            const SizedBox(height: 24),
-            _buildRemindersSection(theme, l),
-            ..._buildSyncControls(theme, l, syncAvailable: syncAvailable),
-          ],
+      body: KairosAtmosphere(
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(
+              KairosSpacing.md,
+              KairosSpacing.md,
+              KairosSpacing.md,
+              KairosSpacing.xl,
+            ),
+            children: [
+              _buildTitleField(l),
+              const SizedBox(height: KairosSpacing.sm),
+              _buildDescriptionField(l),
+              const SizedBox(height: KairosSpacing.lg),
+              KairosGlassSurface(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: KairosSpacing.sm,
+                  vertical: KairosSpacing.xs,
+                ),
+                child: Column(
+                  children: [
+                    _buildDueDateTile(theme, l),
+                    const Divider(),
+                    _buildTagsField(l),
+                    const SizedBox(height: KairosSpacing.sm),
+                    _buildPrioritySection(theme, l),
+                    const SizedBox(height: KairosSpacing.lg),
+                    _buildColorSection(theme, l),
+                    const SizedBox(height: KairosSpacing.lg),
+                    _buildRemindersSection(theme, l),
+                  ],
+                ),
+              ),
+              ..._buildSyncControls(theme, l, syncAvailable: syncAvailable),
+            ],
+          ),
         ),
       ),
     );
