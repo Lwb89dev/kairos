@@ -85,7 +85,7 @@ dependencies:
   # fire at the right *wall-clock* moment, which is only well-defined in a
   # named zone (a DST change between saving and firing would otherwise move
   # the notification by an hour).
-  timezone: ^0.9.4
+  timezone: ^0.10.1
 
   # Reads the device's current IANA timezone name at startup to seed the
   # `timezone` package's local location.
