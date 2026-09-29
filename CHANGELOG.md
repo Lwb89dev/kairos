@@ -4,6 +4,28 @@ All notable changes to Kairos are documented in this file. The format is based
 on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-09-29
+
+The desk Kairos shares with Echoes and Astraea. Iris and coral replace the
+earlier lavender glass. An aurora sits behind the app, the onboarding bar
+frosts over it, and a task card and an opened task paint the same gloss.
+Blur stays on that bar: the scrolling list does not blur one surface per
+task.
+
+Task colors are the same stained-glass sheets Echoes uses for the shared
+names. Text on a sheet, including the quieter metadata, keeps WCAG AA
+against both ends of the gloss. A bright tint that wants light type on the
+night desk is deepened until that type still clears. A light sheet stays
+its own color in both themes.
+
+### Changed
+
+- Light and dark themes now use the shared iris desk instead of the 1.0
+  "Time through Glass" palette.
+- The task list, task details, the editor, onboarding and settings all sit
+  on that desk. Opening a task is the card at full size.
+- Dark mode copy stays on the night ink, including against the aurora.
+
 ## [1.0.0] - 2026-09-04
 
 The first stable release of Kairos. 🎉
@@ -172,7 +194,8 @@ First public release.
 - See [docs/SECURITY_AUDIT.md](docs/SECURITY_AUDIT.md) for the full audit
   record of this release.
 
-[Unreleased]: https://github.com/Lwb89dev/kairos/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/Lwb89dev/kairos/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/Lwb89dev/kairos/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/Lwb89dev/kairos/releases/tag/v1.0.0
 [0.1.3]: https://github.com/Lwb89dev/kairos/releases/tag/v0.1.3
 [0.1.2]: https://github.com/Lwb89dev/kairos/releases/tag/v0.1.2

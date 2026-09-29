@@ -1,41 +1,34 @@
 import 'package:flutter/material.dart';
 
-/// A user-selectable pastel background for a single [Task] — the same
-/// Google Keep-style color coding Echoes uses for notes (this file is its
-/// note_colors.dart with Note→Task renamed), not a theme setting: each task
-/// picks its own, independent of light/dark mode. `null` on [Task.color]
-/// means "no override, use the app's normal surface color", which is why
-/// this enum itself has no "none"/"default" member — that state is the
-/// absence of a [TaskColor], not a member of it.
+/// A user-selectable sheet for a single [Task]. `null` on [Task.color] means
+/// "no override, use the desk paper".
+///
+/// The names are the persisted values (`color.name` in the task JSON).
+/// Renaming them would make existing tasks fail to load, including on an
+/// older install that syncs with this one. The swatches are the same
+/// stained-glass sheets Echoes uses for the shared names.
 enum TaskColor { yellow, red, purple, blue, green, orange, white }
 
 extension TaskColorSwatch on TaskColor {
-  /// The Material Design "200"-weight swatches — one step more saturated
-  /// than the initial "100" pick (too washed-out per user feedback), still
-  /// squarely pastel rather than a highlighter/neon tone.
+  /// Saturated enough to read as a color, still light enough that
+  /// [onBackground] clears WCAG AA. Names stay the stored enum values.
   Color get background => switch (this) {
-    TaskColor.yellow => const Color(0xFFFFF59D),
-    TaskColor.red => const Color(0xFFEF9A9A),
-    TaskColor.purple => const Color(0xFFCE93D8),
-    TaskColor.blue => const Color(0xFF90CAF9),
-    TaskColor.green => const Color(0xFFA5D6A7),
-    TaskColor.orange => const Color(0xFFFFCC80),
-    TaskColor.white => const Color(0xFFFFFFFF),
+    TaskColor.white => const Color(0xFFFFF4E8),
+    TaskColor.yellow => const Color(0xFFFFC44D),
+    TaskColor.green => const Color(0xFF8BE3A8),
+    TaskColor.orange => const Color(0xFFFF8F6B),
+    TaskColor.purple => const Color(0xFFD4B0FF),
+    TaskColor.blue => const Color(0xFF8EB0FF),
+    TaskColor.red => const Color(0xFFFF8FA3),
   };
 
-  /// The color to render *text* in in front of [background] — see
-  /// [readableTextColorOn] for how this is decided.
+  /// The color to render text in on top of [background].
   Color get onBackground => readableTextColorOn(background);
 }
 
-/// Picks whichever of pure black or pure white gives the higher contrast
-/// ratio against [background], per the WCAG 2.x definitions: relative
-/// luminance via [Color.computeLuminance] (Flutter's own implementation of
-/// the WCAG relative-luminance formula), then contrast ratio
-/// `(lighter + 0.05) / (darker + 0.05)`. Always picking the *better* of
-/// the two — rather than a fixed luminance threshold — means this stays
-/// correct even for a custom/future color this app didn't anticipate, not
-/// just the seven built-in [TaskColor]s.
+/// Picks whichever of black or white gives the higher contrast ratio against
+/// [background], per WCAG 2.x: relative luminance via [Color.computeLuminance],
+/// then `(lighter + 0.05) / (darker + 0.05)`.
 Color readableTextColorOn(Color background) {
   final bgLuminance = background.computeLuminance();
   final contrastWithBlack = _contrastRatio(bgLuminance, 0.0);
@@ -49,11 +42,27 @@ double _contrastRatio(double luminanceA, double luminanceB) {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-/// A muted counterpart of [TaskColor.onBackground] for de-emphasized text
-/// on a colored task (due dates, tags) — same idea as
-/// `colorScheme.onSurfaceVariant` next to `colorScheme.onSurface`, just
-/// derived from the task's own color instead of the theme.
+/// Body and metadata ink on a colored task. As soft as it can be while still
+/// clearing WCAG AA (4.5:1) against [background]. A fixed blend looked pale
+/// on gold, coral and lilac and disappeared into the sheet.
 Color mutedTextColorOn(Color background) {
-  final base = readableTextColorOn(background);
-  return Color.alphaBlend(base.withValues(alpha: 0.6), background);
+  final ink = readableTextColorOn(background);
+  var lo = 0.0;
+  var hi = 1.0;
+  var best = ink;
+  for (var i = 0; i < 10; i++) {
+    final mid = (lo + hi) / 2;
+    final candidate = Color.alphaBlend(ink.withValues(alpha: mid), background);
+    final ratio = _contrastRatio(
+      candidate.computeLuminance(),
+      background.computeLuminance(),
+    );
+    if (ratio >= 4.5) {
+      best = candidate;
+      hi = mid;
+    } else {
+      lo = mid;
+    }
+  }
+  return best;
 }

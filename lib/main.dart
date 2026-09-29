@@ -89,13 +89,15 @@ class _StorageFailureApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: KairosPalette.accent,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
+      theme: buildKairosTheme(Brightness.dark),
+      darkTheme: buildKairosTheme(Brightness.dark),
+      themeMode: ThemeMode.dark,
+      builder: (context, child) {
+        return Stack(
+          fit: StackFit.expand,
+          children: [const KairosBackdrop(), ?child],
+        );
+      },
       home: Scaffold(
         body: SafeArea(
           child: Center(
@@ -139,6 +141,12 @@ class KairosApp extends ConsumerWidget {
       themeMode: themeMode,
       theme: buildKairosTheme(Brightness.light),
       darkTheme: buildKairosTheme(Brightness.dark),
+      builder: (context, child) {
+        return Stack(
+          fit: StackFit.expand,
+          children: [const KairosBackdrop(), ?child],
+        );
+      },
       home: const _AppRoot(),
     );
   }

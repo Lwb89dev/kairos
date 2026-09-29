@@ -21,7 +21,6 @@ class TaskDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final l = AppLocalizations.of(context);
     final task = ref.watch(
       tasksProvider.select(
@@ -38,116 +37,114 @@ class TaskDetailsScreen extends ConsumerWidget {
     }
 
     final due = task.dueDateUtc?.toLocal();
+    final tint =
+        task.color?.background ?? KairosPalette.of(context).surfacePaper;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l.taskDetailsTitle),
-        actions: [
-          IconButton(
-            tooltip: l.editTooltip,
-            icon: const Icon(Icons.edit_outlined),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => TaskEditorScreen(task: task)),
-            ),
-          ),
-          IconButton(
-            tooltip: l.deleteTooltip,
-            icon: const Icon(Icons.delete_outline),
-            onPressed: () => _confirmDelete(context, ref, task, l),
-          ),
-        ],
-      ),
-      body: KairosAtmosphere(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(
-            KairosSpacing.md,
-            KairosSpacing.md,
-            KairosSpacing.md,
-            KairosSpacing.xl,
-          ),
-          children: [
-            _TitleRow(task: task),
-            const SizedBox(height: KairosSpacing.lg),
-            KairosGlassSurface(
-              padding: const EdgeInsets.all(KairosSpacing.md),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (task.description != null) ...[
-                    Text(task.description!, style: theme.textTheme.bodyLarge),
-                    const SizedBox(height: KairosSpacing.md),
-                    const Divider(),
-                    const SizedBox(height: KairosSpacing.sm),
-                  ],
-                  _DetailRow(
-                    icon: Icons.event_outlined,
-                    label: l.dueDateLabel,
-                    value: due == null
-                        ? l.noneLabel
-                        : DateFormat.yMMMd().add_Hm().format(due),
-                  ),
-                  _DetailRow(
-                    icon: Icons.label_outline,
-                    label: l.tagsLabel,
-                    value: task.tags.isEmpty
-                        ? l.noneLabel
-                        : task.tags.join(', '),
-                  ),
-                  _DetailRow(
-                    icon: Icons.flag_outlined,
-                    label: l.priorityLabel,
-                    value: task.priority == null
-                        ? l.noneLabel
-                        : l.priorityValue(task.priority!),
-                  ),
-                  if (task.color != null)
-                    _DetailRow(
-                      icon: Icons.palette_outlined,
-                      label: l.colorLabel,
-                      value: task.color!.name,
-                      leadingValue: _ColorDot(color: task.color!),
-                    ),
-                  if (task.reminders.isNotEmpty)
-                    _DetailRow(
-                      icon: Icons.notifications_active_outlined,
-                      label: l.remindersLabel,
-                      value: task.reminders
-                          .map((r) => formatReminderOffset(l, r.minutesBefore))
-                          .join(', '),
-                    ),
-                  if (task.mirrorToCalendar)
-                    _DetailRow(
-                      icon: Icons.event_available_outlined,
-                      label: l.addToCalendarTitle,
-                      value: l.syncedStatus,
-                    ),
-                  _DetailRow(
-                    icon: _syncIcon(task),
-                    label: l.syncStatusLabel,
-                    value: _syncStatusLabel(task, l),
-                  ),
-                  if (task.linkedEventId != null)
-                    _DetailRow(
-                      icon: Icons.link,
-                      label: l.linkedEventLabel,
-                      value: task.linkedEventId!,
-                    ),
-                  const Divider(height: KairosSpacing.lg),
-                  Text(
-                    l.createdUpdatedInfo(
-                      DateFormat.yMMMd().add_Hm().format(
-                        task.createdAt.toLocal(),
-                      ),
-                      DateFormat.yMMMd().add_Hm().format(
-                        task.updatedAt.toLocal(),
-                      ),
-                    ),
-                    style: theme.textTheme.bodySmall,
-                  ),
-                ],
+    return KairosSheet(
+      tint: tint,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(l.taskDetailsTitle),
+          actions: [
+            IconButton(
+              tooltip: l.editTooltip,
+              icon: const Icon(Icons.edit_outlined),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => TaskEditorScreen(task: task)),
               ),
             ),
+            IconButton(
+              tooltip: l.deleteTooltip,
+              icon: const Icon(Icons.delete_outline),
+              onPressed: () => _confirmDelete(context, ref, task, l),
+            ),
           ],
+        ),
+        body: Builder(
+          builder: (context) {
+            final theme = Theme.of(context);
+            return ListView(
+              padding: const EdgeInsets.fromLTRB(
+                KairosSpacing.lg,
+                KairosSpacing.sm,
+                KairosSpacing.lg,
+                KairosSpacing.xl,
+              ),
+              children: [
+                _TitleRow(task: task),
+                const SizedBox(height: KairosSpacing.lg),
+                if (task.description != null) ...[
+                  Text(task.description!, style: theme.textTheme.bodyLarge),
+                  const SizedBox(height: KairosSpacing.md),
+                  const Divider(),
+                  const SizedBox(height: KairosSpacing.sm),
+                ],
+                _DetailRow(
+                  icon: Icons.event_outlined,
+                  label: l.dueDateLabel,
+                  value: due == null
+                      ? l.noneLabel
+                      : DateFormat.yMMMd().add_Hm().format(due),
+                ),
+                _DetailRow(
+                  icon: Icons.label_outline,
+                  label: l.tagsLabel,
+                  value: task.tags.isEmpty ? l.noneLabel : task.tags.join(', '),
+                ),
+                _DetailRow(
+                  icon: Icons.flag_outlined,
+                  label: l.priorityLabel,
+                  value: task.priority == null
+                      ? l.noneLabel
+                      : l.priorityValue(task.priority!),
+                ),
+                if (task.color != null)
+                  _DetailRow(
+                    icon: Icons.palette_outlined,
+                    label: l.colorLabel,
+                    value: task.color!.name,
+                    leadingValue: _ColorDot(color: task.color!),
+                  ),
+                if (task.reminders.isNotEmpty)
+                  _DetailRow(
+                    icon: Icons.notifications_active_outlined,
+                    label: l.remindersLabel,
+                    value: task.reminders
+                        .map((r) => formatReminderOffset(l, r.minutesBefore))
+                        .join(', '),
+                  ),
+                if (task.mirrorToCalendar)
+                  _DetailRow(
+                    icon: Icons.event_available_outlined,
+                    label: l.addToCalendarTitle,
+                    value: l.syncedStatus,
+                  ),
+                _DetailRow(
+                  icon: _syncIcon(task),
+                  label: l.syncStatusLabel,
+                  value: _syncStatusLabel(task, l),
+                ),
+                if (task.linkedEventId != null)
+                  _DetailRow(
+                    icon: Icons.link,
+                    label: l.linkedEventLabel,
+                    value: task.linkedEventId!,
+                  ),
+                const Divider(height: KairosSpacing.lg),
+                Text(
+                  l.createdUpdatedInfo(
+                    DateFormat.yMMMd().add_Hm().format(
+                      task.createdAt.toLocal(),
+                    ),
+                    DateFormat.yMMMd().add_Hm().format(
+                      task.updatedAt.toLocal(),
+                    ),
+                  ),
+                  style: theme.textTheme.bodySmall,
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -221,7 +218,9 @@ class _TitleRow extends ConsumerWidget {
           child: Text(
             task.title,
             style: theme.textTheme.headlineSmall?.copyWith(
+              color: theme.colorScheme.onSurface,
               decoration: task.isDone ? TextDecoration.lineThrough : null,
+              decorationColor: theme.colorScheme.onSurfaceVariant,
             ),
           ),
         ),

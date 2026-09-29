@@ -44,38 +44,34 @@ class SettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(l.settingsTitle)),
-      body: KairosAtmosphere(
-        child: ListView(
-          children: [
-            _SectionHeader(l.sectionAccount),
-            ..._buildAccountSection(context, ref, l, auth),
-
-            _SectionHeader(l.sectionSync),
-            KairosGlassSurface(
-              margin: const EdgeInsets.symmetric(horizontal: KairosSpacing.md),
-              child: ListTile(
-                leading: const Icon(Icons.lock_outline),
-                title: Text(l.syncInfoTitle),
-                subtitle: Text(l.syncInfoBody),
-              ),
+      body: ListView(
+        padding: const EdgeInsets.only(bottom: KairosSpacing.lg),
+        children: [
+          _SectionHeader(l.sectionAccount),
+          _SettingsCard(
+            child: Column(
+              children: _buildAccountSection(context, ref, l, auth),
             ),
-            _SectionHeader(l.sectionRelays),
-            _RelaySection(relays: config.relays),
-
-            _SectionHeader(l.sectionReminders),
-            const _RemindersTile(),
-
-            _SectionHeader(l.sectionAppearance),
-            _ThemeTile(themeMode: themeMode),
-
-            _SectionHeader(l.sectionLanguage),
-            const _LanguageSection(),
-
-            _SectionHeader(l.sectionSupport),
-            const _DonationTile(),
-            const SizedBox(height: KairosSpacing.lg),
-          ],
-        ),
+          ),
+          _SectionHeader(l.sectionSync),
+          _SettingsCard(
+            child: ListTile(
+              leading: const Icon(Icons.lock_outline),
+              title: Text(l.syncInfoTitle),
+              subtitle: Text(l.syncInfoBody),
+            ),
+          ),
+          _SectionHeader(l.sectionRelays),
+          _SettingsCard(child: _RelaySection(relays: config.relays)),
+          _SectionHeader(l.sectionReminders),
+          const _SettingsCard(child: _RemindersTile()),
+          _SectionHeader(l.sectionAppearance),
+          _SettingsCard(child: _ThemeTile(themeMode: themeMode)),
+          _SectionHeader(l.sectionLanguage),
+          const _LanguageSection(),
+          _SectionHeader(l.sectionSupport),
+          const _DonationTile(),
+        ],
       ),
     );
   }
@@ -380,6 +376,7 @@ class _LanguageSection extends ConsumerWidget {
     return KairosGlassSurface(
       margin: const EdgeInsets.symmetric(horizontal: KairosSpacing.md),
       padding: const EdgeInsets.symmetric(horizontal: KairosSpacing.md),
+      shadow: false,
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String?>(
           value: locale?.languageCode,
@@ -484,6 +481,7 @@ class _DonationTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: KairosSpacing.md),
       child: KairosGlassSurface(
         padding: const EdgeInsets.all(KairosSpacing.md),
+        shadow: false,
         child: InkWell(
           onTap: () => _donate(context, l),
           borderRadius: BorderRadius.circular(KairosRadii.sm),
@@ -518,6 +516,22 @@ class _DonationTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _SettingsCard extends StatelessWidget {
+  const _SettingsCard({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return KairosGlassSurface(
+      margin: const EdgeInsets.symmetric(horizontal: KairosSpacing.md),
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      shadow: false,
+      child: child,
     );
   }
 }

@@ -222,80 +222,95 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final l = AppLocalizations.of(context);
     final syncAvailable =
         ref.watch(authProvider).value != null &&
         (ref.watch(syncConfigProvider).value?.allSyncRelays.isNotEmpty ??
             false);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_isEditing ? l.editTaskTitle : l.newTaskTitle),
-        actions: [
-          TextButton(
-            onPressed: _saving ? null : _save,
-            child: _saving
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : Text(l.saveButton),
-          ),
-        ],
-      ),
-      body: KairosAtmosphere(
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(
-              KairosSpacing.md,
-              KairosSpacing.md,
-              KairosSpacing.md,
-              KairosSpacing.xl,
+    final tint = _color?.background ?? KairosPalette.of(context).surfacePaper;
+    return KairosSheet(
+      tint: tint,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(_isEditing ? l.editTaskTitle : l.newTaskTitle),
+          actions: [
+            TextButton(
+              onPressed: _saving ? null : _save,
+              child: _saving
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Text(l.saveButton),
             ),
-            children: [
-              _buildTitleField(l),
-              const SizedBox(height: KairosSpacing.sm),
-              _buildDescriptionField(l),
-              const SizedBox(height: KairosSpacing.lg),
-              KairosGlassSurface(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: KairosSpacing.sm,
-                  vertical: KairosSpacing.xs,
+          ],
+        ),
+        body: Builder(
+          builder: (context) {
+            final theme = Theme.of(context);
+            return Form(
+              key: _formKey,
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  KairosSpacing.md,
+                  KairosSpacing.sm,
+                  KairosSpacing.md,
+                  KairosSpacing.xl,
                 ),
-                child: Column(
-                  children: [
-                    _buildDueDateTile(theme, l),
-                    const Divider(),
-                    _buildTagsField(l),
-                    const SizedBox(height: KairosSpacing.sm),
-                    _buildPrioritySection(theme, l),
-                    const SizedBox(height: KairosSpacing.lg),
-                    _buildColorSection(theme, l),
-                    const SizedBox(height: KairosSpacing.lg),
-                    _buildRemindersSection(theme, l),
-                  ],
-                ),
+                children: [
+                  _buildTitleField(theme, l),
+                  const SizedBox(height: KairosSpacing.sm),
+                  _buildDescriptionField(l),
+                  const SizedBox(height: KairosSpacing.lg),
+                  KairosGlassSurface(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: KairosSpacing.sm,
+                      vertical: KairosSpacing.xs,
+                    ),
+                    shadow: false,
+                    child: Column(
+                      children: [
+                        _buildDueDateTile(theme, l),
+                        const Divider(),
+                        _buildTagsField(l),
+                        const SizedBox(height: KairosSpacing.sm),
+                        _buildPrioritySection(theme, l),
+                        const SizedBox(height: KairosSpacing.lg),
+                        _buildColorSection(theme, l),
+                        const SizedBox(height: KairosSpacing.lg),
+                        _buildRemindersSection(theme, l),
+                      ],
+                    ),
+                  ),
+                  ..._buildSyncControls(theme, l, syncAvailable: syncAvailable),
+                ],
               ),
-              ..._buildSyncControls(theme, l, syncAvailable: syncAvailable),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _buildTitleField(AppLocalizations l) {
+  Widget _buildTitleField(ThemeData theme, AppLocalizations l) {
     return TextFormField(
       controller: _titleController,
       autofocus: !_isEditing,
       maxLength: Task.maxTitleLength,
       textCapitalization: TextCapitalization.sentences,
+      style: theme.textTheme.headlineSmall?.copyWith(
+        color: theme.colorScheme.onSurface,
+      ),
       decoration: InputDecoration(
-        labelText: l.titleFieldLabel,
-        border: const OutlineInputBorder(),
+        hintText: l.titleFieldLabel,
+        filled: false,
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        errorBorder: const UnderlineInputBorder(),
+        focusedErrorBorder: const UnderlineInputBorder(),
       ),
       validator: (value) {
         final title = value?.trim() ?? '';
@@ -315,7 +330,6 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         labelText: l.descriptionFieldLabel,
-        border: const OutlineInputBorder(),
         alignLabelWithHint: true,
       ),
     );
@@ -353,7 +367,6 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
       decoration: InputDecoration(
         labelText: l.tagsFieldLabel,
         hintText: l.tagsFieldHint,
-        border: const OutlineInputBorder(),
       ),
       validator: (value) {
         final tags = (value ?? '')
@@ -403,8 +416,8 @@ class _TaskEditorScreenState extends ConsumerState<TaskEditorScreen> {
     );
   }
 
-  /// Echoes-style color coding: a row of pastel swatches; the first slot is
-  /// "no color" (theme surface).
+  /// Stained-glass sheets, same swatches as Echoes. The first slot is
+  /// "no color" (the desk paper). The open editor repaints in the choice.
   Widget _buildColorSection(ThemeData theme, AppLocalizations l) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

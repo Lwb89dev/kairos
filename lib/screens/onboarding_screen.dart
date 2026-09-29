@@ -45,7 +45,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     if (page < 0 || page >= _pageCount || !_pageController.hasClients) return;
     _pageController.animateToPage(
       page,
-      duration: const Duration(milliseconds: 300),
+      duration: KairosMotion.of(context, const Duration(milliseconds: 300)),
       curve: Curves.easeInOut,
     );
   }
@@ -73,36 +73,34 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: KairosAtmosphere(
-        child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: (page) => setState(() => _page = page),
-                  children: [
-                    const _IntroPage(),
-                    _LoginPage(onAdvance: () => _goToPage(2)),
-                    const _RelaySetupPage(),
-                  ],
-                ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (page) => setState(() => _page = page),
+                children: [
+                  const _IntroPage(),
+                  _LoginPage(onAdvance: () => _goToPage(2)),
+                  const _RelaySetupPage(),
+                ],
               ),
-              _OnboardingBottomBar(
-                page: _page,
-                pageCount: _pageCount,
-                finishing: _finishing,
-                onBack: () => _goToPage(_page - 1),
-                onNext: () => _goToPage(_page + 1),
-                // Skipping login means there's no Nostr account to sync with,
-                // so relay setup (page 3) would be meaningless — go straight
-                // to finishing onboarding instead of just advancing a page.
-                // Relays can still be configured later from Settings.
-                onSkip: _finish,
-                onFinish: _finish,
-              ),
-            ],
-          ),
+            ),
+            _OnboardingBottomBar(
+              page: _page,
+              pageCount: _pageCount,
+              finishing: _finishing,
+              onBack: () => _goToPage(_page - 1),
+              onNext: () => _goToPage(_page + 1),
+              // Skipping login means there's no Nostr account to sync with,
+              // so relay setup (page 3) would be meaningless — go straight
+              // to finishing onboarding instead of just advancing a page.
+              // Relays can still be configured later from Settings.
+              onSkip: _finish,
+              onFinish: _finish,
+            ),
+          ],
         ),
       ),
     );
@@ -134,50 +132,50 @@ class _OnboardingBottomBar extends StatelessWidget {
     final isFirst = page == 0;
     final isLast = page == pageCount - 1;
 
-    return KairosGlassSurface(
-      margin: const EdgeInsets.fromLTRB(12, 8, 12, 12),
-      padding: const EdgeInsets.fromLTRB(8, 6, 12, 6),
-      strong: true,
-      child: Row(
-        children: [
-          SizedBox(
-            width: 72,
-            child: isFirst
-                ? null
-                : TextButton(onPressed: onBack, child: Text(l.backButton)),
-          ),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                pageCount,
-                (i) => _Dot(active: i == page),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+      child: KairosFloatingBar(
+        child: Row(
+          children: [
+            SizedBox(
+              width: 72,
+              child: isFirst
+                  ? null
+                  : TextButton(onPressed: onBack, child: Text(l.backButton)),
+            ),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  pageCount,
+                  (i) => _Dot(active: i == page),
+                ),
               ),
             ),
-          ),
-          if (isLast)
-            FilledButton(
-              onPressed: finishing ? null : onFinish,
-              child: finishing
-                  ? const SizedBox.square(
-                      dimension: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Text(l.getStartedButton),
-            )
-          else if (page == 1)
-            TextButton(
-              onPressed: finishing ? null : onSkip,
-              child: finishing
-                  ? const SizedBox.square(
-                      dimension: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Text(l.useOfflineButton),
-            )
-          else
-            FilledButton(onPressed: onNext, child: Text(l.nextButton)),
-        ],
+            if (isLast)
+              FilledButton(
+                onPressed: finishing ? null : onFinish,
+                child: finishing
+                    ? const SizedBox.square(
+                        dimension: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(l.getStartedButton),
+              )
+            else if (page == 1)
+              TextButton(
+                onPressed: finishing ? null : onSkip,
+                child: finishing
+                    ? const SizedBox.square(
+                        dimension: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(l.useOfflineButton),
+              )
+            else
+              FilledButton(onPressed: onNext, child: Text(l.nextButton)),
+          ],
+        ),
       ),
     );
   }
@@ -191,7 +189,7 @@ class _Dot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+      duration: KairosMotion.of(context, KairosMotion.quick),
       margin: const EdgeInsets.symmetric(horizontal: 3),
       width: active ? 20 : 6,
       height: 6,

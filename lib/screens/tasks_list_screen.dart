@@ -15,9 +15,8 @@ import 'task_details_screen.dart';
 import 'task_editor_screen.dart';
 
 /// Home screen: the task list. Pending tasks first (due-dated ones sorted to
-/// the top by the storage layer), completed ones collapsed below — the
-/// Google-Tasks layout. Tasks carry their Echoes-style color coding as card
-/// backgrounds.
+/// the top by the storage layer), completed ones collapsed below. Each task
+/// is a gloss sheet on the desk — the same card an opened task becomes.
 ///
 /// Sync-on-entry: a relay sync cycle fires when this screen first mounts
 /// (covers both the very first access and every cold app start) and again
@@ -73,7 +72,10 @@ class _TasksListScreenState extends ConsumerState<TasksListScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppConstants.appName),
+        title: Text(
+          AppConstants.appName,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         actions: [
           if (config != null && config.allSyncRelays.isNotEmpty)
             IconButton(
@@ -100,18 +102,14 @@ class _TasksListScreenState extends ConsumerState<TasksListScreen>
               )
             : null,
       ),
-      body: KairosAtmosphere(
-        child: tasksState.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (_, _) => Center(child: Text(l.loadTasksError)),
-          data: (tasks) => RefreshIndicator(
-            color: Theme.of(context).colorScheme.primary,
-            onRefresh: () =>
-                ref.read(tasksProvider.notifier).syncNow(userInitiated: true),
-            child: tasks.isEmpty
-                ? const _EmptyState()
-                : _TaskList(tasks: tasks),
-          ),
+      body: tasksState.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (_, _) => Center(child: Text(l.loadTasksError)),
+        data: (tasks) => RefreshIndicator(
+          color: Theme.of(context).colorScheme.primary,
+          onRefresh: () =>
+              ref.read(tasksProvider.notifier).syncNow(userInitiated: true),
+          child: tasks.isEmpty ? const _EmptyState() : _TaskList(tasks: tasks),
         ),
       ),
       floatingActionButton: KairosFloatingActionButton(
@@ -192,7 +190,7 @@ class _TaskListState extends State<_TaskList> {
 
     return ListView.builder(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.only(bottom: 104),
+      padding: const EdgeInsets.fromLTRB(0, 8, 0, 104),
       itemCount: pending.length + headerRows + completedRows,
       itemBuilder: (context, index) {
         if (index < pending.length) return _TaskTile(task: pending[index]);
@@ -221,95 +219,90 @@ class _TaskTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        KairosSpacing.md,
+        0,
+        KairosSpacing.md,
+        KairosSpacing.sm,
+      ),
+      child: KairosGlassSurface(
+        tint: task.color?.background,
+        child: Builder(builder: (context) => _face(context, ref)),
+      ),
+    );
+  }
+
+  Widget _face(BuildContext context, WidgetRef ref) {
     final l = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final tokens = kairosTokensOf(context);
     final due = task.dueDateUtc?.toLocal();
     final overdue = due != null && !task.isDone && due.isBefore(DateTime.now());
     final muted = theme.colorScheme.onSurfaceVariant;
-    final tint = task.color?.background;
-    final indicator =
-        task.color?.background ?? theme.colorScheme.outlineVariant;
-    final metadata = _metadata(
-      theme,
-      due,
-      overdue,
-      muted,
-      l.addToCalendarTitle,
-    );
+    final tinted = task.color != null;
+    final dueColor = overdue && !tinted ? theme.colorScheme.error : muted;
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => TaskDetailsScreen(taskId: task.id)),
-        ),
-        child: AnimatedContainer(
-          duration: KairosMotion.standard,
-          curve: KairosMotion.curve,
-          margin: const EdgeInsets.symmetric(horizontal: KairosSpacing.md),
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          decoration: BoxDecoration(
-            color: tint?.withValues(alpha: 0.10),
-            border: Border(
-              bottom: BorderSide(color: tokens.border),
-              left: BorderSide(color: indicator, width: 3),
+    return InkWell(
+      borderRadius: BorderRadius.circular(KairosRadii.md),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => TaskDetailsScreen(taskId: task.id)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(4, 4, 10, 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            KairosCompletionControl(
+              value: task.isDone,
+              semanticLabel: task.title,
+              onChanged: (_) =>
+                  ref.read(tasksProvider.notifier).toggleStatus(task),
             ),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              KairosCompletionControl(
-                value: task.isDone,
-                semanticLabel: task.title,
-                onChanged: (_) =>
-                    ref.read(tasksProvider.notifier).toggleStatus(task),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        task.title,
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: task.isDone ? muted : null,
-                          decoration: task.isDone
-                              ? TextDecoration.lineThrough
-                              : null,
-                          decorationColor: muted,
-                        ),
-                      ),
-                      if (metadata.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Wrap(
-                            spacing: 10,
-                            runSpacing: 3,
-                            children: metadata,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-              _trailing(theme, muted),
-            ],
-          ),
+            Expanded(child: _copy(theme, muted, due, dueColor, l)),
+            _trailing(theme, muted, tinted),
+          ],
         ),
       ),
     );
   }
 
-  List<Widget> _metadata(
+  Widget _copy(
     ThemeData theme,
+    Color muted,
     DateTime? due,
-    bool overdue,
+    Color dueColor,
+    AppLocalizations l,
+  ) {
+    final metadata = _metadata(due, dueColor, muted, l.addToCalendarTitle);
+    return Padding(
+      padding: const EdgeInsets.only(top: 10, bottom: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            task.title,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: task.isDone ? muted : theme.colorScheme.onSurface,
+              decoration: task.isDone ? TextDecoration.lineThrough : null,
+              decorationColor: muted,
+            ),
+          ),
+          if (metadata.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Wrap(spacing: 10, runSpacing: 3, children: metadata),
+            ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _metadata(
+    DateTime? due,
+    Color dueColor,
     Color muted,
     String calendarLabel,
   ) {
@@ -318,7 +311,7 @@ class _TaskTile extends ConsumerWidget {
         _MetaItem(
           icon: Icons.schedule_outlined,
           text: DateFormat.yMMMd().add_Hm().format(due),
-          color: overdue ? theme.colorScheme.error : muted,
+          color: dueColor,
         ),
       if (task.tags.isNotEmpty)
         _MetaItem(
@@ -341,17 +334,21 @@ class _TaskTile extends ConsumerWidget {
     ];
   }
 
-  Widget _trailing(ThemeData theme, Color muted) {
+  Widget _trailing(ThemeData theme, Color muted, bool tinted) {
+    final priority = task.priority;
+    final priorityColor = priority != null && priority >= 4 && !tinted
+        ? theme.colorScheme.error
+        : muted;
     return Padding(
-      padding: const EdgeInsets.only(top: 8, left: 4),
+      padding: const EdgeInsets.only(top: 10, left: 4),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (task.priority != null)
+          if (priority != null)
             Icon(
-              task.priority! >= 4 ? Icons.flag_rounded : Icons.flag_outlined,
+              priority >= 4 ? Icons.flag_rounded : Icons.flag_outlined,
               size: 17,
-              color: task.priority! >= 4 ? theme.colorScheme.error : muted,
+              color: priorityColor,
             ),
           if (!task.localOnly)
             Padding(
