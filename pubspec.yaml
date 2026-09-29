@@ -54,7 +54,7 @@ dependencies:
   meta: ^1.16.0
 
   # Localized date formatting for due dates in the task list/editor.
-  intl: ^0.20.2
+  intl: ^0.20.3
 
   # Fetching the logged-in account's public kind-0 profile (name/avatar) and
   # downloading the avatar image.
