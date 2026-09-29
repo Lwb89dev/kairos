@@ -89,7 +89,7 @@ dependencies:
 
   # Reads the device's current IANA timezone name at startup to seed the
   # `timezone` package's local location.
-  flutter_timezone: ^3.0.1
+  flutter_timezone: ^5.1.0
 
 dev_dependencies:
   flutter_test:
